@@ -3,8 +3,8 @@
 // Powers All 10 Master Indian Culinary Domains (512 Authentic Recipes)
 // ==========================================================================
 
-// Everyday Indian home pantry staples & leftovers
-const PANTRY_ITEMS = [
+// Everyday Indian home pantry staples & leftovers (Immutable Default Set)
+const DEFAULT_PANTRY_ITEMS = Object.freeze([
   "Rice",
   "Eggs",
   "Chicken",
@@ -14,7 +14,15 @@ const PANTRY_ITEMS = [
   "Paneer",
   "Toor Dal",
   "Ghee"
-];
+]);
+
+// Runtime custom ingredients added by user (strictly preserves DEFAULT_PANTRY_ITEMS)
+let customPantryItems = new Set();
+
+// Active pantry staples working collection
+function getPantryStaples() {
+  return [...DEFAULT_PANTRY_ITEMS, ...customPantryItems];
+}
 
 // App State
 let selectedPantry = new Set();
@@ -30,9 +38,87 @@ let quickFilterNonVegOnly = false;
 
 let activeRecipe = null;
 let currentServingsFactor = 1;
-let timerSeconds = 900;
+
+// Drift-free Timestamp-based Kitchen Timer State
+let timerTargetTimestamp = null;
+let timerRemainingMs = 900 * 1000;
 let timerInterval = null;
 let timerRunning = false;
+let timerSeconds = 900;
+
+// Centralized HTML sanitizer to prevent XSS across all user-rendered strings
+function escapeHtml(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Serving Calculator: Precision Multiplier & Fraction Formatter
+function formatScaledNumber(num) {
+  const eps = 0.05;
+  const whole = Math.floor(num);
+  const frac = num - whole;
+  if (Math.abs(frac) < eps) return whole.toString();
+  if (Math.abs(frac - 0.25) < eps) return whole > 0 ? `${whole} 1/4` : '1/4';
+  if (Math.abs(frac - 0.333) < eps || Math.abs(frac - 0.33) < eps) return whole > 0 ? `${whole} 1/3` : '1/3';
+  if (Math.abs(frac - 0.5) < eps) return whole > 0 ? `${whole} 1/2` : '1/2';
+  if (Math.abs(frac - 0.666) < eps || Math.abs(frac - 0.67) < eps) return whole > 0 ? `${whole} 2/3` : '2/3';
+  if (Math.abs(frac - 0.75) < eps) return whole > 0 ? `${whole} 3/4` : '3/4';
+  return Number(num.toFixed(2)).toString();
+}
+
+function scaleAmount(str, factor) {
+  if (!str || factor === 1) return str;
+  const parenIdx = str.indexOf('(');
+  let main = str;
+  let note = '';
+  if (parenIdx !== -1) {
+    main = str.substring(0, parenIdx).trim();
+    note = ' ' + str.substring(parenIdx).trim();
+  }
+
+  // Combined single-pass regex to completely avoid repeated multiplication:
+  // 1. Mixed fraction: '1 1/2'
+  // 2. Simple fraction: '1/2' or '3/4'
+  // 3. Decimal or integer: '1.5', '2', '500g'
+  const combinedRegex = /(\d+\s+\d+\/\d+)|(\d+\/\d+)|(\d+(?:\.\d+)?)/g;
+
+  const scaledMain = main.replace(combinedRegex, (match) => {
+    let val = 0;
+    if (match.includes(' ') && match.includes('/')) {
+      const parts = match.split(' ');
+      const frac = parts[1].split('/');
+      val = parseInt(parts[0], 10) + parseInt(frac[0], 10) / parseInt(frac[1], 10);
+    } else if (match.includes('/')) {
+      const frac = match.split('/');
+      val = parseInt(frac[0], 10) / parseInt(frac[1], 10);
+    } else {
+      val = parseFloat(match);
+    }
+    return formatScaledNumber(val * factor);
+  });
+
+  return (scaledMain + note).trim();
+}
+
+// Expose state accessors on window for test verification
+if (typeof window !== "undefined") {
+  window.DEFAULT_PANTRY_ITEMS = DEFAULT_PANTRY_ITEMS;
+  window.getCustomPantryItems = () => customPantryItems;
+  window.getSelectedPantry = () => selectedPantry;
+  window.scaleAmount = scaleAmount;
+  window.escapeHtml = escapeHtml;
+  window.getTimerState = () => ({
+    timerSeconds,
+    timerRemainingMs,
+    timerRunning,
+    timerTargetTimestamp
+  });
+}
 
 // DOM Elements
 const pantryChipsContainer = document.getElementById("pantryChipsContainer");
@@ -99,7 +185,7 @@ const ALL_CULINARY_INGREDIENTS = [
 ];
 
 function getMasterIngredientsList() {
-  const set = new Set(ALL_CULINARY_INGREDIENTS);
+  const set = new Set([...ALL_CULINARY_INGREDIENTS, ...customPantryItems]);
   
   // Also harvest any specific ingredients from all 512 recipes
   try {
@@ -128,9 +214,8 @@ function renderPantryChips() {
   let itemsToDisplay = [];
 
   if (!pantrySearchQuery) {
-    // 1. When NOT searching: Show ONLY the 10 quick staples + any currently selected items!
-    const defaultSet = new Set(PANTRY_ITEMS);
-    selectedPantry.forEach(item => defaultSet.add(item));
+    // 1. When NOT searching: Show DEFAULT_PANTRY_ITEMS + custom additions + any currently selected items
+    const defaultSet = new Set([...DEFAULT_PANTRY_ITEMS, ...customPantryItems, ...selectedPantry]);
     itemsToDisplay = Array.from(defaultSet);
   } else {
     // 2. When SEARCHING: Search across the FULL comprehensive culinary ingredients database!
@@ -159,32 +244,36 @@ function renderPantryChips() {
 
   let html = "";
   if (itemsToDisplay.length === 0 && pantrySearchQuery) {
+    const safeQuery = escapeHtml(pantrySearchQuery);
     html = `
       <div style="padding: 10px 0; font-size: 13px; color: var(--text-dark); display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <span>No ingredient found for "<strong>${pantrySearchQuery}</strong>".</span>
-        <button class="kitchen-chip selected" onclick="addCustomPantryItem('${pantrySearchQuery.replace(/'/g, "\\'")}')">
+        <span>No ingredient found for "<strong>${safeQuery}</strong>".</span>
+        <button class="kitchen-chip selected" onclick="addCustomPantryItem(decodeURIComponent('${encodeURIComponent(pantrySearchQuery)}'))">
           <span>+</span>
-          <span>Add "${pantrySearchQuery}" to my Pantry</span>
+          <span>Add "${safeQuery}" to my Pantry</span>
         </button>
       </div>
     `;
   } else {
     html = itemsToDisplay.map(item => {
       const isSelected = selectedPantry.has(item);
+      const safeItem = escapeHtml(item);
+      const encItem = encodeURIComponent(item);
       return `
-        <button class="kitchen-chip ${isSelected ? 'selected' : ''}" onclick="togglePantryItem('${item.replace(/'/g, "\\'")}')">
+        <button class="kitchen-chip ${isSelected ? 'selected' : ''}" onclick="togglePantryItem(decodeURIComponent('${encItem}'))">
           <span>${isSelected ? '✓' : '+'}</span>
-          <span>${item}</span>
+          <span>${safeItem}</span>
         </button>
       `;
     }).join("");
 
     // If searching and what they typed is not already an exact match, offer "+ Add [typed]" button at the end
     if (pantrySearchQuery && !itemsToDisplay.some(it => it.toLowerCase() === pantrySearchQuery)) {
+      const safeQuery = escapeHtml(pantrySearchQuery);
       html += `
-        <button class="kitchen-chip" style="border: 1.5px dashed var(--turmeric-amber); color: var(--farm-green); background: #fff;" onclick="addCustomPantryItem('${pantrySearchQuery.replace(/'/g, "\\'")}')">
+        <button class="kitchen-chip" style="border: 1.5px dashed var(--turmeric-amber); color: var(--farm-green); background: #fff;" onclick="addCustomPantryItem(decodeURIComponent('${encodeURIComponent(pantrySearchQuery)}'))">
           <span>+</span>
-          <span>Add "${pantrySearchQuery}"</span>
+          <span>Add "${safeQuery}"</span>
         </button>
       `;
     }
@@ -215,39 +304,47 @@ function onPantrySearchKeydown(e) {
     e.preventDefault();
     if (!pantrySearchQuery) return;
     
-    // Check if an item matches
-    const exactMatch = PANTRY_ITEMS.find(it => it.toLowerCase() === pantrySearchQuery);
+    // Check if an item matches in default staples or custom pantry
+    const allPantry = getPantryStaples();
+    const exactMatch = allPantry.find(it => it.toLowerCase() === pantrySearchQuery);
     if (exactMatch) {
       togglePantryItem(exactMatch);
       clearPantrySearch();
       return;
     }
 
-    const partialMatch = PANTRY_ITEMS.find(it => it.toLowerCase().includes(pantrySearchQuery));
+    const partialMatch = allPantry.find(it => it.toLowerCase().includes(pantrySearchQuery));
     if (partialMatch) {
       togglePantryItem(partialMatch);
       clearPantrySearch();
       return;
     }
 
-    // Add custom ingredient
-    const formatted = pantrySearchQuery.charAt(0).toUpperCase() + pantrySearchQuery.slice(1);
-    addCustomPantryItem(formatted);
+    // Add validated custom ingredient
+    addCustomPantryItem(pantrySearchQuery);
     clearPantrySearch();
   }
 }
 
 function addCustomPantryItem(name) {
-  if (!PANTRY_ITEMS.includes(name)) {
-    PANTRY_ITEMS.unshift(name);
-  }
-  selectedPantry.add(name);
+  if (!name || typeof name !== 'string') return;
+  const trimmed = name.trim();
+  if (trimmed.length === 0 || trimmed.length > 50) return;
+  
+  // Format title-cased
+  const formatted = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  
+  // Protect DEFAULT_PANTRY_ITEMS from in-place mutation; store in customPantryItems
+  customPantryItems.add(formatted);
+  selectedPantry.add(formatted);
+  
   renderPantryChips();
   renderDishes();
   updatePantryCounters();
 }
 
 function togglePantryItem(item) {
+  if (!item) return;
   if (selectedPantry.has(item)) {
     selectedPantry.delete(item);
   } else {
@@ -701,7 +798,9 @@ function ingredientMatches(recipeIng, pantryItem) {
   const rNorm = recipeIng.toLowerCase().trim();
   
   // Specific staple overrides for 100% homestyle culinary accuracy
-  if (pNorm === 'egg' || pNorm === 'eggs') {
+
+  // 1. Eggs vs Eggplant (Baingan/Brinjal)
+  if (pNorm === 'egg' || pNorm === 'eggs' || pNorm === 'anda') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
     const hasEggWord = rWords.some(w => w === 'egg' || w === 'anda');
     const isEggplant = rWords.some(w => w === 'eggplant' || w === 'baingan' || w === 'brinjal');
@@ -709,44 +808,82 @@ function ingredientMatches(recipeIng, pantryItem) {
     return hasEggWord;
   }
   
-  if (pNorm === 'rice' || pNorm === 'basmati rice' || pNorm === 'cooked rice' || pNorm === 'leftover cooked rice') {
+  // 2. Whole Rice vs Rice Flour, Rice Rava, Rice Bran Oil, Poha (Prevent False-Positive Matches)
+  if (pNorm === 'rice' || pNorm === 'basmati rice' || pNorm === 'cooked rice' || pNorm === 'leftover cooked rice' || pNorm === 'raw rice' || pNorm === 'chawal') {
+    // If recipe requires flour, batter, rava, oil, or flakes, whole rice cannot be substituted directly
+    if (rNorm.includes('flour') || rNorm.includes('maavu') || rNorm.includes('atta') || rNorm.includes('rava') || rNorm.includes('oil') || rNorm.includes('poha') || rNorm.includes('flakes') || rNorm.includes('batter')) {
+      return false;
+    }
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'rice' || w === 'chawal' || w === 'basmati' || w === 'poha');
+    return rWords.some(w => w === 'rice' || w === 'chawal' || w === 'basmati');
   }
-  
-  if (pNorm === 'chicken') {
+
+  // 3. Rice Flour
+  if (pNorm === 'rice flour' || pNorm === 'chawal ka atta' || pNorm === 'arisi maavu') {
+    return rNorm.includes('rice flour') || rNorm.includes('arisi maavu') || rNorm.includes('chawal ka atta');
+  }
+
+  // 4. Poha (Flattened Rice)
+  if (pNorm === 'poha' || pNorm === 'flattened rice' || pNorm === 'aval' || pNorm === 'atukulu') {
+    return rNorm.includes('poha') || rNorm.includes('flattened rice') || rNorm.includes('aval') || rNorm.includes('atukulu');
+  }
+
+  // 5. Potato vs Sweet Potato
+  if (pNorm === 'potato' || pNorm === 'potatoes' || pNorm === 'aloo' || pNorm === 'batata') {
+    if (rNorm.includes('sweet potato') || rNorm.includes('shakarkand')) return false;
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'potato' || w === 'aloo' || w === 'batata');
+  }
+
+  // 6. Chicken
+  if (pNorm === 'chicken' || pNorm === 'murgh') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
     return rWords.some(w => w === 'chicken' || w === 'murgh');
   }
 
-  if (pNorm === 'paneer') {
+  // 7. Paneer
+  if (pNorm === 'paneer' || pNorm === 'chhena') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
     return rWords.some(w => w === 'paneer' || w === 'chhena');
   }
 
-  if (pNorm === 'toor dal' || pNorm === 'dal') {
+  // 8. Toor Dal / Sambar Dal / Arhar Dal
+  if (pNorm === 'toor dal' || pNorm === 'arhar dal' || pNorm === 'kandi pappu' || pNorm === 'dal') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'toor' || w === 'kandi' || w === 'arhar' || (w === 'dal' && (rNorm.includes('toor') || rNorm.includes('arhar') || rNorm.includes('sambar') || rNorm.includes('kandi') || rNorm.includes('dal'))));
+    return rWords.some(w => w === 'toor' || w === 'kandi' || w === 'arhar' || (w === 'dal' && (rNorm.includes('toor') || rNorm.includes('arhar') || rNorm.includes('sambar') || rNorm.includes('kandi'))));
   }
 
-  if (pNorm === 'potato' || pNorm === 'potatoes') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'potato' || w === 'aloo');
-  }
-
-  if (pNorm === 'tomato' || pNorm === 'tomatoes') {
+  // 9. Tomato
+  if (pNorm === 'tomato' || pNorm === 'tomatoes' || pNorm === 'tamatar') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
     return rWords.some(w => w === 'tomato' || w === 'tamatar' || w === 'thakkali');
   }
 
-  if (pNorm === 'onion' || pNorm === 'onions') {
+  // 10. Onion
+  if (pNorm === 'onion' || pNorm === 'onions' || pNorm === 'pyaz') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'onion' || w === 'pyaz' || w === 'shallot' || w === 'vengayam');
+    return rWords.some(w => w === 'onion' || w === 'pyaz' || w === 'shallot' || w === 'vengayam' || w === 'ullipaya');
   }
 
-  if (pNorm === 'ghee' || pNorm === 'pure cow ghee') {
+  // 11. Ghee
+  if (pNorm === 'ghee' || pNorm === 'pure cow ghee' || pNorm === 'desi ghee') {
     const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
     return rWords.some(w => w === 'ghee' || w === 'neyyi');
+  }
+
+  // 12. Curry Leaves
+  if (pNorm.includes('curry leaves') || pNorm.includes('curry leaf') || pNorm.includes('kadi patta')) {
+    return rNorm.includes('curry leaf') || rNorm.includes('curry leaves') || rNorm.includes('kadi patta') || rNorm.includes('karivepaku');
+  }
+
+  // 13. Ginger
+  if (pNorm === 'ginger' || pNorm === 'adrak' || pNorm === 'allam') {
+    return rNorm.includes('ginger') || rNorm.includes('adrak') || rNorm.includes('allam');
+  }
+
+  // 14. Garlic
+  if (pNorm === 'garlic' || pNorm === 'lahsun' || pNorm === 'vellulli') {
+    return rNorm.includes('garlic') || rNorm.includes('lahsun') || rNorm.includes('vellulli');
   }
 
   // General culinary ingredient matching
@@ -757,10 +894,6 @@ function ingredientMatches(recipeIng, pantryItem) {
   if (pWords.length === 0) {
     const directP = pNorm.split(/\s+/).map(cleanWord).filter(w => w.length > 1);
     return directP.some(pw => rWords.some(rw => rw === pw));
-  }
-
-  if (pNorm.includes('curry leaves') || pNorm.includes('curry leaf')) {
-    return rNorm.includes('curry leaf') || rNorm.includes('curry leaves') || rNorm.includes('kadi patta');
   }
 
   return pWords.some(pw => rWords.some(rw => rw === pw));
@@ -894,7 +1027,7 @@ function renderDishes() {
   }
 
   if (isPantryFilterActive) {
-    const activeList = Array.from(selectedPantry).join(", ");
+    const activeList = Array.from(selectedPantry).map(escapeHtml).join(", ");
     recipeCounterNotice.innerHTML = `
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; width: 100%;">
         <span style="color: var(--farm-green); font-size: 14px;">
@@ -906,7 +1039,7 @@ function renderDishes() {
       </div>
     `;
   } else if (searchQuery) {
-    recipeCounterNotice.innerHTML = `Found <strong>${list.length}</strong> authentic dish${list.length === 1 ? '' : 'es'} matching "<em>${searchQuery}</em>" across all categories`;
+    recipeCounterNotice.innerHTML = `Found <strong>${list.length}</strong> authentic dish${list.length === 1 ? '' : 'es'} matching "<em>${escapeHtml(searchQuery)}</em>" across all categories`;
   } else {
     let sectionName = "breakfast";
     if (currentMainSection === "rice") sectionName = "rice & biryani";
@@ -1067,11 +1200,27 @@ function openRecipe(id) {
   document.getElementById("modalTime").textContent = `${recipe.prepTime} mins`;
   document.getElementById("modalSubcategory").textContent = recipe.subCategory.toUpperCase() + " SPECIAL";
 
+  // Recipe image banner in modal
+  const modalImg = document.getElementById("modalRecipeImg");
+  if (modalImg) {
+    modalImg.src = recipe.image;
+    modalImg.alt = recipe.name;
+  }
+
   // Veg indicator in modal
   const modalVeg = document.getElementById("modalVegIndicator");
   if (modalVeg) {
     modalVeg.className = recipe.veg ? "veg-indicator" : "veg-indicator nonveg";
   }
+
+  // Initial Servings Label Reset
+  const servingsValEl = document.getElementById("modalServingsVal");
+  if (servingsValEl) {
+    servingsValEl.textContent = recipe.servings;
+  }
+  document.querySelectorAll(".stepper-btn").forEach(b => b.classList.remove("active"));
+  const btn1x = document.getElementById("stepper1x");
+  if (btn1x) btn1x.classList.add("active");
 
   const match = calculateMatch(recipe);
   const matchEl = document.getElementById("modalMatch");
@@ -1089,19 +1238,31 @@ function openRecipe(id) {
   // Ingredients Checklist
   renderModalChecklist();
 
-  // Steps
+  // Steps with interactive completion toggle
   const stepsEl = document.getElementById("modalStepsList");
-  stepsEl.innerHTML = recipe.steps.map(s => `<li>${s}</li>`).join("");
+  stepsEl.innerHTML = recipe.steps.map((s, idx) => `
+    <li class="cooking-step" onclick="toggleStepCompleted(this)" title="Tap to mark step done">
+      <span>${escapeHtml(s)}</span>
+    </li>
+  `).join("");
 
-  // Timer
+  // Drift-Free Kitchen Timer Initialization
   setupTimer(recipe.prepTime * 60);
 
   // Open modal
   recipeModal.classList.add("active");
 }
 
+function toggleStepCompleted(el) {
+  if (el) {
+    el.classList.toggle("completed-step");
+  }
+}
+
 function renderModalChecklist() {
   const listEl = document.getElementById("modalIngredientsList");
+  if (!listEl || !activeRecipe) return;
+
   listEl.innerHTML = activeRecipe.ingredients.map(ing => {
     let hasIt = false;
     for (const u of selectedPantry) {
@@ -1111,9 +1272,11 @@ function renderModalChecklist() {
       }
     }
 
+    const scaledAmountStr = scaleAmount(ing.amount, currentServingsFactor);
+
     return `
       <li class="${hasIt ? 'present' : 'absent'}">
-        <span>• <strong>${ing.name}</strong> <span style="color:#7D7065;">(${ing.amount})</span></span>
+        <span>• <strong>${escapeHtml(ing.name)}</strong> <span style="color:#7D7065;">(${escapeHtml(scaledAmountStr)})</span></span>
         <span class="ing-badge">${hasIt ? 'In Pantry ✓' : 'Needed'}</span>
       </li>
     `;
@@ -1126,15 +1289,31 @@ function closeModal() {
 }
 
 function setServings(factor, btn) {
+  if (typeof factor !== 'number' || factor <= 0 || isNaN(factor)) factor = 1;
   currentServingsFactor = factor;
+  
   document.querySelectorAll(".stepper-btn").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
+  if (btn) {
+    btn.classList.add("active");
+  } else {
+    const defaultBtn = document.getElementById(`stepper${factor}x`);
+    if (defaultBtn) defaultBtn.classList.add("active");
+  }
+
+  if (activeRecipe) {
+    const servingsValEl = document.getElementById("modalServingsVal");
+    if (servingsValEl) {
+      servingsValEl.textContent = activeRecipe.servings * currentServingsFactor;
+    }
+    renderModalChecklist();
+  }
 }
 
-// Timer Logic
+// Drift-free Timestamp-based Timer Logic
 function setupTimer(seconds) {
   stopTimer();
-  timerSeconds = seconds;
+  timerRemainingMs = Math.max(0, (seconds || 900) * 1000);
+  timerSeconds = Math.ceil(timerRemainingMs / 1000);
   updateTimerDisplay();
 }
 
@@ -1147,22 +1326,39 @@ function toggleTimer() {
 }
 
 function startTimer() {
+  if (timerRemainingMs <= 0) return;
   timerRunning = true;
-  document.getElementById("timerToggleBtn").textContent = "Pause";
+  timerTargetTimestamp = Date.now() + timerRemainingMs;
+  
+  const btn = document.getElementById("timerToggleBtn");
+  if (btn) btn.textContent = "Pause";
+
+  if (timerInterval) clearInterval(timerInterval);
   timerInterval = setInterval(() => {
-    if (timerSeconds > 0) {
-      timerSeconds--;
-      updateTimerDisplay();
-    } else {
+    const now = Date.now();
+    const remaining = Math.max(0, timerTargetTimestamp - now);
+    timerRemainingMs = remaining;
+    timerSeconds = Math.ceil(remaining / 1000);
+    updateTimerDisplay();
+
+    if (remaining <= 0) {
       stopTimer();
-      alert(`🔔 Kitchen Bell: Cooking time complete for ${activeRecipe.name}!`);
+      alert(`🔔 Kitchen Bell: Cooking time complete for ${activeRecipe ? activeRecipe.name : 'your dish'}!`);
     }
-  }, 1000);
+  }, 250);
 }
 
 function stopTimer() {
+  if (timerRunning && timerTargetTimestamp) {
+    timerRemainingMs = Math.max(0, timerTargetTimestamp - Date.now());
+    timerSeconds = Math.ceil(timerRemainingMs / 1000);
+  }
   timerRunning = false;
-  clearInterval(timerInterval);
+  timerTargetTimestamp = null;
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
   const btn = document.getElementById("timerToggleBtn");
   if (btn) btn.textContent = "Start Timer";
 }
@@ -1170,7 +1366,10 @@ function stopTimer() {
 function updateTimerDisplay() {
   const mins = Math.floor(timerSeconds / 60);
   const secs = timerSeconds % 60;
-  document.getElementById("timerDigits").textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  const digitsEl = document.getElementById("timerDigits");
+  if (digitsEl) {
+    digitsEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
 }
 
 // ==========================================================================

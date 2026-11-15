@@ -1752,7 +1752,7 @@ const SIDES_EGGS_SEAFOOD_RECIPES = [
   },
   {
     "id": "sides-malabar-fish-curry",
-    "name": "Kerala Malabar Fish Curry",
+    "name": "Kerala Malabar Coconut Fish Curry",
     "subCategory": "seafood",
     "prepTime": 25,
     "servings": 4,
@@ -2076,7 +2076,7 @@ const SIDES_EGGS_SEAFOOD_RECIPES = [
   },
   {
     "id": "sides-prawn-koliwada",
-    "name": "Mumbai Prawn Koliwada",
+    "name": "Koliwada Crispy Fried Prawns",
     "subCategory": "seafood",
     "prepTime": 15,
     "servings": 2,
