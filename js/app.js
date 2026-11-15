@@ -1,5 +1,5 @@
 // ==========================================================================
-// AI CHEF — Human-Crafted Application Controller
+// AI CHEF — Production Django Full-Stack Application Controller
 // Powers All 10 Master Indian Culinary Domains (512 Authentic Recipes)
 // ==========================================================================
 
@@ -36,6 +36,9 @@ let quickFilterReady = false;
 let quickFilterVegOnly = false;
 let quickFilterNonVegOnly = false;
 
+let currentPage = 1;
+let totalRecipeCount = 0;
+let loadedRecipes = [];
 let activeRecipe = null;
 let currentServingsFactor = 1;
 
@@ -55,6 +58,10 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // Serving Calculator: Precision Multiplier & Fraction Formatter
@@ -112,12 +119,34 @@ if (typeof window !== "undefined") {
   window.getSelectedPantry = () => selectedPantry;
   window.scaleAmount = scaleAmount;
   window.escapeHtml = escapeHtml;
+  window.ingredientMatches = ingredientMatches;
+  window.calculateMatch = calculateMatch;
+  window.getAllRecipes = getAllRecipes;
+  window.getPantryMatchedRecipes = getPantryMatchedRecipes;
   window.getTimerState = () => ({
     timerSeconds,
     timerRemainingMs,
     timerRunning,
     timerTargetTimestamp
   });
+}
+
+function getAllRecipes() {
+  if (typeof BREAKFAST_RECIPES !== "undefined") {
+    return [
+      ...BREAKFAST_RECIPES,
+      ...RICE_RECIPES,
+      ...STREETFOOD_RECIPES,
+      ...CURRY_RECIPES,
+      ...SNACK_RECIPES,
+      ...BREAD_RECIPES,
+      ...SWEET_RECIPES,
+      ...CHUTNEY_RECIPES,
+      ...SOUPS_DRINKS_RECIPES,
+      ...SIDES_EGGS_SEAFOOD_RECIPES
+    ];
+  }
+  return loadedRecipes;
 }
 
 // DOM Elements
@@ -127,85 +156,31 @@ const recipeCounterNotice = document.getElementById("recipeCounterNotice");
 const navCountEl = document.getElementById("navCount");
 const recipeModal = document.getElementById("recipeModal");
 const filtersBar = document.getElementById("filtersBar");
+const recipesPagination = document.getElementById("recipesPagination");
 
-// Helper to get all 512 recipes aggregated
-function getAllRecipes() {
-  return [
-    ...BREAKFAST_RECIPES,
-    ...RICE_RECIPES,
-    ...STREETFOOD_RECIPES,
-    ...CURRY_RECIPES,
-    ...SNACK_RECIPES,
-    ...BREAD_RECIPES,
-    ...SWEET_RECIPES,
-    ...CHUTNEY_RECIPES,
-    ...SOUPS_DRINKS_RECIPES,
-    ...SIDES_EGGS_SEAFOOD_RECIPES
-  ];
-}
-
-// Initialize on page load
-document.addEventListener("DOMContentLoaded", () => {
-  renderPantryChips();
-  renderFilterPills();
-  renderDishes();
-  updatePantryCounters();
-});
-
-// ================= PANTRY MANAGEMENT & SEARCH =================
+// ==========================================================================
+// PANTRY CHIPS & INGREDIENT MATCHING (IN MY KITCHEN)
+// ==========================================================================
 let pantrySearchQuery = "";
 
-// Master Indian culinary ingredients dictionary for comprehensive instant search
-const ALL_CULINARY_INGREDIENTS = [
-  // Core Quick Staples
-  "Rice", "Eggs", "Chicken", "Onions", "Tomatoes", "Potatoes", "Paneer", "Toor Dal", "Ghee",
-  // Fresh Produce & Aromatics
-  "Garlic", "Ginger", "Ginger Garlic Paste", "Green Chillies", "Curry Leaves", 
-  "Fresh Coriander Leaves", "Fresh Mint Leaves", "Fresh Lemon Juice", 
-  "Capsicum", "Spinach (Palak)", "Carrots", "Cabbage", "Cauliflower", 
-  "Green Peas", "Brinjal (Eggplant)", "Drumstick", "Bottle Gourd", 
-  "Fenugreek Leaves (Methi)", "Gongura Leaves", "Bhindi (Okra)", "Cucumber",
-  // Proteins, Seafood & Dairy
-  "Mutton", "Fish", "Prawns", "Crab", "Fresh Curd", "Butter", "Milk", 
-  "Fresh Cream", "Cheese",
-  // Grains, Flours & Batters
-  "Dosa Batter", "Idli Batter", "Wheat Flour (Atta)", "Maida", "Besan (Gram Flour)", 
-  "Rava (Semolina)", "Rice Flour", "Poha (Flattened Rice)", "Sabudana", 
-  "Pav / Buns", "Sandwich Bread", "Noodles",
-  // Lentils, Nuts & Condiments
-  "Urad Dal", "Yellow Moong Dal", "Chana Dal", "Masoor Dal", "Rajma", "Kabuli Chana",
-  "Peanuts", "Cashews", "Almonds", "Fresh Grated Coconut", "White Sesame Seeds (Til)",
-  "Tamarind", "Jaggery (Gud)", "Sugar", "Mustard Oil", "Sesame Oil", "Refined Cooking Oil",
-  // Spices & Powders
-  "Biryani Masala", "Sambar Powder", "Rasam Powder", "Chaat Masala", "Garam Masala",
-  "Turmeric Powder", "Red Chilli Powder", "Coriander Powder", "Cumin Powder",
-  "Black Peppercorns", "Cumin Seeds", "Mustard Seeds", "Kasuri Methi", "Hing (Asafoetida)",
-  "Cardamom", "Cloves", "Cinnamon Stick", "Bay Leaf", "Star Anise", "Fennel Seeds (Saunf)",
-  "Fine Sev", "Cornstarch"
+// Master ingredients list
+const FALLBACK_MASTER_INGREDIENTS = [
+  "Rice", "Basmati Rice", "Cooked Rice", "Eggs", "Chicken", "Onions", "Tomatoes",
+  "Potatoes", "Paneer", "Toor Dal", "Moong Dal", "Chana Dal", "Urad Dal", "Ghee",
+  "Mustard Seeds", "Cumin Seeds", "Curry Leaves", "Ginger", "Garlic", "Green Chillies",
+  "Turmeric Powder", "Red Chilli Powder", "Coriander Leaves", "Garam Masala", "Coriander Powder",
+  "Cumin Powder", "Fennel Seeds", "Cardamom", "Cloves", "Cinnamon", "Bay Leaf",
+  "Black Pepper", "Hing (Asafoetida)", "Fenugreek Seeds", "Kasuri Methi", "Mint Leaves",
+  "Lemon Juice", "Tamarind", "Coconut", "Grated Coconut", "Cashews", "Raisins",
+  "Almonds", "Milk", "Curd (Yogurt)", "Butter", "Besan (Gram Flour)", "Maida",
+  "Atta (Wheat Flour)", "Rava (Semolina)", "Poha (Flattened Rice)", "Fish", "Prawns",
+  "Mutton", "Capsicum", "Green Peas", "Carrots", "Beans", "Cauliflower", "Spinach (Palak)",
+  "Methi Leaves", "Cabbage", "Brinjal", "Bottle Gourd", "Bitter Gourd", "Drumsticks",
+  "Mushrooms", "Soya Chunks", "Jaggery", "Sugar", "Saffron", "Rose Water", "Gongura Leaves"
 ];
 
 function getMasterIngredientsList() {
-  const set = new Set([...ALL_CULINARY_INGREDIENTS, ...customPantryItems]);
-  
-  // Also harvest any specific ingredients from all 512 recipes
-  try {
-    const all = getAllRecipes();
-    all.forEach(r => {
-      if (r.ingredients) {
-        r.ingredients.forEach(i => {
-          if (i.name && i.name.length < 30) {
-            const clean = i.name.replace(/\(.*?\)/g, "").trim();
-            if (clean.length > 2) {
-              set.add(clean.charAt(0).toUpperCase() + clean.slice(1));
-            }
-          }
-        });
-      }
-    });
-  } catch (e) {
-    // fallback to static list
-  }
-  return Array.from(set);
+  return FALLBACK_MASTER_INGREDIENTS;
 }
 
 function renderPantryChips() {
@@ -214,26 +189,21 @@ function renderPantryChips() {
   let itemsToDisplay = [];
 
   if (!pantrySearchQuery) {
-    // 1. When NOT searching: Show DEFAULT_PANTRY_ITEMS + custom additions + any currently selected items
     const defaultSet = new Set([...DEFAULT_PANTRY_ITEMS, ...customPantryItems, ...selectedPantry]);
     itemsToDisplay = Array.from(defaultSet);
   } else {
-    // 2. When SEARCHING: Search across the FULL comprehensive culinary ingredients database!
     const allIngredients = getMasterIngredientsList();
     itemsToDisplay = allIngredients.filter(it => it.toLowerCase().includes(pantrySearchQuery));
 
-    // Also include any selected item matching the query
     selectedPantry.forEach(item => {
       if (item.toLowerCase().includes(pantrySearchQuery) && !itemsToDisplay.includes(item)) {
         itemsToDisplay.unshift(item);
       }
     });
 
-    // Limit to top 24 most relevant matches for fast clean UI
     itemsToDisplay = itemsToDisplay.slice(0, 24);
   }
 
-  // Sort: Currently selected items pinned to the front
   itemsToDisplay.sort((a, b) => {
     const aSel = selectedPantry.has(a);
     const bSel = selectedPantry.has(b);
@@ -267,7 +237,6 @@ function renderPantryChips() {
       `;
     }).join("");
 
-    // If searching and what they typed is not already an exact match, offer "+ Add [typed]" button at the end
     if (pantrySearchQuery && !itemsToDisplay.some(it => it.toLowerCase() === pantrySearchQuery)) {
       const safeQuery = escapeHtml(pantrySearchQuery);
       html += `
@@ -304,7 +273,6 @@ function onPantrySearchKeydown(e) {
     e.preventDefault();
     if (!pantrySearchQuery) return;
     
-    // Check if an item matches in default staples or custom pantry
     const allPantry = getPantryStaples();
     const exactMatch = allPantry.find(it => it.toLowerCase() === pantrySearchQuery);
     if (exactMatch) {
@@ -320,7 +288,6 @@ function onPantrySearchKeydown(e) {
       return;
     }
 
-    // Add validated custom ingredient
     addCustomPantryItem(pantrySearchQuery);
     clearPantrySearch();
   }
@@ -331,17 +298,14 @@ function addCustomPantryItem(name) {
   const trimmed = name.trim();
   if (trimmed.length === 0 || trimmed.length > 50) return;
   
-  // Format title-cased
   const formatted = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-  
-  // Protect DEFAULT_PANTRY_ITEMS from in-place mutation; store in customPantryItems
   customPantryItems.add(formatted);
   selectedPantry.add(formatted);
   
   renderPantryChips();
-  renderDishes();
   updatePantryCounters();
   triggerPantrySync();
+  loadRecipesFromAPI(currentPage);
 }
 
 function togglePantryItem(item) {
@@ -351,23 +315,63 @@ function togglePantryItem(item) {
   } else {
     selectedPantry.add(item);
   }
-  // If user was viewing pantry matches and removed all items, revert back
-  if (isPantryFilterActive && selectedPantry.size === 0) {
-    isPantryFilterActive = false;
-  }
   renderPantryChips();
-  renderDishes();
   updatePantryCounters();
   triggerPantrySync();
+
+  // If in pantry filter mode, reload
+  if (isPantryFilterActive) {
+    viewPantryMatches();
+  } else {
+    // Re-evaluate matches on currently loaded recipes
+    recalculateLoadedMatches();
+  }
 }
 
 function resetPantry() {
   selectedPantry.clear();
   isPantryFilterActive = false;
   renderPantryChips();
-  renderDishes();
   updatePantryCounters();
   triggerPantrySync();
+  loadRecipesFromAPI(1);
+}
+
+function updatePantryCounters() {
+  const count = selectedPantry.size;
+  if (navCountEl) {
+    navCountEl.textContent = count;
+    navCountEl.classList.toggle("bump", count > 0);
+  }
+
+  const footerTitle = document.getElementById("pantryFooterTitle");
+  const footerSub = document.getElementById("pantryFooterSub");
+  const footerIcon = document.getElementById("pantryFooterIcon");
+  const btnText = document.getElementById("pantryBtnText");
+  const ctaBtn = document.getElementById("pantryViewMatchesCta");
+  const clearBtn = document.getElementById("pantryClearBtn");
+
+  if (clearBtn) clearBtn.style.display = count > 0 ? "inline-flex" : "none";
+
+  if (count === 0) {
+    if (footerTitle) footerTitle.textContent = "Tap ingredients above to start matching";
+    if (footerSub) footerSub.textContent = "Select what you have at home to see instant dish matches";
+    if (footerIcon) footerIcon.textContent = "🥘";
+    if (btnText) btnText.textContent = "Select Ingredients";
+    if (ctaBtn) ctaBtn.classList.add("disabled");
+  } else {
+    const listStr = Array.from(selectedPantry).slice(0, 3).join(", ") + (count > 3 ? ` +${count - 3} more` : "");
+    if (footerTitle) footerTitle.innerHTML = `<strong>${count} ingredient${count === 1 ? '' : 's'} selected:</strong> <span style="font-weight:400;">${escapeHtml(listStr)}</span>`;
+    if (footerSub) footerSub.textContent = "Ready to discover Indian recipes you can cook right now!";
+    if (footerIcon) footerIcon.textContent = "🔥";
+    if (btnText) btnText.textContent = `View Dish Matches (${count})`;
+    if (ctaBtn) ctaBtn.classList.remove("disabled");
+  }
+}
+
+function scrollToPantry() {
+  const el = document.getElementById("pantryShelf");
+  if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
 function getPantryMatchedRecipes() {
@@ -376,78 +380,19 @@ function getPantryMatchedRecipes() {
     .map(r => ({ ...r, matchInfo: calculateMatch(r) }))
     .filter(r => r.matchInfo.userMatchedCount > 0)
     .sort((a, b) => {
-      // 1. Prioritize dishes matching the highest number of user-selected pantry items
       if (b.matchInfo.userMatchedCount !== a.matchInfo.userMatchedCount) {
         return b.matchInfo.userMatchedCount - a.matchInfo.userMatchedCount;
       }
-      // 2. Prioritize higher overall recipe completeness %
       if (b.matchInfo.percent !== a.matchInfo.percent) {
         return b.matchInfo.percent - a.matchInfo.percent;
       }
-      return b.matchInfo.matchedRecipeIngs.length - a.matchInfo.matchedRecipeIngs.length;
+      return (b.matchInfo.matchedRecipeIngs ? b.matchInfo.matchedRecipeIngs.length : 0) - 
+             (a.matchInfo.matchedRecipeIngs ? a.matchInfo.matchedRecipeIngs.length : 0);
     });
-}
-
-function updatePantryCounters() {
-  const count = selectedPantry.size;
-  if (navCountEl) navCountEl.textContent = count;
-
-  const matched = getPantryMatchedRecipes();
-  const matchedCount = matched.length;
-  const readyCount = matched.filter(r => r.matchInfo.percent === 100).length;
-
-  const footer = document.getElementById("pantryShelfFooter");
-  const footerIcon = document.getElementById("pantryFooterIcon");
-  const footerTitle = document.getElementById("pantryFooterTitle");
-  const footerSub = document.getElementById("pantryFooterSub");
-  const clearBtn = document.getElementById("pantryClearBtn");
-  const ctaBtn = document.getElementById("pantryViewMatchesCta");
-  const btnText = document.getElementById("pantryBtnText");
-
-  if (count === 0) {
-    if (footer) footer.classList.remove("active");
-    if (footerIcon) footerIcon.textContent = "🥘";
-    if (footerTitle) footerTitle.textContent = "Tap ingredients above to start matching";
-    if (footerSub) footerSub.textContent = "Select what you have at home to see instant dish matches";
-    if (clearBtn) clearBtn.style.display = "none";
-    if (ctaBtn) {
-      ctaBtn.classList.add("disabled");
-      ctaBtn.setAttribute("disabled", "true");
-    }
-    if (btnText) btnText.textContent = "Select Ingredients";
-  } else {
-    if (footer) footer.classList.add("active");
-    if (footerIcon) footerIcon.textContent = readyCount > 0 ? "🎉" : "✨";
-    if (footerTitle) {
-      const ingList = Array.from(selectedPantry).slice(0, 3).join(", ");
-      const more = count > 3 ? ` +${count - 3} more` : "";
-      footerTitle.innerHTML = `<strong>${count} ingredient${count === 1 ? '' : 's'} selected</strong> <span style="font-weight: 600; color: var(--farm-green);">(${ingList}${more})</span>`;
-    }
-    if (footerSub) {
-      footerSub.innerHTML = readyCount > 0 
-        ? `<strong style="color: #0F8A43;">${readyCount} dish${readyCount === 1 ? '' : 'es'} 100% ready to cook</strong> • ${matchedCount} total authentic dishes found`
-        : `Found <strong>${matchedCount} authentic dish${matchedCount === 1 ? '' : 'es'}</strong> matching what's in your kitchen`;
-    }
-    if (clearBtn) clearBtn.style.display = "inline-block";
-    if (ctaBtn) {
-      ctaBtn.classList.remove("disabled");
-      ctaBtn.removeAttribute("disabled");
-    }
-    if (btnText) {
-      btnText.textContent = `View ${matchedCount} Matching Recipe${matchedCount === 1 ? '' : 's'}`;
-    }
-  }
 }
 
 function viewPantryMatches() {
   if (selectedPantry.size === 0) {
-    const footer = document.getElementById("pantryShelfFooter");
-    if (footer) {
-      footer.style.borderColor = "var(--turmeric-amber)";
-      setTimeout(() => {
-        footer.style.borderColor = "";
-      }, 800);
-    }
     scrollToPantry();
     return;
   }
@@ -455,51 +400,824 @@ function viewPantryMatches() {
   searchQuery = "";
   const searchInput = document.getElementById("recipeSearch");
   if (searchInput) searchInput.value = "";
-  renderDishes();
-  
-  const notice = document.getElementById("recipeCounterNotice");
-  if (notice) notice.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  renderDishesSkeleton();
+
+  if (typeof fetch === "undefined") return;
+
+  fetch('/api/v1/recommendations/recommend/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({
+      ingredients: Array.from(selectedPantry),
+      dietary: quickFilterVegOnly ? 'veg' : (quickFilterNonVegOnly ? 'nonveg' : 'all')
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const rawList = Array.isArray(data) ? data : (data.results || data.recommendations || []);
+    loadedRecipes = rawList.map(r => ({
+      ...r,
+      id: r.recipe_uid,
+      prepTime: r.prep_time,
+      subCategory: r.subcategory,
+      ingredients: r.ingredients || [],
+      matchInfo: {
+        percent: r.match_percentage !== undefined ? r.match_percentage : (r.match_percent || 0),
+        userMatchedCount: r.matched_count || (r.matched_ingredients ? r.matched_ingredients.length : 0),
+        matchedItems: r.matched_ingredients || [],
+        missing: r.missing_ingredients || []
+      }
+    }));
+
+    renderDishesCards(loadedRecipes, loadedRecipes.length);
+    if (recipesPagination) recipesPagination.style.display = "none";
+    
+    const notice = document.getElementById("recipeCounterNotice");
+    if (notice) notice.scrollIntoView({ behavior: "smooth", block: "start" });
+  })
+  .catch(() => {
+    loadRecipesFromAPI(1);
+  });
 }
 
 function exitPantryFilter() {
   isPantryFilterActive = false;
-  renderDishes();
+  loadRecipesFromAPI(1);
 }
 
-function scrollToPantry() {
-  const el = document.getElementById("pantryShelf");
-  if (el) el.scrollIntoView({ behavior: "smooth" });
+// ==========================================================================
+// INGREDIENT MATCHING & BOUNDARY RULES
+// ==========================================================================
+function cleanWord(w) {
+  w = w.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (w.endsWith('ies')) return w.slice(0, -3) + 'y';
+  if (w.endsWith('es') && !w.endsWith('ses') && !w.endsWith('zes') && w.length > 3) return w.slice(0, -2);
+  if (w.endsWith('s') && !w.endsWith('ss') && w.length > 3) return w.slice(0, -1);
+  return w;
 }
 
-// ================= SECTION & CATEGORY SWITCHER =================
-function switchMainSection(section, navBtn) {
+function ingredientMatches(recipeIng, pantryItem) {
+  if (!recipeIng || !pantryItem) return false;
+  const pNorm = pantryItem.toLowerCase().trim();
+  const rNorm = recipeIng.toLowerCase().trim();
+  
+  // Specific staple overrides for 100% homestyle culinary accuracy
+
+  // 1. Eggs vs Eggplant (Baingan/Brinjal)
+  if (pNorm === 'egg' || pNorm === 'eggs' || pNorm === 'anda') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    const hasEggWord = rWords.some(w => w === 'egg' || w === 'anda');
+    const isEggplant = rWords.some(w => w === 'eggplant' || w === 'baingan' || w === 'brinjal');
+    if (isEggplant && !hasEggWord) return false;
+    return hasEggWord;
+  }
+  
+  // 2. Whole Rice vs Rice Flour, Rice Bran Oil, Poha (Prevent False-Positive Matches)
+  if (pNorm === 'rice' || pNorm === 'basmati rice' || pNorm === 'cooked rice' || pNorm === 'leftover cooked rice' || pNorm === 'raw rice' || pNorm === 'chawal') {
+    if (rNorm.includes('flour') || rNorm.includes('maavu') || rNorm.includes('atta') || rNorm.includes('rava') || rNorm.includes('oil') || rNorm.includes('poha') || rNorm.includes('flakes') || rNorm.includes('batter')) {
+      return false;
+    }
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'rice' || w === 'chawal' || w === 'basmati');
+  }
+
+  // 3. Rice Flour
+  if (pNorm === 'rice flour' || pNorm === 'chawal ka atta' || pNorm === 'arisi maavu') {
+    return rNorm.includes('rice flour') || rNorm.includes('arisi maavu') || rNorm.includes('chawal ka atta');
+  }
+
+  // 4. Poha (Flattened Rice)
+  if (pNorm === 'poha' || pNorm === 'flattened rice' || pNorm === 'aval' || pNorm === 'atukulu') {
+    return rNorm.includes('poha') || rNorm.includes('flattened rice') || rNorm.includes('aval') || rNorm.includes('atukulu');
+  }
+
+  // 5. Potato vs Sweet Potato
+  if (pNorm === 'potato' || pNorm === 'potatoes' || pNorm === 'aloo' || pNorm === 'batata') {
+    if (rNorm.includes('sweet potato') || rNorm.includes('shakarkand')) return false;
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'potato' || w === 'aloo' || w === 'batata');
+  }
+
+  // 6. Chicken
+  if (pNorm === 'chicken' || pNorm === 'murgh') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'chicken' || w === 'murgh');
+  }
+
+  // 7. Paneer
+  if (pNorm === 'paneer' || pNorm === 'chhena') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'paneer' || w === 'chhena');
+  }
+
+  // 8. Toor Dal
+  if (pNorm === 'toor dal' || pNorm === 'arhar dal' || pNorm === 'kandi pappu' || pNorm === 'dal') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'toor' || w === 'kandi' || w === 'arhar' || (w === 'dal' && (rNorm.includes('toor') || rNorm.includes('arhar') || rNorm.includes('sambar') || rNorm.includes('kandi'))));
+  }
+
+  // 9. Tomato
+  if (pNorm === 'tomato' || pNorm === 'tomatoes' || pNorm === 'tamatar') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'tomato' || w === 'tamatar' || w === 'thakkali');
+  }
+
+  // 10. Onion
+  if (pNorm === 'onion' || pNorm === 'onions' || pNorm === 'pyaz') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'onion' || w === 'pyaz' || w === 'shallot' || w === 'vengayam' || w === 'ullipaya');
+  }
+
+  // 11. Ghee
+  if (pNorm === 'ghee' || pNorm === 'pure cow ghee' || pNorm === 'desi ghee') {
+    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
+    return rWords.some(w => w === 'ghee' || w === 'neyyi');
+  }
+
+  // 12. Curry Leaves
+  if (pNorm.includes('curry leaves') || pNorm.includes('curry leaf') || pNorm.includes('kadi patta')) {
+    return rNorm.includes('curry leaf') || rNorm.includes('curry leaves') || rNorm.includes('kadi patta') || rNorm.includes('karivepaku');
+  }
+
+  // 13. Ginger
+  if (pNorm === 'ginger' || pNorm === 'adrak' || pNorm === 'allam') {
+    return rNorm.includes('ginger') || rNorm.includes('adrak') || rNorm.includes('allam');
+  }
+
+  // 14. Garlic
+  if (pNorm === 'garlic' || pNorm === 'lahsun' || pNorm === 'vellulli') {
+    return rNorm.includes('garlic') || rNorm.includes('lahsun') || rNorm.includes('vellulli');
+  }
+
+  // General fallback
+  const stopWords = new Set(['fresh','pure','cooked','leftover','raw','cow','desi','warm','cold','hot','dry','fine','chopped','boiled','cut','pieces','powder','seeds','paste']);
+  const pWords = pNorm.split(/[\s,()\/&+-]+/).map(cleanWord).filter(w => !stopWords.has(w) && w.length > 2);
+  const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord).filter(w => !stopWords.has(w) && w.length > 2);
+
+  if (pWords.length === 0) {
+    const directP = pNorm.split(/\s+/).map(cleanWord).filter(w => w.length > 1);
+    return directP.some(pw => rWords.some(rw => rw === pw));
+  }
+
+  return pWords.some(pw => rWords.some(rw => rw === pw));
+}
+
+function calculateMatch(recipe) {
+  const ings = recipe.ingredients || [];
+  if (selectedPantry.size === 0 || ings.length === 0) {
+    return {
+      percent: 0,
+      userMatchedCount: 0,
+      matchedItems: [],
+      matchedRecipeIngs: [],
+      missing: ings
+    };
+  }
+
+  const userItems = Array.from(selectedPantry);
+  const matchedPantryItems = [];
+  const matchedRecipeIngs = [];
+  const missingRecipeIngs = [];
+
+  ings.forEach(ing => {
+    const ingName = typeof ing === 'string' ? ing : (ing.name || ing.raw_name || '');
+    let matchedUserItem = null;
+    for (const u of userItems) {
+      if (ingredientMatches(ingName, u)) {
+        matchedUserItem = u;
+        break;
+      }
+    }
+    if (matchedUserItem) {
+      matchedRecipeIngs.push(ing);
+      if (!matchedPantryItems.includes(matchedUserItem)) {
+        matchedPantryItems.push(matchedUserItem);
+      }
+    } else {
+      missingRecipeIngs.push(ing);
+    }
+  });
+
+  const percent = Math.round((matchedRecipeIngs.length / ings.length) * 100);
+  return {
+    percent,
+    userMatchedCount: matchedPantryItems.length,
+    matchedItems: matchedPantryItems,
+    matchedRecipeIngs,
+    missing: missingRecipeIngs
+  };
+}
+
+function recalculateLoadedMatches() {
+  if (!loadedRecipes || loadedRecipes.length === 0) return;
+  loadedRecipes.forEach(r => {
+    r.matchInfo = calculateMatch(r);
+  });
+  renderDishesCards(loadedRecipes, totalRecipeCount);
+}
+
+// ==========================================================================
+// DJANGO REST API RECIPE FETCHER & DISH CARD RENDERING
+// ==========================================================================
+let currentApiAbortController = null;
+
+function renderDishesSkeleton() {
+  if (!dishesGrid) return;
+  let skeletonHtml = "";
+  for (let i = 0; i < 6; i++) {
+    skeletonHtml += `
+      <div class="dishes-skeleton-card">
+        <div class="skeleton-shimmer" style="width: 100%; height: 210px;"></div>
+        <div style="padding: 18px 16px; flex: 1; display: flex; flex-direction: column; gap: 10px;">
+          <div class="skeleton-shimmer" style="width: 35%; height: 14px; border-radius: 4px;"></div>
+          <div class="skeleton-shimmer" style="width: 75%; height: 20px; border-radius: 6px;"></div>
+          <div class="skeleton-shimmer" style="width: 50%; height: 14px; border-radius: 4px;"></div>
+          <div class="skeleton-shimmer" style="width: 100%; height: 38px; border-radius: 6px; margin-top: auto;"></div>
+        </div>
+      </div>
+    `;
+  }
+  dishesGrid.innerHTML = skeletonHtml;
+}
+
+function loadRecipesFromAPI(page = 1) {
+  currentPage = page;
+
+  if (typeof fetch === "undefined") return;
+
+  if (typeof AbortController !== "undefined") {
+    if (currentApiAbortController) {
+      currentApiAbortController.abort();
+    }
+    currentApiAbortController = new AbortController();
+  }
+
+  renderDishesSkeleton();
+
+  const params = new URLSearchParams();
+  if (currentMainSection && currentMainSection !== "all") {
+    params.set("category", currentMainSection);
+  }
+  if (currentSubCategory && currentSubCategory !== "all") {
+    params.set("subcategory", currentSubCategory);
+  }
+  if (searchQuery) {
+    params.set("search", searchQuery);
+  }
+  if (quickFilterVegOnly) {
+    params.set("veg", "true");
+  } else if (quickFilterNonVegOnly) {
+    params.set("veg", "false");
+  }
+  if (quickFilterFast) {
+    params.set("max_time", "20");
+  }
+  if (currentSort === "time") {
+    params.set("sort", "time");
+  } else if (currentSort === "name") {
+    params.set("sort", "name");
+  }
+  params.set("page", page);
+  params.set("page_size", "24");
+
+  fetch('/api/v1/recipes/?' + params.toString(), {
+    signal: currentApiAbortController.signal
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("HTTP error " + res.status);
+    return res.json();
+  })
+  .then(data => {
+    const rawList = Array.isArray(data) ? data : (data.results || []);
+    totalRecipeCount = data.count !== undefined ? data.count : rawList.length;
+
+    loadedRecipes = rawList.map(r => ({
+      ...r,
+      id: r.recipe_uid,
+      prepTime: r.prep_time,
+      subCategory: r.subcategory,
+      ingredients: r.ingredients || [],
+      matchInfo: calculateMatch(r)
+    }));
+
+    let displayList = loadedRecipes;
+    if (quickFilterReady) {
+      displayList = displayList.filter(r => r.matchInfo.percent === 100);
+    }
+
+    if (currentSort === "match" && selectedPantry.size > 0) {
+      displayList.sort((a, b) => {
+        if (b.matchInfo.userMatchedCount !== a.matchInfo.userMatchedCount) {
+          return b.matchInfo.userMatchedCount - a.matchInfo.userMatchedCount;
+        }
+        return b.matchInfo.percent - a.matchInfo.percent;
+      });
+    }
+
+    renderDishesCards(displayList, totalRecipeCount);
+    renderPagination(totalRecipeCount, currentPage, 24);
+  })
+  .catch(err => {
+    if (err.name === 'AbortError') return;
+    console.error("Recipe load error:", err);
+    if (!dishesGrid) return;
+    dishesGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px solid var(--bg-sand-border);">
+        <p style="font-size: 28px; margin-bottom: 8px;">⚠️</p>
+        <h4 style="font-size: 16px; font-weight: 700; color: var(--text-dark);">Unable to load recipes</h4>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Please check your connection or restart the server.</p>
+        <button onclick="loadRecipesFromAPI(1)" style="margin-top: 14px; background: var(--farm-green); color: #fff; padding: 8px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: none;">
+          Try Again
+        </button>
+      </div>
+    `;
+  });
+}
+
+function renderDishesCards(list, totalCount) {
+  if (!dishesGrid) return;
+
+  // Update Notice
+  if (recipeCounterNotice) {
+    if (isPantryFilterActive) {
+      const activeList = Array.from(selectedPantry).map(escapeHtml).join(", ");
+      recipeCounterNotice.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; width: 100%;">
+          <span style="color: var(--farm-green); font-size: 14px;">
+            🥘 Found <strong>${list.length}</strong> recipes matching your kitchen (<em>${activeList}</em>) — sorted by best match
+          </span>
+          <button onclick="exitPantryFilter()" style="background: var(--bg-sand); border: 1.5px solid var(--farm-green); color: var(--farm-green); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">
+            Show All Recipes ✕
+          </button>
+        </div>
+      `;
+    } else if (searchQuery) {
+      recipeCounterNotice.innerHTML = `Found <strong>${totalCount}</strong> authentic dish${totalCount === 1 ? '' : 'es'} matching "<em>${escapeHtml(searchQuery)}</em>" across all categories`;
+    } else {
+      let sectionName = "breakfast & tiffin";
+      if (currentMainSection === "rice") sectionName = "biryani & rice";
+      else if (currentMainSection === "streetfood") sectionName = "street food & chaat";
+      else if (currentMainSection === "curries") sectionName = "curry & gravy";
+      else if (currentMainSection === "snacks") sectionName = "snack, starter & tikka";
+      else if (currentMainSection === "breads") sectionName = "bread, roti & paratha";
+      else if (currentMainSection === "sweets") sectionName = "sweet & mithai";
+      else if (currentMainSection === "chutneys") sectionName = "pachallu, chutney & pickle";
+      else if (currentMainSection === "soups_drinks") sectionName = "soup, rasam & cooler";
+      else if (currentMainSection === "sides_eggs_seafood") sectionName = "salad, egg & coastal seafood";
+      else sectionName = "Indian homestyle";
+
+      recipeCounterNotice.textContent = `Showing authentic ${sectionName} recipes (${totalCount} total in database)`;
+    }
+  }
+
+  if (list.length === 0) {
+    dishesGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px solid var(--bg-sand-border);">
+        <p style="font-size: 28px; margin-bottom: 8px;">🍽️</p>
+        <h4 style="font-size: 16px; font-weight: 700; color: var(--text-dark);">No matching dishes found</h4>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Try selecting other pantry ingredients or clearing your search filter.</p>
+        <button onclick="resetAllFiltersAndReload()" style="margin-top: 14px; background: var(--farm-green); color: #fff; padding: 8px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: none;">
+          Reset All Filters
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  dishesGrid.innerHTML = list.map(recipe => {
+    const matchInfo = recipe.matchInfo || { percent: 0, missing: [], userMatchedCount: 0, matchedItems: [] };
+    const { percent, missing, userMatchedCount, matchedItems } = matchInfo;
+
+    // Subcategory label
+    const catLabel = (recipe.subcategory || recipe.category_name || "HOMESTYLE").toUpperCase().replace(/[-_]/g, ' ') + " SPECIAL";
+
+    // Match label
+    let matchLabelHtml = "";
+    if (percent === 100) {
+      matchLabelHtml = `<span class="match-label-ready">🎉 100% Ready (Have all items)</span>`;
+    } else if (userMatchedCount > 0) {
+      matchLabelHtml = `<span class="match-label-partial"><strong>${userMatchedCount} pantry item${userMatchedCount === 1 ? '' : 's'} match</strong> • ${percent}% total</span>`;
+    } else {
+      matchLabelHtml = `<span class="match-label-none">⏱ ${recipe.prepTime || recipe.prep_time} mins prep</span>`;
+    }
+
+    let matchedChipHtml = "";
+    if (userMatchedCount > 0 && matchedItems.length > 0) {
+      matchedChipHtml = `<span class="variant-chip matched-chip">✓ Uses: ${escapeHtml(matchedItems.join(", "))}</span>`;
+    }
+
+    const imgUrl = recipe.image || "/static/images/dishes/traditional-rice.jpg";
+    const recipeUid = recipe.recipe_uid || recipe.id;
+
+    return `
+      <article class="dish-card">
+        <div class="card-main-content">
+          <div class="dish-details">
+            <div class="dish-meta-pills">
+              <span class="${recipe.veg ? 'veg-indicator' : 'veg-indicator nonveg'}"><span class="circle"></span></span>
+              <span class="dish-sub-category">${escapeHtml(catLabel)}</span>
+            </div>
+
+            <h3 class="dish-name" onclick="openRecipe('${recipeUid}')">${escapeHtml(recipe.name)}</h3>
+
+            <div class="dish-meta-pills">
+              <span class="rating-badge">★ 4.9</span>
+              <span class="time-pill">⏱ ${recipe.prepTime || recipe.prep_time} mins</span>
+              <span class="time-pill">•</span>
+              <span class="time-pill">👥 Serves ${recipe.servings}</span>
+            </div>
+
+            <p class="dish-description">${escapeHtml(recipe.description || '')}</p>
+
+            <div class="dish-variant-chips">
+              <span class="variant-chip">${recipe.veg ? 'Pure Veg' : 'Non-Veg'}</span>
+              <span class="variant-chip">${(recipe.prepTime || recipe.prep_time) <= 20 ? '⚡ Quick' : 'Simmered'}</span>
+              ${matchedChipHtml}
+            </div>
+          </div>
+
+          <div class="dish-media-box">
+            <div class="dish-img-wrap">
+              <img src="${imgUrl}" alt="${escapeHtml(recipe.name)}" loading="lazy" onerror="this.onerror=null; this.src='/static/images/dishes/traditional-rice.jpg'">
+            </div>
+            <button class="cook-recipe-btn" onclick="openRecipe('${recipeUid}')">
+              COOK
+            </button>
+          </div>
+        </div>
+
+        <div class="dish-card-footer">
+          <div>${matchLabelHtml}</div>
+          <div style="color: var(--farm-green); font-weight: 700; cursor: pointer;" onclick="openRecipe('${recipeUid}')">
+            View Recipe →
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function renderPagination(totalCount, currentPage, pageSize) {
+  if (!recipesPagination) return;
+  const totalPages = Math.ceil(totalCount / pageSize);
+
+  if (totalPages <= 1) {
+    recipesPagination.style.display = "none";
+    return;
+  }
+
+  recipesPagination.style.display = "flex";
+  let html = "";
+
+  // Prev Button
+  html += `
+    <button class="recipes-pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="loadRecipesFromAPI(${currentPage - 1})">
+      ← Prev
+    </button>
+  `;
+
+  // Page Numbers (sliding window)
+  const startPage = Math.max(1, currentPage - 2);
+  const endPage = Math.min(totalPages, startPage + 4);
+
+  if (startPage > 1) {
+    html += `<button class="recipes-pagination-btn" onclick="loadRecipesFromAPI(1)">1</button>`;
+    if (startPage > 2) html += `<span style="padding: 0 4px; color: var(--text-muted);">...</span>`;
+  }
+
+  for (let p = startPage; p <= endPage; p++) {
+    html += `
+      <button class="recipes-pagination-btn ${p === currentPage ? 'active' : ''}" onclick="loadRecipesFromAPI(${p})">
+        ${p}
+      </button>
+    `;
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) html += `<span style="padding: 0 4px; color: var(--text-muted);">...</span>`;
+    html += `<button class="recipes-pagination-btn" onclick="loadRecipesFromAPI(${totalPages})">${totalPages}</button>`;
+  }
+
+  // Next Button
+  html += `
+    <button class="recipes-pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="loadRecipesFromAPI(${currentPage + 1})">
+      Next →
+    </button>
+  `;
+
+  recipesPagination.innerHTML = html;
+}
+
+function resetAllFiltersAndReload() {
+  selectedPantry.clear();
   isPantryFilterActive = false;
-  currentMainSection = section;
-  currentSubCategory = "all";
   searchQuery = "";
   const searchInput = document.getElementById("recipeSearch");
   if (searchInput) searchInput.value = "";
-  
-  // Update header nav active state
-  document.querySelectorAll(".nav-tab-link").forEach(a => {
-    a.classList.remove("active");
-    if (a.getAttribute("data-section") === section) a.classList.add("active");
-  });
-  if (navBtn) navBtn.classList.add("active");
+  quickFilterFast = false;
+  quickFilterReady = false;
+  quickFilterVegOnly = false;
+  quickFilterNonVegOnly = false;
+  currentMainSection = "breakfast";
+  currentSubCategory = "all";
+  currentPage = 1;
 
-  // Sync story circles
+  // Reset story circles
   document.querySelectorAll(".story-circle-item").forEach(s => s.classList.remove("active"));
-  let storyId = "story-all-" + section.replace(/_/g, "-");
-  const defaultStory = document.getElementById(storyId);
-  if (defaultStory) defaultStory.classList.add("active");
+  const def = document.getElementById("story-all-breakfast");
+  if (def) def.classList.add("active");
 
   renderFilterPills();
-  renderDishes();
+  renderPantryChips();
   updatePantryCounters();
+  loadRecipesFromAPI(1);
 }
 
-// Render dynamic subcategory filter pills based on active section
+// ==========================================================================
+// REAL-TIME AUTOCOMPLETE & SEARCH ENGINE (Problem B & C)
+// ==========================================================================
+let autocompleteTimeout = null;
+let activeAutocompleteIndex = -1;
+
+function onSearchInput(val) {
+  const clearBtn = document.getElementById("searchActionBtn");
+  if (clearBtn) {
+    clearBtn.classList.toggle("show", val.trim().length > 0);
+  }
+
+  const query = val.trim();
+  if (!query) {
+    hideAutocomplete();
+    if (searchQuery) {
+      searchQuery = "";
+      loadRecipesFromAPI(1);
+    }
+    return;
+  }
+
+  if (autocompleteTimeout) clearTimeout(autocompleteTimeout);
+  autocompleteTimeout = setTimeout(() => {
+    fetchAutocompleteSuggestions(query);
+  }, 200);
+}
+
+function onSearchFocus() {
+  const input = document.getElementById("recipeSearch");
+  if (input && input.value.trim().length >= 1) {
+    fetchAutocompleteSuggestions(input.value.trim());
+  }
+}
+
+function fetchAutocompleteSuggestions(q) {
+  const dropdown = document.getElementById("searchAutocompleteDropdown");
+  if (!dropdown) return;
+
+  fetch('/api/v1/recipes/autocomplete/?q=' + encodeURIComponent(q))
+    .then(res => res.json())
+    .then(items => {
+      activeAutocompleteIndex = -1;
+      if (!items || items.length === 0) {
+        dropdown.innerHTML = `
+          <div class="search-autocomplete-empty">
+            <p style="font-size: 24px; margin-bottom: 6px;">🍽️</p>
+            No matching dishes found for "<strong>${escapeHtml(q)}</strong>"
+          </div>
+        `;
+        dropdown.style.display = "block";
+        return;
+      }
+
+      const qRegex = new RegExp(`(${escapeRegex(q)})`, 'gi');
+      dropdown.innerHTML = `
+        <div class="search-autocomplete-header">Dish Suggestions (${items.length})</div>
+        ${items.map((it, idx) => {
+          const highlightedName = escapeHtml(it.name).replace(qRegex, '<mark>$1</mark>');
+          return `
+            <div class="search-autocomplete-item" id="autoItem-${idx}" onclick="selectAutocompleteSuggestion('${it.recipe_uid}')">
+              <img src="${it.image}" alt="${escapeHtml(it.name)}" onerror="this.onerror=null; this.src='/static/images/dishes/traditional-rice.jpg'">
+              <div class="item-info">
+                <div class="item-title">${highlightedName}</div>
+                <div class="item-meta">
+                  <span>${it.veg ? '🟢 Veg' : '🔴 Non-Veg'}</span>
+                  <span>•</span>
+                  <span>${escapeHtml(it.category_name)}</span>
+                  <span>•</span>
+                  <span>⏱ ${it.prep_time}m</span>
+                </div>
+              </div>
+              <span style="font-size: 13px; color: var(--farm-green); font-weight: 700;">View →</span>
+            </div>
+          `;
+        }).join("")}
+        <div class="search-autocomplete-footer" onclick="executeSearch(document.getElementById('recipeSearch').value)">
+          🔍 View all matching results for "${escapeHtml(q)}" →
+        </div>
+      `;
+      dropdown.style.display = "block";
+    })
+    .catch(() => {
+      dropdown.style.display = "none";
+    });
+}
+
+function hideAutocomplete() {
+  const dropdown = document.getElementById("searchAutocompleteDropdown");
+  if (dropdown) dropdown.style.display = "none";
+  activeAutocompleteIndex = -1;
+}
+
+function selectAutocompleteSuggestion(recipe_uid) {
+  hideAutocomplete();
+  openRecipe(recipe_uid);
+}
+
+function executeSearch(query) {
+  hideAutocomplete();
+  searchQuery = (query || "").trim();
+  const input = document.getElementById("recipeSearch");
+  if (input) input.value = searchQuery;
+
+  const clearBtn = document.getElementById("searchActionBtn");
+  if (clearBtn) clearBtn.classList.toggle("show", searchQuery.length > 0);
+
+  currentMainSection = "all";
+  currentSubCategory = "all";
+  currentPage = 1;
+
+  document.querySelectorAll(".story-circle-item").forEach(s => s.classList.remove("active"));
+
+  renderFilterPills();
+  loadRecipesFromAPI(1);
+}
+
+function onSearchSubmitClick() {
+  const input = document.getElementById("recipeSearch");
+  if (input) {
+    executeSearch(input.value);
+  }
+}
+
+function onSearchActionClick() {
+  const input = document.getElementById("recipeSearch");
+  if (input) input.value = "";
+  hideAutocomplete();
+  const clearBtn = document.getElementById("searchActionBtn");
+  if (clearBtn) clearBtn.classList.remove("show");
+  searchQuery = "";
+  currentPage = 1;
+  loadRecipesFromAPI(1);
+  if (input) input.focus();
+}
+
+function onSearchKeydown(e) {
+  const dropdown = document.getElementById("searchAutocompleteDropdown");
+  const isDropdownOpen = dropdown && dropdown.style.display === "block";
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    if (isDropdownOpen && activeAutocompleteIndex >= 0) {
+      const activeEl = document.getElementById(`autoItem-${activeAutocompleteIndex}`);
+      if (activeEl) {
+        activeEl.click();
+        return;
+      }
+    }
+    executeSearch(e.target.value);
+  } else if (e.key === "ArrowDown" && isDropdownOpen) {
+    e.preventDefault();
+    const items = dropdown.querySelectorAll(".search-autocomplete-item");
+    if (items.length > 0) {
+      activeAutocompleteIndex = (activeAutocompleteIndex + 1) % items.length;
+      updateAutocompleteActiveItem(items);
+    }
+  } else if (e.key === "ArrowUp" && isDropdownOpen) {
+    e.preventDefault();
+    const items = dropdown.querySelectorAll(".search-autocomplete-item");
+    if (items.length > 0) {
+      activeAutocompleteIndex = (activeAutocompleteIndex - 1 + items.length) % items.length;
+      updateAutocompleteActiveItem(items);
+    }
+  } else if (e.key === "Escape") {
+    hideAutocomplete();
+  }
+}
+
+function updateAutocompleteActiveItem(items) {
+  items.forEach((it, idx) => {
+    it.classList.toggle("active-item", idx === activeAutocompleteIndex);
+  });
+}
+
+// Click outside to dismiss autocomplete
+document.addEventListener("click", (e) => {
+  const wrap = document.getElementById("searchBarWrap");
+  if (wrap && !wrap.contains(e.target)) {
+    hideAutocomplete();
+  }
+});
+
+// Dual Mode Search toggle
+let searchMode = "dishes";
+function toggleSearchMode() {
+  if (searchMode === "dishes") {
+    searchMode = "ingredients";
+    document.getElementById("searchModeIcon").textContent = "🥕";
+    document.getElementById("searchModeLabel").textContent = "Ingredients";
+  } else {
+    searchMode = "dishes";
+    document.getElementById("searchModeIcon").textContent = "🍽️";
+    document.getElementById("searchModeLabel").textContent = "Dishes";
+  }
+
+  const input = document.getElementById("recipeSearch");
+  if (input && input.value.trim().length > 0) {
+    executeSearch(input.value);
+  }
+}
+
+// ==========================================================================
+// CATEGORY NAVIGATION & SUBCATEGORY FILTER PILLS (Problem D)
+// ==========================================================================
+function filterByStory(section, category, itemEl) {
+  isPantryFilterActive = false;
+  searchQuery = "";
+  const input = document.getElementById("recipeSearch");
+  if (input) input.value = "";
+  hideAutocomplete();
+  const clearBtn = document.getElementById("searchActionBtn");
+  if (clearBtn) clearBtn.classList.remove("show");
+
+  currentMainSection = section;
+  currentSubCategory = category || "all";
+  currentPage = 1;
+
+  document.querySelectorAll(".story-circle-item").forEach(s => s.classList.remove("active"));
+  if (itemEl) itemEl.classList.add("active");
+
+  renderFilterPills();
+  loadRecipesFromAPI(1);
+}
+
+function switchMainSection(section, navBtn) {
+  isPantryFilterActive = false;
+  searchQuery = "";
+  const searchInput = document.getElementById("recipeSearch");
+  if (searchInput) searchInput.value = "";
+  hideAutocomplete();
+
+  currentMainSection = section;
+  currentSubCategory = "all";
+  currentPage = 1;
+
+  document.querySelectorAll(".story-circle-item").forEach(s => s.classList.remove("active"));
+  if (section !== "all") {
+    const defaultStory = document.getElementById("story-all-" + section.replace(/_/g, "-"));
+    if (defaultStory) defaultStory.classList.add("active");
+  }
+
+  renderFilterPills();
+  loadRecipesFromAPI(1);
+}
+
+function setSubCategory(cat, btn) {
+  currentSubCategory = cat;
+  currentPage = 1;
+  document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  loadRecipesFromAPI(1);
+}
+
+function toggleQuickFilter(type, btn) {
+  if (type === "fast") {
+    quickFilterFast = !quickFilterFast;
+    btn.classList.toggle("active", quickFilterFast);
+  } else if (type === "ready") {
+    quickFilterReady = !quickFilterReady;
+    btn.classList.toggle("active", quickFilterReady);
+  } else if (type === "veg") {
+    quickFilterVegOnly = !quickFilterVegOnly;
+    if (quickFilterVegOnly) quickFilterNonVegOnly = false;
+    renderFilterPills();
+  } else if (type === "nonveg") {
+    quickFilterNonVegOnly = !quickFilterNonVegOnly;
+    if (quickFilterNonVegOnly) quickFilterVegOnly = false;
+    renderFilterPills();
+  }
+  loadRecipesFromAPI(1);
+}
+
+function handleSort(val) {
+  currentSort = val;
+  loadRecipesFromAPI(1);
+}
+
 function renderFilterPills() {
+  if (!filtersBar) return;
+
   if (currentMainSection === "breakfast") {
     filtersBar.innerHTML = `
       <button class="filter-pill ${currentSubCategory === 'all' ? 'active' : ''}" onclick="setSubCategory('all', this)">
@@ -544,9 +1262,6 @@ function renderFilterPills() {
       <button class="filter-pill ${quickFilterNonVegOnly ? 'active' : ''}" onclick="toggleQuickFilter('nonveg', this)">
         <span>🔴 Non-Veg</span>
       </button>
-      <button class="filter-pill ${quickFilterReady ? 'active' : ''}" onclick="toggleQuickFilter('ready', this)">
-        <span>✨ 100% Ready</span>
-      </button>
     `;
   } else if (currentMainSection === "streetfood") {
     filtersBar.innerHTML = `
@@ -564,12 +1279,6 @@ function renderFilterPills() {
       </button>
       <button class="filter-pill ${currentSubCategory === 'fast-food' ? 'active' : ''}" onclick="setSubCategory('fast-food', this)">
         <span>Crispy Fast Food</span> <span class="filter-tag-count">15</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'noodles' ? 'active' : ''}" onclick="setSubCategory('noodles', this)">
-        <span>Hakka Noodles</span> <span class="filter-tag-count">8</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'momos' ? 'active' : ''}" onclick="setSubCategory('momos', this)">
-        <span>Momos</span> <span class="filter-tag-count">6</span>
       </button>
       <button class="filter-pill ${quickFilterVegOnly ? 'active' : ''}" onclick="toggleQuickFilter('veg', this)">
         <span>🟢 Pure Veg</span>
@@ -595,9 +1304,6 @@ function renderFilterPills() {
       <button class="filter-pill ${currentSubCategory === 'dal-south-curry' ? 'active' : ''}" onclick="setSubCategory('dal-south-curry', this)">
         <span>Dal & Sambars</span> <span class="filter-tag-count">10</span>
       </button>
-      <button class="filter-pill ${currentSubCategory === 'egg-seafood-curry' ? 'active' : ''}" onclick="setSubCategory('egg-seafood-curry', this)">
-        <span>Seafood & Egg</span> <span class="filter-tag-count">10</span>
-      </button>
     `;
   } else if (currentMainSection === "snacks") {
     filtersBar.innerHTML = `
@@ -613,32 +1319,20 @@ function renderFilterPills() {
       <button class="filter-pill ${currentSubCategory === 'cutlets-vadas' ? 'active' : ''}" onclick="setSubCategory('cutlets-vadas', this)">
         <span>Cutlets & Vadas</span> <span class="filter-tag-count">10</span>
       </button>
-      <button class="filter-pill ${currentSubCategory === 'crispy-bites' ? 'active' : ''}" onclick="setSubCategory('crispy-bites', this)">
-        <span>Crispy Bites & Bonda</span> <span class="filter-tag-count">8</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'regional-namkeen' ? 'active' : ''}" onclick="setSubCategory('regional-namkeen', this)">
-        <span>Regional Namkeen</span> <span class="filter-tag-count">8</span>
-      </button>
     `;
   } else if (currentMainSection === "breads") {
     filtersBar.innerHTML = `
       <button class="filter-pill ${currentSubCategory === 'all' ? 'active' : ''}" onclick="setSubCategory('all', this)">
-        <span>All Breads & Rotis</span> <span class="filter-tag-count">35</span>
+        <span>All Breads</span> <span class="filter-tag-count">35</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'naan' ? 'active' : ''}" onclick="setSubCategory('naan', this)">
-        <span>Naans & Tandoor</span> <span class="filter-tag-count">5</span>
+        <span>Naans</span> <span class="filter-tag-count">5</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'roti' ? 'active' : ''}" onclick="setSubCategory('roti', this)">
-        <span>Rotis & Bhakri</span> <span class="filter-tag-count">9</span>
+        <span>Rotis</span> <span class="filter-tag-count">9</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'paratha' ? 'active' : ''}" onclick="setSubCategory('paratha', this)">
-        <span>Stuffed Parathas</span> <span class="filter-tag-count">11</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'puri' ? 'active' : ''}" onclick="setSubCategory('puri', this)">
-        <span>Puris, Theplas & Bhature</span> <span class="filter-tag-count">10</span>
-      </button>
-      <button class="filter-pill ${quickFilterReady ? 'active' : ''}" onclick="toggleQuickFilter('ready', this)">
-        <span>✨ 100% Ready</span>
+        <span>Parathas</span> <span class="filter-tag-count">11</span>
       </button>
     `;
   } else if (currentMainSection === "sweets") {
@@ -647,19 +1341,13 @@ function renderFilterPills() {
         <span>All Sweets</span> <span class="filter-tag-count">45</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'halwa' ? 'active' : ''}" onclick="setSubCategory('halwa', this)">
-        <span>Halwas & Sheera</span> <span class="filter-tag-count">8</span>
+        <span>Halwas</span> <span class="filter-tag-count">8</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'ladoo' ? 'active' : ''}" onclick="setSubCategory('ladoo', this)">
-        <span>Ladoos & Peda</span> <span class="filter-tag-count">10</span>
+        <span>Ladoos</span> <span class="filter-tag-count">10</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'kheer' ? 'active' : ''}" onclick="setSubCategory('kheer', this)">
-        <span>Kheer & Payasam</span> <span class="filter-tag-count">8</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'syrup-sweet' ? 'active' : ''}" onclick="setSubCategory('syrup-sweet', this)">
-        <span>Syrupy Mithai</span> <span class="filter-tag-count">11</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'barfi' ? 'active' : ''}" onclick="setSubCategory('barfi', this)">
-        <span>Barfi, Fudge & Kulfi</span> <span class="filter-tag-count">8</span>
+        <span>Kheer</span> <span class="filter-tag-count">8</span>
       </button>
     `;
   } else if (currentMainSection === "chutneys") {
@@ -668,16 +1356,10 @@ function renderFilterPills() {
         <span>All Pachallu & Pickles</span> <span class="filter-tag-count">40</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'pachadi' ? 'active' : ''}" onclick="setSubCategory('pachadi', this)">
-        <span>Andhra Roti Pachallu</span> <span class="filter-tag-count">12</span>
+        <span>Andhra Pachallu</span> <span class="filter-tag-count">12</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'tiffin-chutney' ? 'active' : ''}" onclick="setSubCategory('tiffin-chutney', this)">
-        <span>Fresh Tiffin Chutneys</span> <span class="filter-tag-count">10</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'pickle' ? 'active' : ''}" onclick="setSubCategory('pickle', this)">
-        <span>Heritage Pickles (Avakaya)</span> <span class="filter-tag-count">10</span>
-      </button>
-      <button class="filter-pill ${currentSubCategory === 'podi' ? 'active' : ''}" onclick="setSubCategory('podi', this)">
-        <span>Gunpowders & Podis</span> <span class="filter-tag-count">8</span>
+        <span>Tiffin Chutneys</span> <span class="filter-tag-count">10</span>
       </button>
     `;
   } else if (currentMainSection === "soups_drinks") {
@@ -689,13 +1371,7 @@ function renderFilterPills() {
         <span>Rasams & Shorbas</span> <span class="filter-tag-count">25</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'drink' ? 'active' : ''}" onclick="setSubCategory('drink', this)">
-        <span>Chai, Lassi & Coolers</span> <span class="filter-tag-count">25</span>
-      </button>
-      <button class="filter-pill ${quickFilterFast ? 'active' : ''}" onclick="toggleQuickFilter('fast', this)">
-        <span>⚡ Under 15 mins</span>
-      </button>
-      <button class="filter-pill ${quickFilterReady ? 'active' : ''}" onclick="toggleQuickFilter('ready', this)">
-        <span>✨ 100% Ready</span>
+        <span>Chai & Coolers</span> <span class="filter-tag-count">25</span>
       </button>
     `;
   } else if (currentMainSection === "sides_eggs_seafood") {
@@ -703,11 +1379,8 @@ function renderFilterPills() {
       <button class="filter-pill ${currentSubCategory === 'all' ? 'active' : ''}" onclick="setSubCategory('all', this)">
         <span>All Specials</span> <span class="filter-tag-count">60</span>
       </button>
-      <button class="filter-pill ${currentSubCategory === 'salad' ? 'active' : ''}" onclick="setSubCategory('salad', this)">
-        <span>Salads, Raitas & Sundals</span> <span class="filter-tag-count">20</span>
-      </button>
       <button class="filter-pill ${currentSubCategory === 'egg' ? 'active' : ''}" onclick="setSubCategory('egg', this)">
-        <span>Egg Specials</span> <span class="filter-tag-count">18</span>
+        <span>Egg Dishes</span> <span class="filter-tag-count">18</span>
       </button>
       <button class="filter-pill ${currentSubCategory === 'seafood' ? 'active' : ''}" onclick="setSubCategory('seafood', this)">
         <span>Coastal Seafood</span> <span class="filter-tag-count">22</span>
@@ -725,501 +1398,77 @@ function renderFilterPills() {
       <button class="filter-pill ${quickFilterNonVegOnly ? 'active' : ''}" onclick="toggleQuickFilter('nonveg', this)">
         <span>🔴 Non-Veg</span>
       </button>
-      <button class="filter-pill ${quickFilterReady ? 'active' : ''}" onclick="toggleQuickFilter('ready', this)">
-        <span>✨ 100% Ready</span>
+      <button class="filter-pill ${quickFilterFast ? 'active' : ''}" onclick="toggleQuickFilter('fast', this)">
+        <span>⚡ Under 20 mins</span>
       </button>
     `;
   }
 }
 
-function setSubCategory(cat, btn) {
-  currentSubCategory = cat;
-  document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-  renderDishes();
-}
-
-function filterByStory(section, category, itemEl) {
-  isPantryFilterActive = false;
-  currentMainSection = section;
-  currentSubCategory = category;
-
-  document.querySelectorAll(".story-circle-item").forEach(s => s.classList.remove("active"));
-  if (itemEl) itemEl.classList.add("active");
-
-  // Sync nav links
-  document.querySelectorAll(".nav-tab-link").forEach(a => {
-    a.classList.remove("active");
-    if (a.getAttribute("data-section") === section) a.classList.add("active");
-  });
-
-  renderFilterPills();
-  renderDishes();
-}
-
-function toggleQuickFilter(type, btn) {
-  if (type === "fast") {
-    quickFilterFast = !quickFilterFast;
-    btn.classList.toggle("active", quickFilterFast);
-  } else if (type === "ready") {
-    quickFilterReady = !quickFilterReady;
-    btn.classList.toggle("active", quickFilterReady);
-  } else if (type === "veg") {
-    quickFilterVegOnly = !quickFilterVegOnly;
-    if (quickFilterVegOnly) quickFilterNonVegOnly = false;
-    renderFilterPills();
-  } else if (type === "nonveg") {
-    quickFilterNonVegOnly = !quickFilterNonVegOnly;
-    if (quickFilterNonVegOnly) quickFilterVegOnly = false;
-    renderFilterPills();
-  }
-  renderDishes();
-}
-
-function handleSearch(val) {
-  searchQuery = val.trim().toLowerCase();
-  renderDishes();
-}
-
-function handleSort(val) {
-  currentSort = val;
-  renderDishes();
-}
-
-// ================= MATCH CALCULATION =================
-function cleanWord(w) {
-  w = w.toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (w.endsWith('ies')) return w.slice(0, -3) + 'y';
-  if (w.endsWith('es') && !w.endsWith('ses') && !w.endsWith('zes') && w.length > 3) return w.slice(0, -2);
-  if (w.endsWith('s') && !w.endsWith('ss') && w.length > 3) return w.slice(0, -1);
-  return w;
-}
-
-function ingredientMatches(recipeIng, pantryItem) {
-  if (!recipeIng || !pantryItem) return false;
-  const pNorm = pantryItem.toLowerCase().trim();
-  const rNorm = recipeIng.toLowerCase().trim();
-  
-  // Specific staple overrides for 100% homestyle culinary accuracy
-
-  // 1. Eggs vs Eggplant (Baingan/Brinjal)
-  if (pNorm === 'egg' || pNorm === 'eggs' || pNorm === 'anda') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    const hasEggWord = rWords.some(w => w === 'egg' || w === 'anda');
-    const isEggplant = rWords.some(w => w === 'eggplant' || w === 'baingan' || w === 'brinjal');
-    if (isEggplant && !hasEggWord) return false;
-    return hasEggWord;
-  }
-  
-  // 2. Whole Rice vs Rice Flour, Rice Rava, Rice Bran Oil, Poha (Prevent False-Positive Matches)
-  if (pNorm === 'rice' || pNorm === 'basmati rice' || pNorm === 'cooked rice' || pNorm === 'leftover cooked rice' || pNorm === 'raw rice' || pNorm === 'chawal') {
-    // If recipe requires flour, batter, rava, oil, or flakes, whole rice cannot be substituted directly
-    if (rNorm.includes('flour') || rNorm.includes('maavu') || rNorm.includes('atta') || rNorm.includes('rava') || rNorm.includes('oil') || rNorm.includes('poha') || rNorm.includes('flakes') || rNorm.includes('batter')) {
-      return false;
-    }
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'rice' || w === 'chawal' || w === 'basmati');
-  }
-
-  // 3. Rice Flour
-  if (pNorm === 'rice flour' || pNorm === 'chawal ka atta' || pNorm === 'arisi maavu') {
-    return rNorm.includes('rice flour') || rNorm.includes('arisi maavu') || rNorm.includes('chawal ka atta');
-  }
-
-  // 4. Poha (Flattened Rice)
-  if (pNorm === 'poha' || pNorm === 'flattened rice' || pNorm === 'aval' || pNorm === 'atukulu') {
-    return rNorm.includes('poha') || rNorm.includes('flattened rice') || rNorm.includes('aval') || rNorm.includes('atukulu');
-  }
-
-  // 5. Potato vs Sweet Potato
-  if (pNorm === 'potato' || pNorm === 'potatoes' || pNorm === 'aloo' || pNorm === 'batata') {
-    if (rNorm.includes('sweet potato') || rNorm.includes('shakarkand')) return false;
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'potato' || w === 'aloo' || w === 'batata');
-  }
-
-  // 6. Chicken
-  if (pNorm === 'chicken' || pNorm === 'murgh') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'chicken' || w === 'murgh');
-  }
-
-  // 7. Paneer
-  if (pNorm === 'paneer' || pNorm === 'chhena') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'paneer' || w === 'chhena');
-  }
-
-  // 8. Toor Dal / Sambar Dal / Arhar Dal
-  if (pNorm === 'toor dal' || pNorm === 'arhar dal' || pNorm === 'kandi pappu' || pNorm === 'dal') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'toor' || w === 'kandi' || w === 'arhar' || (w === 'dal' && (rNorm.includes('toor') || rNorm.includes('arhar') || rNorm.includes('sambar') || rNorm.includes('kandi'))));
-  }
-
-  // 9. Tomato
-  if (pNorm === 'tomato' || pNorm === 'tomatoes' || pNorm === 'tamatar') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'tomato' || w === 'tamatar' || w === 'thakkali');
-  }
-
-  // 10. Onion
-  if (pNorm === 'onion' || pNorm === 'onions' || pNorm === 'pyaz') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'onion' || w === 'pyaz' || w === 'shallot' || w === 'vengayam' || w === 'ullipaya');
-  }
-
-  // 11. Ghee
-  if (pNorm === 'ghee' || pNorm === 'pure cow ghee' || pNorm === 'desi ghee') {
-    const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord);
-    return rWords.some(w => w === 'ghee' || w === 'neyyi');
-  }
-
-  // 12. Curry Leaves
-  if (pNorm.includes('curry leaves') || pNorm.includes('curry leaf') || pNorm.includes('kadi patta')) {
-    return rNorm.includes('curry leaf') || rNorm.includes('curry leaves') || rNorm.includes('kadi patta') || rNorm.includes('karivepaku');
-  }
-
-  // 13. Ginger
-  if (pNorm === 'ginger' || pNorm === 'adrak' || pNorm === 'allam') {
-    return rNorm.includes('ginger') || rNorm.includes('adrak') || rNorm.includes('allam');
-  }
-
-  // 14. Garlic
-  if (pNorm === 'garlic' || pNorm === 'lahsun' || pNorm === 'vellulli') {
-    return rNorm.includes('garlic') || rNorm.includes('lahsun') || rNorm.includes('vellulli');
-  }
-
-  // General culinary ingredient matching
-  const stopWords = new Set(['fresh','pure','cooked','leftover','raw','cow','desi','warm','cold','hot','dry','fine','chopped','boiled','cut','pieces','powder','seeds','paste']);
-  const pWords = pNorm.split(/[\s,()\/&+-]+/).map(cleanWord).filter(w => !stopWords.has(w) && w.length > 2);
-  const rWords = rNorm.split(/[\s,()\/&+-]+/).map(cleanWord).filter(w => !stopWords.has(w) && w.length > 2);
-
-  if (pWords.length === 0) {
-    const directP = pNorm.split(/\s+/).map(cleanWord).filter(w => w.length > 1);
-    return directP.some(pw => rWords.some(rw => rw === pw));
-  }
-
-  return pWords.some(pw => rWords.some(rw => rw === pw));
-}
-
-function calculateMatch(recipe) {
-  if (selectedPantry.size === 0) {
-    return {
-      percent: 0,
-      userMatchedCount: 0,
-      matchedItems: [],
-      matchedRecipeIngs: [],
-      missing: recipe.ingredients
-    };
-  }
-
-  const userItems = Array.from(selectedPantry);
-  const matchedPantryItems = [];
-  const matchedRecipeIngs = [];
-  const missingRecipeIngs = [];
-
-  recipe.ingredients.forEach(ing => {
-    let matchedUserItem = null;
-    for (const u of userItems) {
-      if (ingredientMatches(ing.name, u)) {
-        matchedUserItem = u;
-        break;
-      }
-    }
-    if (matchedUserItem) {
-      matchedRecipeIngs.push(ing);
-      if (!matchedPantryItems.includes(matchedUserItem)) {
-        matchedPantryItems.push(matchedUserItem);
-      }
-    } else {
-      missingRecipeIngs.push(ing);
-    }
-  });
-
-  const percent = Math.round((matchedRecipeIngs.length / recipe.ingredients.length) * 100);
-  return {
-    percent,
-    userMatchedCount: matchedPantryItems.length,
-    matchedItems: matchedPantryItems,
-    matchedRecipeIngs,
-    missing: missingRecipeIngs
-  };
-}
-
-// ================= DISHES RENDERING =================
-function renderDishes() {
-  let list = [];
-
-  if (searchQuery) {
-    // 1. GLOBAL SEARCH ACROSS ALL 512 RECIPES
-    const q = searchQuery.toLowerCase().trim();
-    const all = getAllRecipes().map(r => ({ ...r, matchInfo: calculateMatch(r) }));
-
-    if (searchMode === "ingredients") {
-      list = all.filter(r => r.ingredients.some(i => i.name.toLowerCase().includes(q)));
-    } else {
-      list = all.filter(r => {
-        const matchName = r.name.toLowerCase().includes(q);
-        const matchDesc = r.description.toLowerCase().includes(q);
-        const matchIng = r.ingredients.some(i => i.name.toLowerCase().includes(q));
-        return matchName || matchDesc || matchIng;
-      });
-      // Prioritize title matches so that typing "chicken" ranks Hyderabadi Chicken Biryani, Butter Chicken, etc. first
-      list.sort((a, b) => {
-        const aTitle = a.name.toLowerCase().includes(q) ? 1 : 0;
-        const bTitle = b.name.toLowerCase().includes(q) ? 1 : 0;
-        if (bTitle !== aTitle) return bTitle - aTitle;
-        return 0;
-      });
-    }
-  } else if (isPantryFilterActive) {
-    // 2. PANTRY INGREDIENT MATCHES ACROSS ALL 512 RECIPES
-    list = getPantryMatchedRecipes();
-  } else {
-    // 3. CATEGORY BROWSING
-    if (currentMainSection === "breakfast") list = [...BREAKFAST_RECIPES];
-    else if (currentMainSection === "rice") list = [...RICE_RECIPES];
-    else if (currentMainSection === "streetfood") list = [...STREETFOOD_RECIPES];
-    else if (currentMainSection === "curries") list = [...CURRY_RECIPES];
-    else if (currentMainSection === "snacks") list = [...SNACK_RECIPES];
-    else if (currentMainSection === "breads") list = [...BREAD_RECIPES];
-    else if (currentMainSection === "sweets") list = [...SWEET_RECIPES];
-    else if (currentMainSection === "chutneys") list = [...CHUTNEY_RECIPES];
-    else if (currentMainSection === "soups_drinks") list = [...SOUPS_DRINKS_RECIPES];
-    else if (currentMainSection === "sides_eggs_seafood") list = [...SIDES_EGGS_SEAFOOD_RECIPES];
-    else list = getAllRecipes();
-
-    // Subcategory filter (applied when user is browsing within a section)
-    if (currentSubCategory !== "all") {
-      list = list.filter(r => r.subCategory === currentSubCategory);
-    }
-
-    list = list.map(r => ({ ...r, matchInfo: calculateMatch(r) }));
-  }
-
-  // 4. Quick filters
-  if (quickFilterFast) {
-    list = list.filter(r => r.prepTime <= 20);
-  }
-  if (quickFilterReady) {
-    list = list.filter(r => r.matchInfo.percent === 100);
-  }
-  if (quickFilterVegOnly) {
-    list = list.filter(r => r.veg === true);
-  }
-  if (quickFilterNonVegOnly) {
-    list = list.filter(r => r.veg === false);
-  }
-
-  // 5. Sort (when not in pantry filter mode, respect dropdown)
-  if (!isPantryFilterActive) {
-    if (currentSort === "match") {
-      if (selectedPantry.size > 0) {
-        list.sort((a, b) => {
-          if (b.matchInfo.userMatchedCount !== a.matchInfo.userMatchedCount) {
-            return b.matchInfo.userMatchedCount - a.matchInfo.userMatchedCount;
-          }
-          return b.matchInfo.percent - a.matchInfo.percent;
-        });
-      }
-    } else if (currentSort === "time") {
-      list.sort((a, b) => a.prepTime - b.prepTime);
-    } else if (currentSort === "name") {
-      list.sort((a, b) => a.name.localeCompare(b.name));
-    }
-  }
-
-  if (isPantryFilterActive) {
-    const activeList = Array.from(selectedPantry).map(escapeHtml).join(", ");
-    recipeCounterNotice.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; width: 100%;">
-        <span style="color: var(--farm-green); font-size: 14px;">
-          🥘 Found <strong>${list.length}</strong> recipes matching your kitchen (<em>${activeList}</em>) — sorted by best match
-        </span>
-        <button onclick="exitPantryFilter()" style="background: var(--bg-sand); border: 1.5px solid var(--farm-green); color: var(--farm-green); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">
-          Show Category View ✕
-        </button>
-      </div>
-    `;
-  } else if (searchQuery) {
-    recipeCounterNotice.innerHTML = `Found <strong>${list.length}</strong> authentic dish${list.length === 1 ? '' : 'es'} matching "<em>${escapeHtml(searchQuery)}</em>" across all categories`;
-  } else {
-    let sectionName = "breakfast";
-    if (currentMainSection === "rice") sectionName = "rice & biryani";
-    else if (currentMainSection === "streetfood") sectionName = "street food & fast food";
-    else if (currentMainSection === "curries") sectionName = "curries & gravies";
-    else if (currentMainSection === "snacks") sectionName = "snacks, starters & tikkas";
-    else if (currentMainSection === "breads") sectionName = "breads, rotis & parathas";
-    else if (currentMainSection === "sweets") sectionName = "sweets & mithai";
-    else if (currentMainSection === "chutneys") sectionName = "pachallu, chutneys & pickles";
-    else if (currentMainSection === "soups_drinks") sectionName = "soups, rasams & coolers";
-    else if (currentMainSection === "sides_eggs_seafood") sectionName = "salads, eggs & coastal seafood";
-    else sectionName = "master Indian culinary";
-
-    recipeCounterNotice.textContent = `Showing ${list.length} authentic ${sectionName} dish${list.length === 1 ? '' : 'es'}`;
-  }
-
-  if (list.length === 0) {
-    dishesGrid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px solid var(--bg-sand-border);">
-        <p style="font-size: 28px; margin-bottom: 8px;">🍽️</p>
-        <h4 style="font-size: 16px; font-weight: 700; color: var(--text-dark);">No matching dishes found</h4>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Try selecting other pantry ingredients or clearing your search filter.</p>
-        <button onclick="resetPantry(); searchQuery=''; quickFilterFast=false; quickFilterReady=false; quickFilterVegOnly=false; quickFilterNonVegOnly=false; renderFilterPills(); renderDishes();" style="margin-top: 14px; background: var(--farm-green); color: #fff; padding: 8px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: none;">
-          Reset All Filters
-        </button>
-      </div>
-    `;
+// ==========================================================================
+// RECIPE DETAIL MODAL & COOKING TIMER (Problem A & E)
+// ==========================================================================
+function openRecipe(id) {
+  const cached = loadedRecipes.find(r => r.id === id || r.recipe_uid === id);
+  if (cached && cached.instructions && cached.instructions.length > 0) {
+    populateRecipeModal(cached);
     return;
   }
 
-  // Render cards
-  dishesGrid.innerHTML = list.map(recipe => {
-    const { percent, missing, userMatchedCount, matchedItems } = recipe.matchInfo;
-    
-    // Category label
-    let catLabel = "HOMESTYLE SPECIAL";
-    if (recipe.subCategory === "idli") catLabel = "IDLI SPECIAL";
-    else if (recipe.subCategory === "dosa") catLabel = "DOSA SPECIAL";
-    else if (recipe.subCategory === "biryani") catLabel = "ROYAL BIRYANI";
-    else if (recipe.subCategory === "fried-rice") catLabel = "WOK FRIED RICE";
-    else if (recipe.subCategory === "traditional-rice") catLabel = "TRADITIONAL RICE";
-    else if (recipe.subCategory === "pulao") catLabel = "PULAO & KHICHDI";
-    else if (recipe.subCategory === "chaat-streetfood") catLabel = "CHAAT SPECIAL";
-    else if (recipe.subCategory === "noodles") catLabel = "HAKKA NOODLES";
-    else if (recipe.subCategory === "momos") catLabel = "TIBETAN MOMOS";
-    else if (recipe.subCategory === "rolls") catLabel = "KATHI ROLL";
-    else if (recipe.subCategory === "burgers-sandwiches") catLabel = "SANDWICH & BURGER";
-    else if (recipe.subCategory === "fast-food") catLabel = "CRISPY FAST FOOD";
-    else if (recipe.subCategory === "chicken-curry") catLabel = "CHICKEN SPECIAL";
-    else if (recipe.subCategory === "mutton-curry") catLabel = "ROYAL MUTTON";
-    else if (recipe.subCategory === "veg-paneer-curry") catLabel = "SHAHI PANEER & VEG";
-    else if (recipe.subCategory === "dal-south-curry") catLabel = "DAL & SAMBAR";
-    else if (recipe.subCategory === "egg-seafood-curry") catLabel = "SEAFOOD & EGG";
-    else if (recipe.subCategory === "tikkas-kebabs") catLabel = "CHARRED TIKKA";
-    else if (recipe.subCategory === "pakoras-fritters") catLabel = "CRISPY PAKORA";
-    else if (recipe.subCategory === "cutlets-vadas") catLabel = "CUTLET & VADA";
-    else if (recipe.subCategory === "crispy-bites") catLabel = "CRISPY BITES";
-    else if (recipe.subCategory === "regional-namkeen") catLabel = "TEA-TIME NAMKEEN";
-    else if (recipe.subCategory === "naan") catLabel = "TANDOORI NAAN";
-    else if (recipe.subCategory === "roti") catLabel = "ROTI & BHAKRI";
-    else if (recipe.subCategory === "paratha") catLabel = "STUFFED PARATHA";
-    else if (recipe.subCategory === "puri") catLabel = "PURI & THEPLA";
-    else if (recipe.subCategory === "halwa") catLabel = "SHAHI HALWA";
-    else if (recipe.subCategory === "ladoo") catLabel = "DANEDAR LADOO";
-    else if (recipe.subCategory === "kheer") catLabel = "KHEER & PAYASAM";
-    else if (recipe.subCategory === "syrup-sweet") catLabel = "SYRUPY MITHAI";
-    else if (recipe.subCategory === "barfi") catLabel = "BARFI & FUDGE";
-    else if (recipe.subCategory === "pachadi") catLabel = "ANDHRA PACHADI";
-    else if (recipe.subCategory === "tiffin-chutney") catLabel = "TIFFIN CHUTNEY";
-    else if (recipe.subCategory === "pickle") catLabel = "HERITAGE PICKLE";
-    else if (recipe.subCategory === "podi") catLabel = "GUNPOWDER & PODI";
-    else if (recipe.subCategory === "soup") catLabel = "SOUP & RASAM";
-    else if (recipe.subCategory === "drink") catLabel = "CHAI & COOLER";
-    else if (recipe.subCategory === "salad") catLabel = "SALAD & SUNDAL";
-    else if (recipe.subCategory === "egg") catLabel = "EGG SPECIAL";
-    else if (recipe.subCategory === "seafood") catLabel = "COASTAL SEAFOOD";
-
-    // Match label
-    let matchLabelHtml = "";
-    if (percent === 100) {
-      matchLabelHtml = `<span class="match-label-ready">🎉 100% Ready (Have all items)</span>`;
-    } else if (userMatchedCount > 0) {
-      matchLabelHtml = `<span class="match-label-partial"><strong>${userMatchedCount} pantry item${userMatchedCount === 1 ? '' : 's'} match</strong> • ${percent}% total • Need ${missing.length} more</span>`;
-    } else if (percent > 0) {
-      matchLabelHtml = `<span class="match-label-partial">${percent}% Match • Need ${missing[0].name}</span>`;
-    } else {
-      matchLabelHtml = `<span class="match-label-none">Need ${recipe.ingredients.length} items</span>`;
-    }
-
-    // Matched chip
-    let matchedChipHtml = "";
-    if (userMatchedCount > 0) {
-      matchedChipHtml = `<span class="variant-chip matched-chip">✓ Uses your: ${matchedItems.join(", ")}</span>`;
-    }
-
-    return `
-      <article class="dish-card">
-        <div class="card-main-content">
-          
-          <!-- Left details block -->
-          <div class="dish-details">
-            <div class="dish-meta-pills">
-              <span class="${recipe.veg ? 'veg-indicator' : 'veg-indicator nonveg'}"><span class="circle"></span></span>
-              <span class="dish-sub-category">${catLabel}</span>
-            </div>
-
-            <h3 class="dish-name" onclick="openRecipe('${recipe.id}')">${recipe.name}</h3>
-
-            <div class="dish-meta-pills">
-              <span class="rating-badge">★ 4.9</span>
-              <span class="time-pill">⏱ ${recipe.prepTime} mins</span>
-              <span class="time-pill">•</span>
-              <span class="time-pill">👥 Serves ${recipe.servings}</span>
-            </div>
-
-            <p class="dish-description">${recipe.description}</p>
-
-            <div class="dish-variant-chips">
-              <span class="variant-chip">${recipe.veg ? 'Pure Veg' : 'Non-Veg'}</span>
-              <span class="variant-chip">${recipe.prepTime <= 20 ? 'Quick Cook' : 'Slow Simmered'}</span>
-              ${matchedChipHtml}
-            </div>
-          </div>
-
-          <!-- Right food photo & COOK button -->
-          <div class="dish-media-box">
-            <div class="dish-img-wrap">
-              <img src="${recipe.image}" alt="${recipe.name}" loading="lazy" onerror="this.src='images/dishes/traditional-rice.jpg'">
-            </div>
-            <button class="cook-recipe-btn" onclick="openRecipe('${recipe.id}')">
-              COOK
-            </button>
-          </div>
-
-        </div>
-
-        <!-- Footnote match status -->
-        <div class="dish-card-footer">
-          <div>${matchLabelHtml}</div>
-          <div style="color: var(--farm-green); font-weight: 700; cursor: pointer;" onclick="openRecipe('${recipe.id}')">
-            View Recipe →
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
+  fetch('/api/v1/recipes/' + encodeURIComponent(id) + '/')
+    .then(res => {
+      if (!res.ok) throw new Error("Recipe not found");
+      return res.json();
+    })
+    .then(data => {
+      const recipe = {
+        ...data,
+        id: data.recipe_uid,
+        prepTime: data.prep_time,
+        subCategory: data.subcategory,
+        ingredients: data.ingredients || [],
+        steps: data.instructions ? data.instructions.map(i => i.instruction) : []
+      };
+      populateRecipeModal(recipe);
+    })
+    .catch(err => {
+      console.error("Failed to load recipe detail:", err);
+      if (cached) {
+        populateRecipeModal(cached);
+      }
+    });
 }
 
-// ================= MODAL & COOKING TIMER =================
-function openRecipe(id) {
-  const recipe = getAllRecipes().find(r => r.id === id);
-  if (!recipe) return;
+function populateRecipeModal(recipe) {
   activeRecipe = recipe;
   currentServingsFactor = 1;
 
-  document.getElementById("modalTitle").textContent = recipe.name;
-  document.getElementById("modalDesc").textContent = recipe.description;
-  document.getElementById("modalTime").textContent = `${recipe.prepTime} mins`;
-  document.getElementById("modalSubcategory").textContent = recipe.subCategory.toUpperCase() + " SPECIAL";
+  const titleEl = document.getElementById("modalTitle");
+  if (titleEl) titleEl.textContent = recipe.name;
 
-  // Recipe image banner in modal
+  const descEl = document.getElementById("modalDesc");
+  if (descEl) descEl.textContent = recipe.description || "";
+
+  const timeEl = document.getElementById("modalTime");
+  if (timeEl) timeEl.textContent = `${recipe.prepTime || recipe.prep_time} mins`;
+
+  const subCatEl = document.getElementById("modalSubcategory");
+  if (subCatEl) subCatEl.textContent = ((recipe.subCategory || recipe.subcategory || "").toUpperCase()) + " SPECIAL";
+
   const modalImg = document.getElementById("modalRecipeImg");
   if (modalImg) {
-    modalImg.src = recipe.image;
+    modalImg.src = recipe.image || "/static/images/dishes/traditional-rice.jpg";
     modalImg.alt = recipe.name;
   }
 
-  // Veg indicator in modal
   const modalVeg = document.getElementById("modalVegIndicator");
   if (modalVeg) {
     modalVeg.className = recipe.veg ? "veg-indicator" : "veg-indicator nonveg";
   }
 
-  // Initial Servings Label Reset
   const servingsValEl = document.getElementById("modalServingsVal");
   if (servingsValEl) {
-    servingsValEl.textContent = recipe.servings;
+    servingsValEl.textContent = recipe.servings || 2;
   }
   document.querySelectorAll(".stepper-btn").forEach(b => b.classList.remove("active"));
   const btn1x = document.getElementById("stepper1x");
@@ -1227,62 +1476,63 @@ function openRecipe(id) {
 
   const match = calculateMatch(recipe);
   const matchEl = document.getElementById("modalMatch");
-  if (match.percent === 100) {
-    matchEl.textContent = "100% Ready";
-    matchEl.style.color = "#0F8A43";
-  } else if (match.percent > 0) {
-    matchEl.textContent = `${match.percent}% Match`;
-    matchEl.style.color = "#C97808";
-  } else {
-    matchEl.textContent = "Need Items";
-    matchEl.style.color = "#6B5E55";
+  if (matchEl) {
+    if (match.percent === 100) {
+      matchEl.textContent = "100% Ready";
+      matchEl.style.color = "#0F8A43";
+    } else if (match.percent > 0) {
+      matchEl.textContent = `${match.percent}% Match`;
+      matchEl.style.color = "#C97808";
+    } else {
+      matchEl.textContent = "Need Items";
+      matchEl.style.color = "#6B5E55";
+    }
   }
 
-  // Ingredients Checklist
   renderModalChecklist();
 
-  // Steps with interactive completion toggle
   const stepsEl = document.getElementById("modalStepsList");
-  stepsEl.innerHTML = recipe.steps.map((s, idx) => `
-    <li class="cooking-step" onclick="toggleStepCompleted(this)" title="Tap to mark step done">
-      <span>${escapeHtml(s)}</span>
-    </li>
-  `).join("");
+  if (stepsEl) {
+    const stepList = recipe.steps || (recipe.instructions ? recipe.instructions.map(i => i.instruction) : []);
+    stepsEl.innerHTML = stepList.map(s => `
+      <li class="cooking-step" onclick="toggleStepCompleted(this)" title="Tap to mark step done">
+        <span>${escapeHtml(s)}</span>
+      </li>
+    `).join("");
+  }
 
-  // Drift-Free Kitchen Timer Initialization
-  setupTimer(recipe.prepTime * 60);
-
-  // Update Favorite Button State
+  setupTimer((recipe.prepTime || recipe.prep_time || 15) * 60);
   updateModalFavoriteButton();
 
-  // Open modal
-  recipeModal.classList.add("active");
+  if (recipeModal) recipeModal.classList.add("active");
 }
 
 function toggleStepCompleted(el) {
-  if (el) {
-    el.classList.toggle("completed-step");
-  }
+  if (el) el.classList.toggle("completed-step");
 }
 
 function renderModalChecklist() {
   const listEl = document.getElementById("modalIngredientsList");
   if (!listEl || !activeRecipe) return;
 
-  listEl.innerHTML = activeRecipe.ingredients.map(ing => {
+  const ings = activeRecipe.ingredients || [];
+  listEl.innerHTML = ings.map(ing => {
+    const rawName = typeof ing === 'string' ? ing : (ing.raw_name || ing.name || '');
+    const amount = typeof ing === 'string' ? '' : (ing.amount || '');
+
     let hasIt = false;
     for (const u of selectedPantry) {
-      if (ingredientMatches(ing.name, u)) {
+      if (ingredientMatches(rawName, u)) {
         hasIt = true;
         break;
       }
     }
 
-    const scaledAmountStr = scaleAmount(ing.amount, currentServingsFactor);
+    const scaledAmountStr = scaleAmount(amount, currentServingsFactor);
 
     return `
       <li class="${hasIt ? 'present' : 'absent'}">
-        <span>• <strong>${escapeHtml(ing.name)}</strong> <span style="color:#7D7065;">(${escapeHtml(scaledAmountStr)})</span></span>
+        <span>• <strong>${escapeHtml(rawName)}</strong> ${scaledAmountStr ? `<span style="color:#7D7065;">(${escapeHtml(scaledAmountStr)})</span>` : ''}</span>
         <span class="ing-badge">${hasIt ? 'In Pantry ✓' : 'Needed'}</span>
       </li>
     `;
@@ -1290,32 +1540,27 @@ function renderModalChecklist() {
 }
 
 function closeModal() {
-  recipeModal.classList.remove("active");
+  if (recipeModal) recipeModal.classList.remove("active");
   stopTimer();
 }
 
 function setServings(factor, btn) {
   if (typeof factor !== 'number' || factor <= 0 || isNaN(factor)) factor = 1;
   currentServingsFactor = factor;
-  
+
   document.querySelectorAll(".stepper-btn").forEach(b => b.classList.remove("active"));
-  if (btn) {
-    btn.classList.add("active");
-  } else {
-    const defaultBtn = document.getElementById(`stepper${factor}x`);
-    if (defaultBtn) defaultBtn.classList.add("active");
-  }
+  if (btn) btn.classList.add("active");
 
   if (activeRecipe) {
     const servingsValEl = document.getElementById("modalServingsVal");
     if (servingsValEl) {
-      servingsValEl.textContent = activeRecipe.servings * currentServingsFactor;
+      servingsValEl.textContent = (activeRecipe.servings || 2) * currentServingsFactor;
     }
     renderModalChecklist();
   }
 }
 
-// Drift-free Timestamp-based Timer Logic
+// Drift-free Timestamp-based Timer
 function setupTimer(seconds) {
   stopTimer();
   timerRemainingMs = Math.max(0, (seconds || 900) * 1000);
@@ -1335,7 +1580,7 @@ function startTimer() {
   if (timerRemainingMs <= 0) return;
   timerRunning = true;
   timerTargetTimestamp = Date.now() + timerRemainingMs;
-  
+
   const btn = document.getElementById("timerToggleBtn");
   if (btn) btn.textContent = "Pause";
 
@@ -1379,115 +1624,7 @@ function updateTimerDisplay() {
 }
 
 // ==========================================================================
-// DUAL-MODE & ANIMATED ROTATING SEARCH ENGINE (Styles 1 + 4 Finalized)
-// ==========================================================================
-let searchMode = "dishes"; // "dishes" or "ingredients"
-let rotatingTimer = null;
-let currentRotatingIdx = 0;
-
-const DISH_ROTATING_PROMPTS = [
-  "Search 'Hyderabadi Dum Biryani'...",
-  "Search 'Traditional Gongura Pachadi'...",
-  "Search 'Crispy Mysore Masala Dosa'...",
-  "Search 'Delhi Style Butter Chicken'...",
-  "Search 'Kumbakonam Filter Coffee'...",
-  "Search 'Chettinad Fish Curry'...",
-  "Search 'Melt-in-mouth Gulab Jamun'..."
-];
-
-const INGREDIENT_ROTATING_PROMPTS = [
-  "Search 'Leftover cooked rice'...",
-  "Search 'Fresh paneer' or 'Chicken'...",
-  "Search 'Toor dal' or 'Mustard seeds'...",
-  "Search 'Gongura leaves' or 'Tamarind'...",
-  "Search 'Prawns' or 'Fish'...",
-  "Search 'Eggs' or 'Potatoes'..."
-];
-
-function initSearchSystem() {
-  startRotatingPlaceholder();
-
-  // Keyboard shortcut: Press '/' to focus search input
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-      e.preventDefault();
-      const input = document.getElementById("recipeSearch");
-      if (input) {
-        input.focus();
-        input.select();
-      }
-    } else if (e.key === "Escape") {
-      const input = document.getElementById("recipeSearch");
-      if (input && document.activeElement === input) {
-        input.blur();
-      }
-    }
-  });
-}
-
-function startRotatingPlaceholder() {
-  const input = document.getElementById("recipeSearch");
-  if (!input) return;
-
-  if (rotatingTimer) clearInterval(rotatingTimer);
-  const prompts = searchMode === "ingredients" ? INGREDIENT_ROTATING_PROMPTS : DISH_ROTATING_PROMPTS;
-  currentRotatingIdx = 0;
-  input.placeholder = prompts[currentRotatingIdx];
-
-  rotatingTimer = setInterval(() => {
-    if (document.activeElement === input || input.value.trim().length > 0) return;
-    const currentPrompts = searchMode === "ingredients" ? INGREDIENT_ROTATING_PROMPTS : DISH_ROTATING_PROMPTS;
-    currentRotatingIdx = (currentRotatingIdx + 1) % currentPrompts.length;
-    input.placeholder = currentPrompts[currentRotatingIdx];
-  }, 2800);
-}
-
-function toggleSearchMode() {
-  if (searchMode === "dishes") {
-    searchMode = "ingredients";
-    document.getElementById("searchModeIcon").textContent = "🥕";
-    document.getElementById("searchModeLabel").textContent = "Ingredients";
-  } else {
-    searchMode = "dishes";
-    document.getElementById("searchModeIcon").textContent = "🍽️";
-    document.getElementById("searchModeLabel").textContent = "Dishes";
-  }
-
-  startRotatingPlaceholder();
-
-  const input = document.getElementById("recipeSearch");
-  if (input && input.value.trim().length > 0) {
-    handleSearch(input.value);
-  }
-}
-
-function onSearchInput(val) {
-  handleSearch(val);
-  const clearBtn = document.getElementById("searchActionBtn");
-  if (clearBtn) {
-    clearBtn.classList.toggle("show", val.trim().length > 0);
-  }
-}
-
-function onSearchActionClick() {
-  const input = document.getElementById("recipeSearch");
-  if (!input) return;
-
-  input.value = "";
-  handleSearch("");
-  const clearBtn = document.getElementById("searchActionBtn");
-  if (clearBtn) clearBtn.classList.remove("show");
-  input.focus();
-}
-
-// Auto-initialize when window loads
-window.addEventListener("DOMContentLoaded", initSearchSystem);
-if (document.readyState === "complete" || document.readyState === "interactive") {
-  initSearchSystem();
-}
-
-// ==========================================================================
-// DJANGO REST FRAMEWORK FULL-STACK API BRIDGE & PERSONALIZATION
+// DJANGO REST FRAMEWORK AUTHENTICATION, FAVORITES & SHOPPING
 // ==========================================================================
 let currentUser = null;
 let userFavoritesSet = new Set();
@@ -1648,7 +1785,12 @@ function submitRegister(e) {
       'Content-Type': 'application/json',
       'X-CSRFToken': getCsrfToken()
     },
-    body: JSON.stringify({ username: u, email, password: p, dietary_preference: diet })
+    body: JSON.stringify({
+      username: u,
+      email: email,
+      password: p,
+      dietary_preference: diet
+    })
   })
   .then(res => res.json().then(data => ({ status: res.status, data })))
   .then(({ status, data }) => {
@@ -1657,10 +1799,11 @@ function submitRegister(e) {
       closeAuthModal();
       updateAuthNavUI();
       syncLocalPantryToBackend();
+      alert("🎉 Account created successfully! Welcome to AI Chef.");
     } else {
       if (notice) {
-        const errs = Object.values(data).flat().join(" ");
-        notice.textContent = errs || "Registration error.";
+        const errs = Object.entries(data).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(' ') : v}`).join(' | ');
+        notice.textContent = errs || "Registration error. Please try again.";
         notice.style.display = "block";
       }
     }
@@ -1680,21 +1823,20 @@ function logoutUser() {
       'X-CSRFToken': getCsrfToken()
     }
   })
-  .finally(() => {
+  .then(() => {
     currentUser = null;
     userFavoritesSet.clear();
     updateAuthNavUI();
     const menu = document.getElementById("userDropdownMenu");
     if (menu) menu.style.display = "none";
-  });
+  })
+  .catch(() => {});
 }
 
 function triggerPantrySync() {
   if (!currentUser) return;
   if (pantrySyncTimeout) clearTimeout(pantrySyncTimeout);
-  pantrySyncTimeout = setTimeout(() => {
-    syncLocalPantryToBackend();
-  }, 1000);
+  pantrySyncTimeout = setTimeout(syncLocalPantryToBackend, 600);
 }
 
 function syncLocalPantryToBackend() {
@@ -1721,8 +1863,8 @@ function fetchUserPantry() {
         if (name) selectedPantry.add(name);
       });
       renderPantryChips();
-      renderDishes();
       updatePantryCounters();
+      recalculateLoadedMatches();
     })
     .catch(() => {});
 }
@@ -1732,7 +1874,8 @@ function updateModalFavoriteButton() {
   const label = document.getElementById("favBtnLabel");
   const btn = document.getElementById("modalFavoriteBtn");
   if (!activeRecipe || !icon || !label) return;
-  const isFav = userFavoritesSet.has(activeRecipe.id);
+  const recipeUid = activeRecipe.recipe_uid || activeRecipe.id;
+  const isFav = userFavoritesSet.has(recipeUid);
   icon.textContent = isFav ? "❤️" : "🤍";
   label.textContent = isFav ? "Saved to Favorites" : "Save to Favorites";
   if (btn) {
@@ -1763,6 +1906,7 @@ function toggleCurrentRecipeFavorite() {
     return;
   }
   if (!activeRecipe) return;
+  const recipeUid = activeRecipe.recipe_uid || activeRecipe.id;
 
   fetch('/api/v1/favorites/toggle/', {
     method: 'POST',
@@ -1770,14 +1914,14 @@ function toggleCurrentRecipeFavorite() {
       'Content-Type': 'application/json',
       'X-CSRFToken': getCsrfToken()
     },
-    body: JSON.stringify({ recipe_uid: activeRecipe.id })
+    body: JSON.stringify({ recipe_uid: recipeUid })
   })
   .then(res => res.json())
   .then(data => {
     if (data.is_favorited) {
-      userFavoritesSet.add(activeRecipe.id);
+      userFavoritesSet.add(recipeUid);
     } else {
-      userFavoritesSet.delete(activeRecipe.id);
+      userFavoritesSet.delete(recipeUid);
     }
     updateModalFavoriteButton();
   })
@@ -1815,7 +1959,7 @@ function openFavoritesModal() {
         return `
           <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-sand); border-radius: 10px; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <img src="${r.image}" alt="${escapeHtml(r.name)}" style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" onerror="this.src='/static/images/dishes/traditional-rice.jpg'">
+              <img src="${r.image}" alt="${escapeHtml(r.name)}" style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" onerror="this.onerror=null; this.src='/static/images/dishes/traditional-rice.jpg'">
               <div>
                 <h4 style="font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">${escapeHtml(r.name)}</h4>
                 <div style="font-size: 11px; color: var(--text-muted);">⏱ ${r.prep_time} mins • ${r.dietary_type}</div>
@@ -1847,6 +1991,7 @@ function addCurrentRecipeToShoppingList() {
     openAuthModal();
     return;
   }
+  const recipeUid = activeRecipe.recipe_uid || activeRecipe.id;
 
   fetch('/api/v1/shopping/generate_from_recipes/', {
     method: 'POST',
@@ -1855,12 +2000,12 @@ function addCurrentRecipeToShoppingList() {
       'X-CSRFToken': getCsrfToken()
     },
     body: JSON.stringify({
-      recipe_uids: [activeRecipe.id],
+      recipe_uids: [recipeUid],
       exclude_pantry: true
     })
   })
   .then(res => res.json())
-  .then(data => {
+  .then(() => {
     alert(`🛒 Added missing ingredients from ${activeRecipe.name} to your Grocery List!`);
   })
   .catch(() => {
@@ -1927,42 +2072,11 @@ function toggleShoppingItem(listId, itemId) {
   .catch(() => {});
 }
 
-function addCustomShoppingItem() {
-  const input = document.getElementById("newShoppingItemInput");
-  if (!input) return;
-  const name = input.value.trim();
-  if (!name) return;
-
-  fetch('/api/v1/shopping/')
-    .then(res => res.json())
-    .then(data => {
-      const lists = Array.isArray(data) ? data : (data.results || []);
-      if (lists.length > 0) {
-        return lists[0].id;
-      } else {
-        return fetch('/api/v1/shopping/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
-          body: JSON.stringify({ title: 'My Grocery List' })
-        }).then(r => r.json()).then(l => l.id);
-      }
-    })
-    .then(listId => {
-      return fetch(`/api/v1/shopping/${listId}/add_item/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
-        body: JSON.stringify({ ingredient_name: name, amount: '' })
-      });
-    })
-    .then(() => {
-      input.value = '';
-      loadShoppingListItems();
-    })
-    .catch(() => {
-      alert("Please sign in to save grocery items.");
-    });
-}
-
-// Auto-check auth state on initial DOM load
-document.addEventListener("DOMContentLoaded", fetchCurrentUser);
-
+// Initial Page Bootstrap
+document.addEventListener("DOMContentLoaded", () => {
+  renderPantryChips();
+  renderFilterPills();
+  updatePantryCounters();
+  loadRecipesFromAPI(1);
+  fetchCurrentUser();
+});

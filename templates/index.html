@@ -29,7 +29,7 @@
           </div>
         </a>
 
-        <!-- Global Search Bar: Dual-Mode (Dishes/Ingredients) + Rotating Animated Placeholder -->
+        <!-- Global Search Bar: Dual-Mode (Dishes/Ingredients) + Autocomplete + Animated Placeholder -->
         <div class="search-bar-wrap" id="searchBarWrap">
           <!-- Dual mode toggle badge (Dishes vs Ingredients) -->
           <button type="button" class="search-mode-pill" id="searchModeBtn" onclick="toggleSearchMode()" title="Click to switch: Search by Dish Name or by Ingredient">
@@ -38,13 +38,21 @@
             <span style="font-size: 8px; opacity: 0.6;">▼</span>
           </button>
 
-          <!-- Main Input Field with Animated Rotating Placeholder -->
-          <input type="text" id="recipeSearch" class="search-input has-dual-mode" placeholder="Search 'Hyderabadi Dum Biryani'..." oninput="onSearchInput(this.value)" autocomplete="off">
+          <!-- Main Input Field with Real-Time Autocomplete & Search Execution -->
+          <input type="text" id="recipeSearch" class="search-input has-dual-mode" placeholder="Search 'Hyderabadi Dum Biryani'..." oninput="onSearchInput(this.value)" onkeydown="onSearchKeydown(event)" onfocus="onSearchFocus()" autocomplete="off">
 
           <!-- Right Action: Clear Button [✕] (appears when typing) -->
           <button type="button" class="search-action-btn" id="searchActionBtn" onclick="onSearchActionClick()" title="Clear search">
             <span id="searchActionContent">✕</span>
           </button>
+
+          <!-- Right Action: Search Submit Button [🔍] -->
+          <button type="button" class="search-submit-btn" id="searchSubmitBtn" onclick="onSearchSubmitClick()" title="Execute Search">
+            <span>🔍</span>
+          </button>
+
+          <!-- Real-Time Autocomplete Suggestions Dropdown -->
+          <div class="search-autocomplete-dropdown" id="searchAutocompleteDropdown" style="display: none;"></div>
         </div>
 
         <!-- Right Header Actions: My Pantry + Authentication Pill -->
@@ -259,8 +267,11 @@
 
     <!-- Responsive Dishes Grid -->
     <div class="dishes-grid" id="dishesGrid">
-      <!-- Injected by app.js -->
+      <!-- Injected by app.js from Django REST API -->
     </div>
+
+    <!-- Dynamic Pagination Controls -->
+    <div class="recipes-pagination-wrap" id="recipesPagination" style="display: none;"></div>
 
   </main>
 
@@ -450,17 +461,7 @@
     </div>
   </div>
 
-  <!-- Data and Application Scripts -->
-  <script src="{% static 'data/breakfast.js' %}"></script>
-  <script src="{% static 'data/rice.js' %}"></script>
-  <script src="{% static 'data/streetfood.js' %}"></script>
-  <script src="{% static 'data/curries.js' %}"></script>
-  <script src="{% static 'data/snacks.js' %}"></script>
-  <script src="{% static 'data/breads.js' %}"></script>
-  <script src="{% static 'data/sweets.js' %}"></script>
-  <script src="{% static 'data/chutneys.js' %}"></script>
-  <script src="{% static 'data/soups_drinks.js' %}"></script>
-  <script src="{% static 'data/sides_eggs_seafood.js' %}"></script>
-  <script src="{% static 'js/app.js' %}?v=15"></script>
+  <!-- Application Scripts -->
+  <script src="{% static 'js/app.js' %}?v=16"></script>
 </body>
 </html>

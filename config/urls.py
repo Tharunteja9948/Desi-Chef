@@ -6,14 +6,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
+from apps.recipes.views import home_view, recipe_detail_view
 
 urlpatterns = [
     # Admin Interface
     path('admin/', admin.site.urls),
 
     # Main Frontend Application
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('', home_view, name='home'),
+    path('recipes/<str:recipe_uid>/', recipe_detail_view, name='recipe_detail'),
+    path('recipe/<str:recipe_uid>/', recipe_detail_view, name='recipe_detail_alias'),
 
     # REST API Endpoints (v1)
     path('api/v1/auth/', include('apps.accounts.urls')),

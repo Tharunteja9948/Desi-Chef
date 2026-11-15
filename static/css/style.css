@@ -142,7 +142,7 @@ h1, h2, h3, .serif-font {
   background-color: var(--bg-sand);
   border: 1.5px solid var(--bg-sand-border);
   border-radius: var(--radius-pill);
-  padding: 0 40px 0 114px;
+  padding: 0 76px 0 114px;
   font-size: 13.5px;
   font-family: inherit;
   color: var(--text-dark);
@@ -188,7 +188,7 @@ h1, h2, h3, .serif-font {
 /* Clear Button [✕] (appears when user types) */
 .search-action-btn {
   position: absolute;
-  right: 12px;
+  right: 44px;
   top: 50%;
   transform: translateY(-50%);
   border: none;
@@ -204,6 +204,7 @@ h1, h2, h3, .serif-font {
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+  z-index: 2;
 }
 
 .search-action-btn.show {
@@ -213,6 +214,202 @@ h1, h2, h3, .serif-font {
 .search-action-btn:hover {
   background: #C74343;
   color: #fff;
+}
+
+/* Search Submit Button [🔍] */
+.search-submit-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 12px;
+  background: var(--farm-green);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(16, 132, 116, 0.25);
+}
+
+.search-submit-btn:hover {
+  background: #0b5e52;
+  transform: translateY(-50%) scale(1.06);
+}
+
+/* Autocomplete Dropdown */
+.search-autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1.5px solid var(--bg-sand-border);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+  z-index: 1000;
+  max-height: 440px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.search-autocomplete-header {
+  padding: 6px 14px 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--bg-sand-border);
+  letter-spacing: 0.5px;
+}
+
+.search-autocomplete-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid #f6f3ed;
+  gap: 12px;
+}
+
+.search-autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.search-autocomplete-item:hover,
+.search-autocomplete-item.active-item {
+  background: #F8F6F0;
+}
+
+.search-autocomplete-item img {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--bg-sand);
+}
+
+.search-autocomplete-item .item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-autocomplete-item .item-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-autocomplete-item .item-title mark {
+  background-color: #FFF3CD;
+  color: #856404;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 800;
+}
+
+.search-autocomplete-item .item-meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-autocomplete-empty {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.search-autocomplete-footer {
+  padding: 10px 14px;
+  background: #FAF8F2;
+  border-top: 1px solid var(--bg-sand-border);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--farm-green);
+  text-align: center;
+  cursor: pointer;
+}
+
+.search-autocomplete-footer:hover {
+  background: #F1ECE0;
+}
+
+/* Loading skeleton for dishes grid */
+.dishes-skeleton-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bg-sand-border);
+  overflow: hidden;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #f0ede6 25%, #faf8f4 50%, #f0ede6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Pagination container */
+.recipes-pagination-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 36px 0 20px 0;
+  flex-wrap: wrap;
+}
+
+.recipes-pagination-btn {
+  padding: 8px 16px;
+  background: #fff;
+  border: 1.5px solid var(--bg-sand-border);
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.recipes-pagination-btn:hover:not(:disabled) {
+  border-color: var(--farm-green);
+  color: var(--farm-green);
+}
+
+.recipes-pagination-btn.active {
+  background: var(--farm-green);
+  color: #fff;
+  border-color: var(--farm-green);
+}
+
+.recipes-pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .top-pantry-btn {

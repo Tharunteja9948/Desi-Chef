@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ recipe.name }} — AI Chef Indian Homestyle Recipes</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=16">
+  <style>
+    .detail-container {
+      max-width: 860px;
+      margin: 24px auto 60px auto;
+      padding: 0 16px;
+    }
+    .detail-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--farm-green);
+      text-decoration: none;
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      background: var(--bg-sand);
+      border-radius: var(--radius-pill);
+      transition: background 0.2s ease;
+    }
+    .detail-back-link:hover {
+      background: #E8E5DA;
+    }
+    .detail-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--bg-sand-border);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .detail-hero-img-wrap {
+      width: 100%;
+      height: 380px;
+      position: relative;
+      background-color: var(--bg-sand);
+    }
+    .detail-hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .detail-badge-pill {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .detail-badge-veg {
+      background: #E8F5E9;
+      color: #2E7D32;
+      border: 1px solid #A5D6A7;
+    }
+    .detail-badge-nonveg {
+      background: #FFEBEE;
+      color: #C62828;
+      border: 1px solid #FFCDD2;
+    }
+    .detail-body {
+      padding: 28px 24px;
+    }
+    .detail-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .detail-desc {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      background: var(--bg-sand);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .detail-meta-cell {
+      text-align: center;
+    }
+    .detail-meta-cell .label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .detail-meta-cell .val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .detail-section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin: 28px 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .step-item {
+      padding: 14px 16px;
+      background: var(--bg-sand);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .step-item.done {
+      background: #E8F5E9;
+      opacity: 0.7;
+      text-decoration: line-through;
+    }
+    .step-num {
+      width: 26px;
+      height: 26px;
+      background: var(--farm-green);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="top-header">
+    <div class="container">
+      <div class="top-nav">
+        <a href="/" class="brand-wrap">
+          <div class="brand-logo-badge" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; border: 2px solid var(--turmeric-amber); display: flex; align-items: center; justify-content: center; background: #fff;">
+            <img src="{% static 'images/chef-logo.jpg' %}" alt="Chef Logo" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div class="brand-info">
+            <h1>AI CHEF</h1>
+            <span>Homestyle Recipes</span>
+          </div>
+        </a>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="/" style="font-size: 13px; font-weight: 700; color: var(--farm-green); text-decoration: none; padding: 7px 14px; background: var(--bg-sand); border-radius: var(--radius-pill);">
+            🏠 Back to All Recipes
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="detail-container">
+    <a href="/" class="detail-back-link">
+      <span>←</span> <span>Browse All Categories</span>
+    </a>
+
+    <article class="detail-card">
+      <div class="detail-hero-img-wrap">
+        <img src="{% if recipe.image %}{% if recipe.image|slice:':4' == 'http' or recipe.image|slice:':1' == '/' %}{{ recipe.image }}{% else %}/static/{{ recipe.image }}{% endif %}{% else %}{% static 'images/dishes/traditional-rice.jpg' %}{% endif %}" alt="{{ recipe.name }}" onerror="this.onerror=null; this.src='{% static 'images/dishes/traditional-rice.jpg' %}'">
+        <div class="detail-badge-pill {% if recipe.veg %}detail-badge-veg{% else %}detail-badge-nonveg{% endif %}">
+          {% if recipe.veg %}🟢 PURE VEGETARIAN{% else %}🔴 NON-VEGETARIAN{% endif %}
+        </div>
+      </div>
+
+      <div class="detail-body">
+        <div style="font-size: 12px; font-weight: 800; color: var(--farm-green); text-transform: uppercase; margin-bottom: 4px;">
+          {{ recipe.category.name }} • {{ recipe.subcategory|upper }}
+        </div>
+        <h1 class="detail-title">{{ recipe.name }}</h1>
+        <p class="detail-desc">{{ recipe.description }}</p>
+
+        <!-- Metrics Grid -->
+        <div class="detail-meta-grid">
+          <div class="detail-meta-cell">
+            <div class="label">Prep Time</div>
+            <div class="val">{{ recipe.prep_time }} mins</div>
+          </div>
+          <div class="detail-meta-cell">
+            <div class="label">Cook Time</div>
+            <div class="val">{{ recipe.cook_time }} mins</div>
+          </div>
+          <div class="detail-meta-cell">
+            <div class="label">Total Time</div>
+            <div class="val">{{ recipe.total_time }} mins</div>
+          </div>
+          <div class="detail-meta-cell">
+            <div class="label">Servings</div>
+            <div class="val" id="detailServingsCount">{{ recipe.servings }}</div>
+          </div>
+          <div class="detail-meta-cell">
+            <div class="label">Cuisine</div>
+            <div class="val">{{ recipe.cuisine }}</div>
+          </div>
+        </div>
+
+        <!-- Serving Stepper -->
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--bg-sand-border);">
+          <div style="font-size: 14px; font-weight: 700; color: var(--text-dark);">
+            Adjust Portion Servings:
+          </div>
+          <div class="servings-stepper">
+            <button class="stepper-btn active" onclick="scaleServings(1, this)">1x ({{ recipe.servings }})</button>
+            <button class="stepper-btn" onclick="scaleServings(2, this)">2x ({% widthratio recipe.servings 1 2 %})</button>
+            <button class="stepper-btn" onclick="scaleServings(4, this)">4x ({% widthratio recipe.servings 1 4 %})</button>
+          </div>
+        </div>
+
+        <!-- Ingredients Section -->
+        <h2 class="detail-section-title">🥘 Required Ingredients ({{ recipe.recipe_ingredients.count }})</h2>
+        <ul class="ing-checklist" id="detailIngredientsList">
+          {% for ri in recipe.recipe_ingredients.all %}
+          <li class="present" style="padding: 10px 14px; background: var(--bg-sand); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1;">
+              <input type="checkbox" style="width: 16px; height: 16px; accent-color: var(--farm-green);">
+              <span><strong>{{ ri.raw_name }}</strong> <span class="ing-amount" data-base="{{ ri.amount }}" style="color: var(--text-muted); font-size: 13px;">({{ ri.amount }})</span></span>
+            </label>
+            {% if ri.is_optional %}
+            <span style="font-size: 11px; background: #FFF3CD; color: #856404; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Optional</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+
+        <!-- Cooking Instructions Section -->
+        <h2 class="detail-section-title">👨‍🍳 Step-by-Step Cooking Directions</h2>
+        <div id="detailStepsList">
+          {% for step in recipe.instructions.all %}
+          <div class="step-item" onclick="this.classList.toggle('done')">
+            <div class="step-num">{{ step.step_number }}</div>
+            <div style="flex: 1;">
+              <p style="margin: 0; font-size: 14px; color: var(--text-dark);">{{ step.instruction }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Kitchen Timer -->
+        <div class="kitchen-timer-strip" style="margin-top: 24px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; color: var(--turmeric-dark); text-transform: uppercase; display: block;">Interactive Kitchen Timer</span>
+            <span class="timer-digits" id="detailTimerDigits">{{ recipe.prep_time }}:00</span>
+          </div>
+          <button class="timer-btn" id="detailTimerToggleBtn" onclick="toggleDetailTimer({{ recipe.prep_time }})">Start Timer</button>
+        </div>
+
+      </div>
+    </article>
+  </div>
+
+  <script>
+    let timerRunning = false;
+    let timerInterval = null;
+    let timerTarget = null;
+    let timerRemainingMs = {{ recipe.prep_time }} * 60 * 1000;
+
+    function toggleDetailTimer(defaultMins) {
+      if (timerRunning) {
+        timerRunning = false;
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById("detailTimerToggleBtn").textContent = "Start Timer";
+        return;
+      }
+
+      timerRunning = true;
+      document.getElementById("detailTimerToggleBtn").textContent = "Pause Timer";
+      timerTarget = Date.now() + timerRemainingMs;
+
+      timerInterval = setInterval(() => {
+        const remaining = Math.max(0, timerTarget - Date.now());
+        timerRemainingMs = remaining;
+        const totalSecs = Math.ceil(remaining / 1000);
+        const m = Math.floor(totalSecs / 60);
+        const s = totalSecs % 60;
+        document.getElementById("detailTimerDigits").textContent = 
+          String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById("detailTimerToggleBtn").textContent = "Start Timer";
+          alert("🔔 Cooking timer complete for {{ recipe.name|escapejs }}!");
+        }
+      }, 250);
+    }
+
+    function scaleServings(factor, btn) {
+      document.querySelectorAll(".stepper-btn").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+      
+      const baseServings = {{ recipe.servings }};
+      document.getElementById("detailServingsCount").textContent = baseServings * factor;
+
+      // Scale ingredients
+      fetch('/api/v1/recipes/{{ recipe.recipe_uid }}/scale/?servings=' + (baseServings * factor))
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.scaled_ingredients) {
+            const list = document.getElementById("detailIngredientsList");
+            list.innerHTML = data.scaled_ingredients.map(si => `
+              <li class="present" style="padding: 10px 14px; background: var(--bg-sand); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1;">
+                  <input type="checkbox" style="width: 16px; height: 16px; accent-color: var(--farm-green);">
+                  <span><strong>${si.raw_name}</strong> <span style="color: var(--text-muted); font-size: 13px;">(${si.scaled_amount})</span></span>
+                </label>
+                ${si.is_optional ? '<span style="font-size: 11px; background: #FFF3CD; color: #856404; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Optional</span>' : ''}
+              </li>
+            `).join("");
+          }
+        })
+        .catch(() => {});
+    }
+  </script>
+</body>
+</html>
