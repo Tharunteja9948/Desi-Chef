@@ -1,5 +1,5 @@
 // ==========================================================================
-// DESI CHEF — Your Personal Chef (Django Full-Stack Application Controller)
+// DESI CHEF — Your Personal Chef (Production Full-Stack Platform)
 // Powers All 10 Master Indian Culinary Domains (512 Authentic Recipes)
 // ==========================================================================
 
