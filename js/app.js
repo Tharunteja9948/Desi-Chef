@@ -341,6 +341,7 @@ function addCustomPantryItem(name) {
   renderPantryChips();
   renderDishes();
   updatePantryCounters();
+  triggerPantrySync();
 }
 
 function togglePantryItem(item) {
@@ -357,6 +358,7 @@ function togglePantryItem(item) {
   renderPantryChips();
   renderDishes();
   updatePantryCounters();
+  triggerPantrySync();
 }
 
 function resetPantry() {
@@ -365,6 +367,7 @@ function resetPantry() {
   renderPantryChips();
   renderDishes();
   updatePantryCounters();
+  triggerPantrySync();
 }
 
 function getPantryMatchedRecipes() {
@@ -1249,6 +1252,9 @@ function openRecipe(id) {
   // Drift-Free Kitchen Timer Initialization
   setupTimer(recipe.prepTime * 60);
 
+  // Update Favorite Button State
+  updateModalFavoriteButton();
+
   // Open modal
   recipeModal.classList.add("active");
 }
@@ -1479,3 +1485,484 @@ window.addEventListener("DOMContentLoaded", initSearchSystem);
 if (document.readyState === "complete" || document.readyState === "interactive") {
   initSearchSystem();
 }
+
+// ==========================================================================
+// DJANGO REST FRAMEWORK FULL-STACK API BRIDGE & PERSONALIZATION
+// ==========================================================================
+let currentUser = null;
+let userFavoritesSet = new Set();
+let pantrySyncTimeout = null;
+
+function getCsrfToken() {
+  const metaInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+  if (metaInput && metaInput.value) return metaInput.value;
+  const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+  return cookie ? cookie.split('=')[1] : '';
+}
+
+function fetchCurrentUser() {
+  fetch('/api/v1/auth/me/')
+    .then(res => res.json())
+    .then(data => {
+      if (data.is_authenticated && data.user) {
+        currentUser = data.user;
+        updateAuthNavUI();
+        fetchFavorites();
+        fetchUserPantry();
+      } else {
+        currentUser = null;
+        updateAuthNavUI();
+      }
+    })
+    .catch(() => {
+      currentUser = null;
+      updateAuthNavUI();
+    });
+}
+
+function updateAuthNavUI() {
+  const label = document.getElementById("authNavLabel");
+  const icon = document.getElementById("authNavIcon");
+  const userEl = document.getElementById("dropdownUsername");
+  const btn = document.getElementById("authNavBtn");
+
+  if (currentUser) {
+    if (label) label.textContent = currentUser.username;
+    if (icon) icon.textContent = "👤";
+    if (userEl) userEl.textContent = currentUser.username;
+    if (btn) btn.title = "Click to open user menu";
+  } else {
+    if (label) label.textContent = "Sign In";
+    if (icon) icon.textContent = "👤";
+    if (userEl) userEl.textContent = "User";
+    if (btn) btn.title = "Sign In or Register";
+  }
+}
+
+function onAuthNavClick() {
+  if (currentUser) {
+    const menu = document.getElementById("userDropdownMenu");
+    if (menu) {
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  } else {
+    openAuthModal();
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const wrap = document.querySelector(".user-auth-wrap");
+  const menu = document.getElementById("userDropdownMenu");
+  if (menu && wrap && !wrap.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
+
+function openAuthModal() {
+  const modal = document.getElementById("authModal");
+  if (modal) {
+    modal.classList.add("active");
+    switchAuthTab('login');
+    const notice = document.getElementById("authErrorNotice");
+    if (notice) notice.style.display = "none";
+  }
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById("authModal");
+  if (modal) modal.classList.remove("active");
+}
+
+function switchAuthTab(tab) {
+  const tabLogin = document.getElementById("authTabLogin");
+  const tabRegister = document.getElementById("authTabRegister");
+  const formLogin = document.getElementById("authLoginForm");
+  const formRegister = document.getElementById("authRegisterForm");
+  const title = document.getElementById("authModalTitle");
+  const notice = document.getElementById("authErrorNotice");
+  if (notice) notice.style.display = "none";
+
+  if (tab === 'login') {
+    if (tabLogin) { tabLogin.classList.add("active"); tabLogin.style.color = "var(--farm-green)"; tabLogin.style.borderBottomColor = "var(--farm-green)"; }
+    if (tabRegister) { tabRegister.classList.remove("active"); tabRegister.style.color = "var(--text-muted)"; tabRegister.style.borderBottomColor = "transparent"; }
+    if (formLogin) formLogin.style.display = "block";
+    if (formRegister) formRegister.style.display = "none";
+    if (title) title.textContent = "Sign In to AI Chef";
+  } else {
+    if (tabRegister) { tabRegister.classList.add("active"); tabRegister.style.color = "var(--farm-green)"; tabRegister.style.borderBottomColor = "var(--farm-green)"; }
+    if (tabLogin) { tabLogin.classList.remove("active"); tabLogin.style.color = "var(--text-muted)"; tabLogin.style.borderBottomColor = "transparent"; }
+    if (formRegister) formRegister.style.display = "block";
+    if (formLogin) formLogin.style.display = "none";
+    if (title) title.textContent = "Create AI Chef Account";
+  }
+}
+
+function submitLogin(e) {
+  e.preventDefault();
+  const u = document.getElementById("loginUsername").value.trim();
+  const p = document.getElementById("loginPassword").value;
+  const notice = document.getElementById("authErrorNotice");
+
+  fetch('/api/v1/auth/login/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({ username: u, password: p })
+  })
+  .then(res => res.json().then(data => ({ status: res.status, data })))
+  .then(({ status, data }) => {
+    if (status === 200) {
+      currentUser = data.user;
+      closeAuthModal();
+      updateAuthNavUI();
+      fetchFavorites();
+      syncLocalPantryToBackend();
+    } else {
+      if (notice) {
+        notice.textContent = data.non_field_errors ? data.non_field_errors.join(" ") : (data.detail || "Invalid login credentials.");
+        notice.style.display = "block";
+      }
+    }
+  })
+  .catch(() => {
+    if (notice) {
+      notice.textContent = "Connection error. Please try again.";
+      notice.style.display = "block";
+    }
+  });
+}
+
+function submitRegister(e) {
+  e.preventDefault();
+  const u = document.getElementById("regUsername").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const p = document.getElementById("regPassword").value;
+  const diet = document.getElementById("regDiet").value;
+  const notice = document.getElementById("authErrorNotice");
+
+  fetch('/api/v1/auth/register/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({ username: u, email, password: p, dietary_preference: diet })
+  })
+  .then(res => res.json().then(data => ({ status: res.status, data })))
+  .then(({ status, data }) => {
+    if (status === 201) {
+      currentUser = data.user;
+      closeAuthModal();
+      updateAuthNavUI();
+      syncLocalPantryToBackend();
+    } else {
+      if (notice) {
+        const errs = Object.values(data).flat().join(" ");
+        notice.textContent = errs || "Registration error.";
+        notice.style.display = "block";
+      }
+    }
+  })
+  .catch(() => {
+    if (notice) {
+      notice.textContent = "Connection error. Please try again.";
+      notice.style.display = "block";
+    }
+  });
+}
+
+function logoutUser() {
+  fetch('/api/v1/auth/logout/', {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCsrfToken()
+    }
+  })
+  .finally(() => {
+    currentUser = null;
+    userFavoritesSet.clear();
+    updateAuthNavUI();
+    const menu = document.getElementById("userDropdownMenu");
+    if (menu) menu.style.display = "none";
+  });
+}
+
+function triggerPantrySync() {
+  if (!currentUser) return;
+  if (pantrySyncTimeout) clearTimeout(pantrySyncTimeout);
+  pantrySyncTimeout = setTimeout(() => {
+    syncLocalPantryToBackend();
+  }, 1000);
+}
+
+function syncLocalPantryToBackend() {
+  if (!currentUser) return;
+  const items = Array.from(selectedPantry);
+  fetch('/api/v1/pantry/sync_session_pantry/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({ items })
+  }).catch(() => {});
+}
+
+function fetchUserPantry() {
+  if (!currentUser) return;
+  fetch('/api/v1/pantry/')
+    .then(res => res.json())
+    .then(data => {
+      const results = Array.isArray(data) ? data : (data.results || []);
+      results.forEach(it => {
+        const name = it.ingredient_name || it.custom_name;
+        if (name) selectedPantry.add(name);
+      });
+      renderPantryChips();
+      renderDishes();
+      updatePantryCounters();
+    })
+    .catch(() => {});
+}
+
+function updateModalFavoriteButton() {
+  const icon = document.getElementById("favBtnIcon");
+  const label = document.getElementById("favBtnLabel");
+  const btn = document.getElementById("modalFavoriteBtn");
+  if (!activeRecipe || !icon || !label) return;
+  const isFav = userFavoritesSet.has(activeRecipe.id);
+  icon.textContent = isFav ? "❤️" : "🤍";
+  label.textContent = isFav ? "Saved to Favorites" : "Save to Favorites";
+  if (btn) {
+    btn.style.background = isFav ? "var(--farm-green-light)" : "#fff";
+  }
+}
+
+function fetchFavorites() {
+  if (!currentUser) return;
+  fetch('/api/v1/favorites/')
+    .then(res => res.json())
+    .then(data => {
+      userFavoritesSet.clear();
+      const results = Array.isArray(data) ? data : (data.results || []);
+      results.forEach(f => {
+        if (f.recipe_details && f.recipe_details.recipe_uid) {
+          userFavoritesSet.add(f.recipe_details.recipe_uid);
+        }
+      });
+      updateModalFavoriteButton();
+    })
+    .catch(() => {});
+}
+
+function toggleCurrentRecipeFavorite() {
+  if (!currentUser) {
+    openAuthModal();
+    return;
+  }
+  if (!activeRecipe) return;
+
+  fetch('/api/v1/favorites/toggle/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({ recipe_uid: activeRecipe.id })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.is_favorited) {
+      userFavoritesSet.add(activeRecipe.id);
+    } else {
+      userFavoritesSet.delete(activeRecipe.id);
+    }
+    updateModalFavoriteButton();
+  })
+  .catch(() => {});
+}
+
+function openFavoritesModal() {
+  const menu = document.getElementById("userDropdownMenu");
+  if (menu) menu.style.display = "none";
+  const modal = document.getElementById("favoritesModal");
+  if (modal) modal.classList.add("active");
+
+  const container = document.getElementById("favoritesListContainer");
+  if (!container) return;
+
+  container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Loading your saved recipes...</div>';
+
+  fetch('/api/v1/favorites/')
+    .then(res => res.json())
+    .then(data => {
+      const results = Array.isArray(data) ? data : (data.results || []);
+      if (results.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px 20px; background: var(--bg-sand); border-radius: 12px;">
+            <p style="font-size: 28px; margin-bottom: 8px;">🤍</p>
+            <h4 style="font-size: 15px; font-weight: 700; color: var(--text-dark);">No saved recipes yet</h4>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Tap "Save to Favorites" on any recipe card to keep your favorite dishes here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = results.map(fav => {
+        const r = fav.recipe_details;
+        return `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-sand); border-radius: 10px; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="${r.image}" alt="${escapeHtml(r.name)}" style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" onerror="this.src='/static/images/dishes/traditional-rice.jpg'">
+              <div>
+                <h4 style="font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">${escapeHtml(r.name)}</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">⏱ ${r.prep_time} mins • ${r.dietary_type}</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="closeFavoritesModal(); openRecipe('${r.recipe_uid}')" style="background: var(--farm-green); color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                Cook →
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    })
+    .catch(() => {
+      container.innerHTML = '<div style="color: #D32F2F; text-align: center; padding: 20px;">Could not load favorites.</div>';
+    });
+}
+
+function closeFavoritesModal() {
+  const modal = document.getElementById("favoritesModal");
+  if (modal) modal.classList.remove("active");
+}
+
+function addCurrentRecipeToShoppingList() {
+  if (!activeRecipe) return;
+
+  if (!currentUser) {
+    openAuthModal();
+    return;
+  }
+
+  fetch('/api/v1/shopping/generate_from_recipes/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({
+      recipe_uids: [activeRecipe.id],
+      exclude_pantry: true
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(`🛒 Added missing ingredients from ${activeRecipe.name} to your Grocery List!`);
+  })
+  .catch(() => {
+    alert("Could not update shopping list. Please try again.");
+  });
+}
+
+function openShoppingModal() {
+  const menu = document.getElementById("userDropdownMenu");
+  if (menu) menu.style.display = "none";
+  const modal = document.getElementById("shoppingModal");
+  if (modal) modal.classList.add("active");
+
+  loadShoppingListItems();
+}
+
+function closeShoppingModal() {
+  const modal = document.getElementById("shoppingModal");
+  if (modal) modal.classList.remove("active");
+}
+
+function loadShoppingListItems() {
+  const container = document.getElementById("shoppingListItemsContainer");
+  if (!container) return;
+
+  container.innerHTML = '<li style="padding: 16px; text-align: center; color: var(--text-muted);">Loading grocery list...</li>';
+
+  fetch('/api/v1/shopping/')
+    .then(res => res.json())
+    .then(data => {
+      const lists = Array.isArray(data) ? data : (data.results || []);
+      if (lists.length === 0 || !lists[0].items || lists[0].items.length === 0) {
+        container.innerHTML = `
+          <li style="text-align: center; padding: 30px 16px; background: var(--bg-sand); border-radius: 10px; color: var(--text-muted); font-size: 13px;">
+            🛒 Your shopping list is empty. Tap "Add to Grocery List" on any recipe modal to automatically add missing ingredients!
+          </li>
+        `;
+        return;
+      }
+
+      const activeList = lists[0];
+      container.innerHTML = activeList.items.map(item => `
+        <li style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-sand); border-radius: 8px; font-size: 13px;">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; ${item.is_purchased ? 'text-decoration: line-through; opacity: 0.55;' : ''}">
+            <input type="checkbox" ${item.is_purchased ? 'checked' : ''} onchange="toggleShoppingItem('${activeList.id}', '${item.id}')" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--farm-green);">
+            <span><strong>${escapeHtml(item.ingredient_name)}</strong> <span style="color: var(--text-muted); font-size: 12px;">(${escapeHtml(item.amount || 'as needed')})</span></span>
+          </label>
+        </li>
+      `).join("");
+    })
+    .catch(() => {
+      container.innerHTML = '<li style="color: #D32F2F; padding: 16px; text-align: center;">Could not load grocery list.</li>';
+    });
+}
+
+function toggleShoppingItem(listId, itemId) {
+  fetch(`/api/v1/shopping/${listId}/items/${itemId}/toggle/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCsrfToken()
+    }
+  })
+  .then(() => loadShoppingListItems())
+  .catch(() => {});
+}
+
+function addCustomShoppingItem() {
+  const input = document.getElementById("newShoppingItemInput");
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) return;
+
+  fetch('/api/v1/shopping/')
+    .then(res => res.json())
+    .then(data => {
+      const lists = Array.isArray(data) ? data : (data.results || []);
+      if (lists.length > 0) {
+        return lists[0].id;
+      } else {
+        return fetch('/api/v1/shopping/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+          body: JSON.stringify({ title: 'My Grocery List' })
+        }).then(r => r.json()).then(l => l.id);
+      }
+    })
+    .then(listId => {
+      return fetch(`/api/v1/shopping/${listId}/add_item/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+        body: JSON.stringify({ ingredient_name: name, amount: '' })
+      });
+    })
+    .then(() => {
+      input.value = '';
+      loadShoppingListItems();
+    })
+    .catch(() => {
+      alert("Please sign in to save grocery items.");
+    });
+}
+
+// Auto-check auth state on initial DOM load
+document.addEventListener("DOMContentLoaded", fetchCurrentUser);
+

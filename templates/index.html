@@ -1,0 +1,466 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chef — Authentic Indian Homestyle Recipe Platform</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=15">
+</head>
+<body>
+
+  <!-- Hidden CSRF token carrier for secure Django API calls -->
+  <div style="display: none;">
+    {% csrf_token %}
+  </div>
+
+  <!-- ================= 1. STICKY HEADER ================= -->
+  <header class="top-header">
+    <div class="container">
+      <div class="top-nav">
+        <!-- Brand Identity -->
+        <a href="/" class="brand-wrap">
+          <div class="brand-logo-badge" style="width: 48px; height: 48px; min-width: 48px; min-height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--turmeric-amber); display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.12); flex-shrink: 0;">
+            <img src="{% static 'images/chef-logo.jpg' %}" alt="Chef Logo" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%;">
+          </div>
+          <div class="brand-info">
+            <h1>AI CHEF</h1>
+            <span>Homestyle Recipes</span>
+          </div>
+        </a>
+
+        <!-- Global Search Bar: Dual-Mode (Dishes/Ingredients) + Rotating Animated Placeholder -->
+        <div class="search-bar-wrap" id="searchBarWrap">
+          <!-- Dual mode toggle badge (Dishes vs Ingredients) -->
+          <button type="button" class="search-mode-pill" id="searchModeBtn" onclick="toggleSearchMode()" title="Click to switch: Search by Dish Name or by Ingredient">
+            <span id="searchModeIcon">🍽️</span>
+            <span id="searchModeLabel">Dishes</span>
+            <span style="font-size: 8px; opacity: 0.6;">▼</span>
+          </button>
+
+          <!-- Main Input Field with Animated Rotating Placeholder -->
+          <input type="text" id="recipeSearch" class="search-input has-dual-mode" placeholder="Search 'Hyderabadi Dum Biryani'..." oninput="onSearchInput(this.value)" autocomplete="off">
+
+          <!-- Right Action: Clear Button [✕] (appears when typing) -->
+          <button type="button" class="search-action-btn" id="searchActionBtn" onclick="onSearchActionClick()" title="Clear search">
+            <span id="searchActionContent">✕</span>
+          </button>
+        </div>
+
+        <!-- Right Header Actions: My Pantry + Authentication Pill -->
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap;">
+          <button class="top-pantry-btn" onclick="scrollToPantry()">
+            <span>🥘 My Pantry</span>
+            <span class="badge-counter" id="navCount">0</span>
+          </button>
+
+          <div class="user-auth-wrap" style="position: relative;">
+            <button type="button" class="auth-pill-btn" id="authNavBtn" onclick="onAuthNavClick()" style="background: var(--bg-sand); border: 1.5px solid var(--farm-green); color: var(--farm-green); font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+              <span id="authNavIcon">👤</span>
+              <span id="authNavLabel">Sign In</span>
+            </button>
+            
+            <!-- User Dropdown Menu -->
+            <div id="userDropdownMenu" style="display: none; position: absolute; right: 0; top: 115%; width: 200px; background: #fff; border: 1px solid var(--bg-sand-border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; padding: 6px 0;">
+              <div style="padding: 8px 16px; border-bottom: 1px solid var(--bg-sand-border); font-size: 12px; color: var(--text-muted);">
+                Signed in as <strong id="dropdownUsername" style="color: var(--text-dark);">User</strong>
+              </div>
+              <button type="button" onclick="openFavoritesModal()" style="width: 100%; text-align: left; padding: 10px 16px; background: none; border: none; font-size: 13px; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <span>❤️</span> <span>Saved Recipes</span>
+              </button>
+              <button type="button" onclick="openShoppingModal()" style="width: 100%; text-align: left; padding: 10px 16px; background: none; border: none; font-size: 13px; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <span>🛒</span> <span>Grocery List</span>
+              </button>
+              <button type="button" onclick="logoutUser()" style="width: 100%; text-align: left; padding: 10px 16px; background: none; border: none; font-size: 13px; font-weight: 600; color: #D32F2F; border-top: 1px solid var(--bg-sand-border); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <span>🚪</span> <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 2. "WHAT ARE YOU CRAVING TODAY?" STORY CIRCLES ================= -->
+  <section class="category-strip-section">
+    <div class="container">
+      <div class="section-label-row">
+        <h2>What are you craving today?</h2>
+        <span style="font-size: 12px; color: var(--farm-green); font-weight: 700; cursor: pointer;" onclick="switchMainSection('all', null)">Explore All (10 Categories)</span>
+      </div>
+
+      <div class="story-circles-container">
+        <!-- 1. Breakfast -->
+        <div class="story-circle-item active" id="story-all-breakfast" onclick="filterByStory('breakfast', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/classic-idli.jpg' %}" alt="Breakfast">
+          </div>
+          <span class="story-label">Breakfast</span>
+          <span class="story-count">30 dishes</span>
+        </div>
+
+        <!-- 2. Biryani & Rice -->
+        <div class="story-circle-item" id="story-all-rice" onclick="filterByStory('rice', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/biryani.jpg' %}" alt="Biryani & Rice">
+          </div>
+          <span class="story-label">Biryani & Rice</span>
+          <span class="story-count">77 dishes</span>
+        </div>
+
+        <!-- 3. Curries -->
+        <div class="story-circle-item" id="story-all-curries" onclick="filterByStory('curries', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/butter-chicken.jpg' %}" alt="Curries">
+          </div>
+          <span class="story-label">Curries</span>
+          <span class="story-count">60 dishes</span>
+        </div>
+
+        <!-- 4. Street Food -->
+        <div class="story-circle-item" id="story-all-streetfood" onclick="filterByStory('streetfood', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/pani-puri.jpg' %}" alt="Street Food">
+          </div>
+          <span class="story-label">Street Food</span>
+          <span class="story-count">65 dishes</span>
+        </div>
+
+        <!-- 5. Snacks & Kebabs -->
+        <div class="story-circle-item" id="story-all-snacks" onclick="filterByStory('snacks', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/paneer-tikka.jpg' %}" alt="Snacks & Kebabs">
+          </div>
+          <span class="story-label">Snacks & Kebabs</span>
+          <span class="story-count">50 dishes</span>
+        </div>
+
+        <!-- 6. Rotis & Naans -->
+        <div class="story-circle-item" id="story-all-breads" onclick="filterByStory('breads', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/garlic-naan.jpg' %}" alt="Rotis & Naans">
+          </div>
+          <span class="story-label">Rotis & Naans</span>
+          <span class="story-count">35 dishes</span>
+        </div>
+
+        <!-- 7. Mithai & Sweets -->
+        <div class="story-circle-item" id="story-all-sweets" onclick="filterByStory('sweets', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/gulab-jamun.jpg' %}" alt="Mithai & Sweets">
+          </div>
+          <span class="story-label">Mithai & Sweets</span>
+          <span class="story-count">45 dishes</span>
+        </div>
+
+        <!-- 8. Pachallu & Pickles -->
+        <div class="story-circle-item" id="story-all-chutneys" onclick="filterByStory('chutneys', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/gongura-pachadi.jpg' %}" alt="Pachallu & Pickles">
+          </div>
+          <span class="story-label">Pachallu & Pickles</span>
+          <span class="story-count">40 dishes</span>
+        </div>
+
+        <!-- 9. Soups & Chai -->
+        <div class="story-circle-item" id="story-all-soups-drinks" onclick="filterByStory('soups_drinks', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/masala-chai.jpg' %}" alt="Soups & Chai">
+          </div>
+          <span class="story-label">Soups & Chai</span>
+          <span class="story-count">50 dishes</span>
+        </div>
+
+        <!-- 10. Seafood & Eggs -->
+        <div class="story-circle-item" id="story-all-sides-eggs-seafood" onclick="filterByStory('sides_eggs_seafood', 'all', this)">
+          <div class="story-avatar">
+            <img src="{% static 'images/dishes/karimeen-pollichathu.jpg' %}" alt="Seafood & Eggs">
+          </div>
+          <span class="story-label">Seafood & Eggs</span>
+          <span class="story-count">60 dishes</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3. PANTRY SHELF (In My Kitchen) ================= -->
+  <section class="container pantry-shelf-section" id="pantryShelf">
+    <div class="pantry-shelf-box">
+      
+      <div class="pantry-shelf-top">
+        <div class="pantry-shelf-title">
+          <h3>🥘 In My Kitchen</h3>
+          <p>Select what you have at home to see instant dish matches:</p>
+        </div>
+      </div>
+
+      <!-- Ingredient Search Bar -->
+      <div class="pantry-search-container">
+        <div class="pantry-search-input-wrap">
+          <span class="pantry-search-icon">🔍</span>
+          <input type="text" id="pantrySearchInput" class="pantry-search-input" placeholder="Search or add any ingredient (e.g. 'curry leaves', 'fish', 'rava')..." oninput="onPantrySearch(this.value)" onkeydown="onPantrySearchKeydown(event)" autocomplete="off">
+          <button type="button" class="pantry-search-clear-btn" id="pantrySearchClearBtn" onclick="clearPantrySearch()" title="Clear ingredient search">✕</button>
+        </div>
+      </div>
+
+      <!-- Ingredient Chips Selector -->
+      <div class="pantry-pills-row" id="pantryChipsContainer">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Integrated Shelf Footer Bar -->
+      <div class="pantry-shelf-footer" id="pantryShelfFooter">
+        <div class="pantry-footer-info">
+          <div class="pantry-footer-icon" id="pantryFooterIcon">🥘</div>
+          <div class="pantry-footer-text">
+            <h4 id="pantryFooterTitle">Tap ingredients above to start matching</h4>
+            <p id="pantryFooterSub">Select what you have at home to see instant dish matches</p>
+          </div>
+        </div>
+        <div class="pantry-footer-actions">
+          <button type="button" class="pantry-clear-btn" id="pantryClearBtn" onclick="resetPantry()" style="display: none;">
+            Clear All
+          </button>
+          <button type="button" class="pantry-view-matches-btn disabled" id="pantryViewMatchesCta" onclick="viewPantryMatches()">
+            <span class="pantry-btn-icon">🔥</span>
+            <span class="pantry-btn-text" id="pantryBtnText">Select Ingredients</span>
+            <span class="pantry-btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 4. FILTER PILLS BAR ================= -->
+  <div class="container">
+    <div class="filters-bar" id="filtersBar">
+      <!-- Rendered dynamically by renderFilterPills() in app.js -->
+    </div>
+  </div>
+
+  <!-- ================= 5. FOOD ITEMS GRID ================= -->
+  <main class="container" style="padding-top: 10px;">
+    
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-size: 13px; color: var(--text-muted);">
+      <div id="recipeCounterNotice" style="font-weight: 700; color: var(--text-dark);">
+        Showing authentic recipes
+      </div>
+      <div>
+        <span>Sort by: </span>
+        <select onchange="handleSort(this.value)" style="border: 1px solid var(--bg-sand-border); border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: 600;">
+          <option value="match">Pantry Match %</option>
+          <option value="time">Fastest Cook Time</option>
+          <option value="name">Name (A-Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Responsive Dishes Grid -->
+    <div class="dishes-grid" id="dishesGrid">
+      <!-- Injected by app.js -->
+    </div>
+
+  </main>
+
+  <!-- ================= 6. RECIPE COOKING MODAL ================= -->
+  <div class="modal-overlay" id="recipeModal" onclick="if(event.target === this) closeModal()">
+    <div class="modal-sheet">
+      
+      <div class="modal-sheet-header">
+        <div>
+          <div id="modalVegIndicator" class="veg-indicator"><span class="circle"></span></div>
+          <span id="modalSubcategory" style="font-size: 11px; font-weight: 700; color: var(--farm-green); text-transform: uppercase;">SPECIAL</span>
+          <h3 class="modal-dish-title" id="modalTitle">Dish Name</h3>
+          <p id="modalDesc" style="font-size: 13px; color: var(--text-muted); margin-top: 4px;"></p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      </div>
+
+      <!-- Modal Dish Banner Image -->
+      <div class="modal-dish-img-wrap" style="width: 100%; height: 210px; border-radius: var(--radius-md); overflow: hidden; margin: 14px 0 4px 0; background-color: var(--bg-sand);">
+        <img id="modalRecipeImg" src="{% static 'images/dishes/traditional-rice.jpg' %}" alt="Recipe Image" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='{% static 'images/dishes/traditional-rice.jpg' %}'">
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="modal-metrics-bar">
+        <div class="metric-cell">
+          <div class="label">Cook Time</div>
+          <div class="val" id="modalTime">15 mins</div>
+        </div>
+        <div class="metric-cell">
+          <div class="label" id="modalServingsLabel">Servings (<span id="modalServingsVal">2</span>)</div>
+          <div class="servings-stepper">
+            <button class="stepper-btn active" id="stepper1x" onclick="setServings(1, this)">1x</button>
+            <button class="stepper-btn" id="stepper2x" onclick="setServings(2, this)">2x</button>
+            <button class="stepper-btn" id="stepper4x" onclick="setServings(4, this)">4x</button>
+          </div>
+        </div>
+        <div class="metric-cell">
+          <div class="label">Pantry Match</div>
+          <div class="val" id="modalMatch" style="color: var(--veg-green);">100% Ready</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons: Save to Favorites & Add to Grocery List -->
+      <div style="display: flex; gap: 10px; margin: 14px 0 16px 0; flex-wrap: wrap;">
+        <button type="button" id="modalFavoriteBtn" onclick="toggleCurrentRecipeFavorite()" style="flex: 1; min-width: 160px; padding: 10px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--farm-green); background: #fff; color: var(--farm-green); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span id="favBtnIcon">🤍</span> <span id="favBtnLabel">Save to Favorites</span>
+        </button>
+        <button type="button" onclick="addCurrentRecipeToShoppingList()" style="flex: 1; min-width: 180px; padding: 10px 16px; border-radius: var(--radius-sm); border: none; background: var(--farm-green); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span>🛒</span> <span>Add to Grocery List</span>
+        </button>
+      </div>
+
+      <!-- Ingredients Checklist with In-Pantry vs Needed -->
+      <h4 class="modal-subhead">Ingredients Checklist</h4>
+      <ul class="ing-checklist" id="modalIngredientsList">
+        <!-- Rendered by JS -->
+      </ul>
+
+      <!-- How to Cook Directions -->
+      <h4 class="modal-subhead">Step-by-Step Cooking</h4>
+      <ol class="steps-list" id="modalStepsList">
+        <!-- Rendered by JS -->
+      </ol>
+
+      <!-- Embedded Kitchen Timer -->
+      <div class="kitchen-timer-strip">
+        <div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--turmeric-dark); text-transform: uppercase; display: block;">Interactive Kitchen Timer</span>
+          <span class="timer-digits" id="timerDigits">15:00</span>
+        </div>
+        <button class="timer-btn" id="timerToggleBtn" onclick="toggleTimer()">Start Timer</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 7. USER AUTH MODAL (LOGIN / REGISTER) ================= -->
+  <div class="modal-overlay" id="authModal" onclick="if(event.target === this) closeAuthModal()">
+    <div class="modal-sheet" style="max-width: 440px;">
+      <div class="modal-sheet-header">
+        <div>
+          <h3 class="modal-dish-title" id="authModalTitle">Sign In to AI Chef</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Save your kitchen pantry, favorite recipes and grocery lists</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeAuthModal()">✕</button>
+      </div>
+
+      <!-- Auth Switch Tabs -->
+      <div style="display: flex; gap: 8px; margin: 16px 0; border-bottom: 1px solid var(--bg-sand-border); padding-bottom: 8px;">
+        <button type="button" class="auth-tab-btn active" id="authTabLogin" onclick="switchAuthTab('login')" style="flex: 1; padding: 8px 12px; border: none; background: none; font-size: 14px; font-weight: 700; color: var(--farm-green); border-bottom: 2px solid var(--farm-green); cursor: pointer;">
+          Sign In
+        </button>
+        <button type="button" class="auth-tab-btn" id="authTabRegister" onclick="switchAuthTab('register')" style="flex: 1; padding: 8px 12px; border: none; background: none; font-size: 14px; font-weight: 700; color: var(--text-muted); border-bottom: 2px solid transparent; cursor: pointer;">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Error Notice -->
+      <div id="authErrorNotice" style="display: none; padding: 10px 14px; background: #FFEBEE; border: 1px solid #FFCDD2; color: #C62828; border-radius: 8px; font-size: 12px; margin-bottom: 14px;"></div>
+
+      <!-- Login Form -->
+      <form id="authLoginForm" onsubmit="submitLogin(event)">
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Username</label>
+          <input type="text" id="loginUsername" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none;" placeholder="e.g. demochef">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Password</label>
+          <input type="password" id="loginPassword" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none;" placeholder="••••••••">
+        </div>
+        <button type="submit" style="width: 100%; padding: 12px; background: var(--farm-green); color: #fff; font-size: 14px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer;">
+          Sign In
+        </button>
+        <div style="margin-top: 10px; font-size: 12px; text-align: center; color: var(--text-muted);">
+          Demo credentials: <strong>demochef</strong> / <strong>chef123</strong>
+        </div>
+      </form>
+
+      <!-- Register Form -->
+      <form id="authRegisterForm" onsubmit="submitRegister(event)" style="display: none;">
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Username</label>
+          <input type="text" id="regUsername" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none;" placeholder="Choose a username">
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Email (Optional)</label>
+          <input type="email" id="regEmail" style="width: 100%; padding: 10px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none;" placeholder="name@example.com">
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Password</label>
+          <input type="password" id="regPassword" required minlength="6" style="width: 100%; padding: 10px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none;" placeholder="Minimum 6 characters">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Dietary Preference</label>
+          <select id="regDiet" style="width: 100%; padding: 10px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none; background: #fff;">
+            <option value="all">No Restrictions (All Indian Recipes)</option>
+            <option value="veg">Pure Vegetarian (No eggs/meat)</option>
+            <option value="nonveg">Non-Vegetarian Favorites</option>
+            <option value="vegan">Vegan Only</option>
+          </select>
+        </div>
+        <button type="submit" style="width: 100%; padding: 12px; background: var(--farm-green); color: #fff; font-size: 14px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer;">
+          Create Free Account
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= 8. SAVED RECIPES (FAVORITES) MODAL ================= -->
+  <div class="modal-overlay" id="favoritesModal" onclick="if(event.target === this) closeFavoritesModal()">
+    <div class="modal-sheet" style="max-width: 680px;">
+      <div class="modal-sheet-header">
+        <div>
+          <h3 class="modal-dish-title">❤️ My Saved Recipes</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Dishes you bookmarked for later</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeFavoritesModal()">✕</button>
+      </div>
+
+      <div id="favoritesListContainer" style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 9. GROCERY SHOPPING LIST MODAL ================= -->
+  <div class="modal-overlay" id="shoppingModal" onclick="if(event.target === this) closeShoppingModal()">
+    <div class="modal-sheet" style="max-width: 600px;">
+      <div class="modal-sheet-header">
+        <div>
+          <h3 class="modal-dish-title">🛒 Grocery Shopping List</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Items to buy on your next market trip</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeShoppingModal()">✕</button>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin: 14px 0;">
+        <input type="text" id="newShoppingItemInput" placeholder="Add custom grocery item (e.g. 'Mustard oil 500ml')..." style="flex: 1; padding: 9px 12px; border: 1px solid var(--bg-sand-border); border-radius: 8px; font-size: 13px; outline: none;">
+        <button type="button" onclick="addCustomShoppingItem()" style="background: var(--farm-green); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer;">
+          + Add
+        </button>
+      </div>
+
+      <ul id="shoppingListItemsContainer" style="list-style: none; padding: 0; margin: 10px 0; display: flex; flex-direction: column; gap: 6px;">
+        <!-- Rendered by JS -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Data and Application Scripts -->
+  <script src="{% static 'data/breakfast.js' %}"></script>
+  <script src="{% static 'data/rice.js' %}"></script>
+  <script src="{% static 'data/streetfood.js' %}"></script>
+  <script src="{% static 'data/curries.js' %}"></script>
+  <script src="{% static 'data/snacks.js' %}"></script>
+  <script src="{% static 'data/breads.js' %}"></script>
+  <script src="{% static 'data/sweets.js' %}"></script>
+  <script src="{% static 'data/chutneys.js' %}"></script>
+  <script src="{% static 'data/soups_drinks.js' %}"></script>
+  <script src="{% static 'data/sides_eggs_seafood.js' %}"></script>
+  <script src="{% static 'js/app.js' %}?v=15"></script>
+</body>
+</html>

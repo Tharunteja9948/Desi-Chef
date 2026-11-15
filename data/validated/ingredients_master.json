@@ -1,0 +1,4507 @@
+[
+  {
+    "name": "Idli Batter",
+    "normalized_name": "idli batter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Cow Ghee",
+    "normalized_name": "pure cow ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Water",
+    "normalized_name": "water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sambar",
+    "normalized_name": "sambar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ragi Flour",
+    "normalized_name": "ragi flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Urad Dal",
+    "normalized_name": "urad dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Curd",
+    "normalized_name": "curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Salt",
+    "normalized_name": "salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Leftover Cooked Rice",
+    "normalized_name": "leftover cooked rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chutney Podi",
+    "normalized_name": "chutney podi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger",
+    "normalized_name": "ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Curry Leaves",
+    "normalized_name": "curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin & Pepper",
+    "normalized_name": "cumin & pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rolled Oats",
+    "normalized_name": "rolled oats",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rava",
+    "normalized_name": "rava",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chillies",
+    "normalized_name": "green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrot",
+    "normalized_name": "carrot",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dosa Batter",
+    "normalized_name": "dosa batter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Potatoes",
+    "normalized_name": "boiled potatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion",
+    "normalized_name": "onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Green Moong",
+    "normalized_name": "whole green moong",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Wheat Flour",
+    "normalized_name": "wheat flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Water & Salt",
+    "normalized_name": "water & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil",
+    "normalized_name": "oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Milk",
+    "normalized_name": "coconut milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Beans",
+    "normalized_name": "beans",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cabbage",
+    "normalized_name": "cabbage",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soy Sauce",
+    "normalized_name": "soy sauce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Spring Onion",
+    "normalized_name": "spring onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Pepper",
+    "normalized_name": "black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic",
+    "normalized_name": "garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Eggs",
+    "normalized_name": "eggs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boneless Chicken",
+    "normalized_name": "boneless chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Schezwan Sauce",
+    "normalized_name": "schezwan sauce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Capsicum",
+    "normalized_name": "capsicum",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paneer",
+    "normalized_name": "paneer",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Button Mushrooms",
+    "normalized_name": "button mushrooms",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Garlic",
+    "normalized_name": "fresh garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter or Oil",
+    "normalized_name": "butter or oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken",
+    "normalized_name": "chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Prawns",
+    "normalized_name": "prawns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Lemon Juice",
+    "normalized_name": "fresh lemon juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Peanuts",
+    "normalized_name": "peanuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds",
+    "normalized_name": "mustard seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric",
+    "normalized_name": "turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomatoes",
+    "normalized_name": "tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger Garlic Paste",
+    "normalized_name": "ginger garlic paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilli Powder",
+    "normalized_name": "chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Curd",
+    "normalized_name": "fresh curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Milk",
+    "normalized_name": "milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pomegranate",
+    "normalized_name": "pomegranate",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind Pulp",
+    "normalized_name": "tamarind pulp",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Red Chillies",
+    "normalized_name": "dry red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fenugreek Powder",
+    "normalized_name": "fenugreek powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sesame Oil",
+    "normalized_name": "sesame oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Grated Coconut",
+    "normalized_name": "fresh grated coconut",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashews",
+    "normalized_name": "cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Basmati Rice",
+    "normalized_name": "basmati rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds",
+    "normalized_name": "cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Spices",
+    "normalized_name": "whole spices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander",
+    "normalized_name": "fresh coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raisins",
+    "normalized_name": "raisins",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Cloves",
+    "normalized_name": "cardamom & cloves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Mint Leaves",
+    "normalized_name": "fresh mint leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ghee",
+    "normalized_name": "ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Green Mango",
+    "normalized_name": "raw green mango",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Toor Dal",
+    "normalized_name": "toor dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sambar Powder",
+    "normalized_name": "sambar powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind",
+    "normalized_name": "tamarind",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mixed Vegetables",
+    "normalized_name": "mixed vegetables",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomato",
+    "normalized_name": "tomato",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crushed Pepper & Cumin",
+    "normalized_name": "crushed pepper & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin",
+    "normalized_name": "cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garam Masala",
+    "normalized_name": "garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shahi Jeera",
+    "normalized_name": "shahi jeera",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Garam Masala",
+    "normalized_name": "whole garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mint & Coriander",
+    "normalized_name": "mint & coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rice",
+    "normalized_name": "rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bisibelebath Powder",
+    "normalized_name": "bisibelebath powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fried Onions",
+    "normalized_name": "fried onions",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Biryani Masala",
+    "normalized_name": "biryani masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Saffron Milk",
+    "normalized_name": "saffron milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken 65",
+    "normalized_name": "chicken 65",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Biryani Spices",
+    "normalized_name": "biryani spices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Seeraga Samba Rice",
+    "normalized_name": "seeraga samba rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mint & Coriander Paste",
+    "normalized_name": "mint & coriander paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Chilli Paste",
+    "normalized_name": "red chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shallots",
+    "normalized_name": "shallots",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mint",
+    "normalized_name": "mint",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jeerakasala / Kaima Rice",
+    "normalized_name": "jeerakasala / kaima rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashews & Raisins",
+    "normalized_name": "cashews & raisins",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fennel & Garam Masala",
+    "normalized_name": "fennel & garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tandoori Chicken Tikka",
+    "normalized_name": "tandoori chicken tikka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Minced Chicken",
+    "normalized_name": "minced chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken Lollipops",
+    "normalized_name": "chicken lollipops",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashew Paste",
+    "normalized_name": "cashew paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cream",
+    "normalized_name": "cream",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Saffron",
+    "normalized_name": "saffron",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Papaya Paste",
+    "normalized_name": "raw papaya paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mutton",
+    "normalized_name": "mutton",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shahi Garam Masala",
+    "normalized_name": "shahi garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Minced Mutton",
+    "normalized_name": "minced mutton",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Peas",
+    "normalized_name": "green peas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mutton Nalli / Bone",
+    "normalized_name": "mutton nalli / bone",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kaima Rice",
+    "normalized_name": "kaima rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hard Boiled Eggs",
+    "normalized_name": "hard boiled eggs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Prawns",
+    "normalized_name": "fresh prawns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fish Fillets",
+    "normalized_name": "fish fillets",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fish Tikka",
+    "normalized_name": "fish tikka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Crab",
+    "normalized_name": "fresh crab",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Spices",
+    "normalized_name": "spices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrots & Beans",
+    "normalized_name": "carrots & beans",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cauliflower",
+    "normalized_name": "cauliflower",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Potatoes",
+    "normalized_name": "potatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Paneer",
+    "normalized_name": "fresh paneer",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paneer Tikka",
+    "normalized_name": "paneer tikka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Capsicum & Onion",
+    "normalized_name": "capsicum & onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Baby Corn",
+    "normalized_name": "baby corn",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soya Chunks",
+    "normalized_name": "soya chunks",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Jackfruit",
+    "normalized_name": "raw jackfruit",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sweet Corn",
+    "normalized_name": "sweet corn",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Spinach",
+    "normalized_name": "fresh spinach",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Cashews",
+    "normalized_name": "whole cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrot & Beans",
+    "normalized_name": "carrot & beans",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sweet Green Peas",
+    "normalized_name": "sweet green peas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Apples & Pomegranate",
+    "normalized_name": "apples & pomegranate",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Walnuts & Almonds",
+    "normalized_name": "walnuts & almonds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pav Bhaji Masala",
+    "normalized_name": "pav bhaji masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter",
+    "normalized_name": "butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lemon",
+    "normalized_name": "lemon",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Yakhni Stock",
+    "normalized_name": "yakhni stock",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fennel & Coriander Seeds",
+    "normalized_name": "fennel & coriander seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Yellow Moong Dal",
+    "normalized_name": "yellow moong dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin & Mustard",
+    "normalized_name": "cumin & mustard",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Moong Dal",
+    "normalized_name": "moong dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrots & Peas",
+    "normalized_name": "carrots & peas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Brinjals",
+    "normalized_name": "brinjals",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Vangi Bath Powder",
+    "normalized_name": "vangi bath powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Karam Podi",
+    "normalized_name": "garlic karam podi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Puri",
+    "normalized_name": "puri",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Chickpeas",
+    "normalized_name": "boiled chickpeas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind Chutney",
+    "normalized_name": "tamarind chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chaat Masala",
+    "normalized_name": "chaat masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Salt",
+    "normalized_name": "black salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Puffed Rice",
+    "normalized_name": "puffed rice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fine Sev",
+    "normalized_name": "fine sev",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Papdi",
+    "normalized_name": "papdi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chutney",
+    "normalized_name": "green chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lemon Juice",
+    "normalized_name": "lemon juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Flat Papdi",
+    "normalized_name": "flat papdi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Chutney",
+    "normalized_name": "garlic chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nylon Sev",
+    "normalized_name": "nylon sev",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hollow Puris",
+    "normalized_name": "hollow puris",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Moong / Chickpeas",
+    "normalized_name": "boiled moong / chickpeas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Puris",
+    "normalized_name": "puris",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dried Green Peas",
+    "normalized_name": "dried green peas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Wheat Flour / Maida",
+    "normalized_name": "wheat flour / maida",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ajwain",
+    "normalized_name": "ajwain",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Amchur",
+    "normalized_name": "amchur",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Samosa Patti / Spring Roll Sheets",
+    "normalized_name": "samosa patti / spring roll sheets",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Poha",
+    "normalized_name": "poha",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander",
+    "normalized_name": "coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bhavnagri / Bajji Green Chillies",
+    "normalized_name": "bhavnagri / bajji green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Besan",
+    "normalized_name": "besan",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rice Flour",
+    "normalized_name": "rice flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Potatoes",
+    "normalized_name": "raw potatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Chilli Powder",
+    "normalized_name": "red chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hing",
+    "normalized_name": "hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Baking Soda",
+    "normalized_name": "baking soda",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pav Buns",
+    "normalized_name": "pav buns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cauliflower & Green Peas",
+    "normalized_name": "cauliflower & green peas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli Powder",
+    "normalized_name": "kashmiri chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Salted Butter",
+    "normalized_name": "pure salted butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ladi Pav",
+    "normalized_name": "ladi pav",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger Garlic Green Chilli Paste",
+    "normalized_name": "ginger garlic green chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Garlic Chutney",
+    "normalized_name": "dry garlic chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fried Green Chillies",
+    "normalized_name": "fried green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dabeli Masala",
+    "normalized_name": "dabeli masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Spicy Masala Peanuts",
+    "normalized_name": "spicy masala peanuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pomegranate Seeds",
+    "normalized_name": "pomegranate seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch / Rice Flour",
+    "normalized_name": "cornstarch / rice flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Powder",
+    "normalized_name": "cumin powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ghee or Oil for frying",
+    "normalized_name": "ghee or oil for frying",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Maida",
+    "normalized_name": "maida",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sooji",
+    "normalized_name": "sooji",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Baking Powder",
+    "normalized_name": "baking powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kabuli Chana",
+    "normalized_name": "kabuli chana",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tea Bag",
+    "normalized_name": "tea bag",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Amritsari Chole Masala",
+    "normalized_name": "amritsari chole masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion & Tomatoes",
+    "normalized_name": "onion & tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Ghee",
+    "normalized_name": "pure ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hakka Noodles",
+    "normalized_name": "hakka noodles",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli Sauce",
+    "normalized_name": "green chilli sauce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Vinegar",
+    "normalized_name": "vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Noodles",
+    "normalized_name": "noodles",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Eggs",
+    "normalized_name": "fresh eggs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Spring Onions",
+    "normalized_name": "spring onions",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilli Sauce",
+    "normalized_name": "chilli sauce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Ginger",
+    "normalized_name": "garlic & ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger & Garlic",
+    "normalized_name": "ginger & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken Momos",
+    "normalized_name": "chicken momos",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil for frying",
+    "normalized_name": "oil for frying",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Steamed Momos",
+    "normalized_name": "steamed momos",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Curd",
+    "normalized_name": "thick curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kasuri Methi",
+    "normalized_name": "kasuri methi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Oil",
+    "normalized_name": "mustard oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornflakes",
+    "normalized_name": "cornflakes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch & Maida",
+    "normalized_name": "cornstarch & maida",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilli Flakes & Oregano",
+    "normalized_name": "chilli flakes & oregano",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paratha / Roti",
+    "normalized_name": "paratha / roti",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Egg",
+    "normalized_name": "egg",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paratha",
+    "normalized_name": "paratha",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "2 Eggs",
+    "normalized_name": "2 eggs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomato Ketchup",
+    "normalized_name": "tomato ketchup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paneer Cubes",
+    "normalized_name": "paneer cubes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tandoori Masala",
+    "normalized_name": "tandoori masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mint Chutney",
+    "normalized_name": "mint chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roti / Tortilla",
+    "normalized_name": "roti / tortilla",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Frankie Masala",
+    "normalized_name": "frankie masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Vinegar Chilli Water",
+    "normalized_name": "vinegar chilli water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Bread Slices",
+    "normalized_name": "white bread slices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Beetroot",
+    "normalized_name": "beetroot",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cucumber & Tomato",
+    "normalized_name": "cucumber & tomato",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Amul Butter",
+    "normalized_name": "amul butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Mint Chutney",
+    "normalized_name": "green mint chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sandwich Masala",
+    "normalized_name": "sandwich masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Grated Cheese",
+    "normalized_name": "grated cheese",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Burger Buns",
+    "normalized_name": "burger buns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Potatoes & Sweet Corn",
+    "normalized_name": "boiled potatoes & sweet corn",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Breadcrumbs",
+    "normalized_name": "breadcrumbs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lettuce",
+    "normalized_name": "lettuce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion & Tomato",
+    "normalized_name": "onion & tomato",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cheese Slice",
+    "normalized_name": "cheese slice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mayonnaise",
+    "normalized_name": "mayonnaise",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Minced Chicken / Chicken Breast",
+    "normalized_name": "minced chicken / chicken breast",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Burger Sauce",
+    "normalized_name": "burger sauce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bread Slices",
+    "normalized_name": "bread slices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cucumber",
+    "normalized_name": "cucumber",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch & Rice Flour",
+    "normalized_name": "cornstarch & rice flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch",
+    "normalized_name": "cornstarch",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Paneer Cubes",
+    "normalized_name": "fresh paneer cubes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken Wingettes / Lollipops",
+    "normalized_name": "chicken wingettes / lollipops",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Large Potatoes",
+    "normalized_name": "large potatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cold Water",
+    "normalized_name": "cold water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Peri Peri Seasoning",
+    "normalized_name": "peri peri seasoning",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Spring Roll Wrappers",
+    "normalized_name": "spring roll wrappers",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrots",
+    "normalized_name": "carrots",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Flour Paste",
+    "normalized_name": "flour paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cabbage & Carrot",
+    "normalized_name": "cabbage & carrot",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger & Green Chillies",
+    "normalized_name": "ginger & green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken Tikka",
+    "normalized_name": "chicken tikka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrots & Cabbage",
+    "normalized_name": "carrots & cabbage",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roti",
+    "normalized_name": "roti",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilli Vinegar",
+    "normalized_name": "chilli vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crispy Veg Patty",
+    "normalized_name": "crispy veg patty",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "2 Cheese Slices",
+    "normalized_name": "2 cheese slices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomato & Onion",
+    "normalized_name": "tomato & onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Paneer Slab",
+    "normalized_name": "thick paneer slab",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tandoori Spices",
+    "normalized_name": "tandoori spices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mint Mayo",
+    "normalized_name": "mint mayo",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Potato",
+    "normalized_name": "boiled potato",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion & Capsicum",
+    "normalized_name": "onion & capsicum",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cheese",
+    "normalized_name": "cheese",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chutney",
+    "normalized_name": "chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cooked Chicken",
+    "normalized_name": "cooked chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cheese Slices & Mozzarella",
+    "normalized_name": "cheese slices & mozzarella",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Peri Peri Masala",
+    "normalized_name": "peri peri masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Powder",
+    "normalized_name": "garlic powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Egg & Flour",
+    "normalized_name": "egg & flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Buttermilk",
+    "normalized_name": "buttermilk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Seasoned Flour & Cornstarch",
+    "normalized_name": "seasoned flour & cornstarch",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paprika",
+    "normalized_name": "paprika",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken Wings",
+    "normalized_name": "chicken wings",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hot Sauce & Butter",
+    "normalized_name": "hot sauce & butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pizza Base",
+    "normalized_name": "pizza base",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pizza Sauce",
+    "normalized_name": "pizza sauce",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mozzarella Cheese",
+    "normalized_name": "mozzarella cheese",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oregano & Chilli Flakes",
+    "normalized_name": "oregano & chilli flakes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Elbow Macaroni Pasta",
+    "normalized_name": "elbow macaroni pasta",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Capsicum & Carrots",
+    "normalized_name": "capsicum & carrots",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Flaky Paratha",
+    "normalized_name": "flaky paratha",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boneless Chicken Tikka",
+    "normalized_name": "boneless chicken tikka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Cream",
+    "normalized_name": "fresh cream",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Gingelly Oil",
+    "normalized_name": "gingelly oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fennel Seeds",
+    "normalized_name": "fennel seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Poppy Seeds",
+    "normalized_name": "poppy seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Guntur Chilli Powder",
+    "normalized_name": "guntur chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander Seeds",
+    "normalized_name": "coriander seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Coconut",
+    "normalized_name": "dry coconut",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Sesame Seeds",
+    "normalized_name": "white sesame seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kolhapuri Masala",
+    "normalized_name": "kolhapuri masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds",
+    "normalized_name": "almonds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kewra Water",
+    "normalized_name": "kewra water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Cardamoms",
+    "normalized_name": "green cardamoms",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mace",
+    "normalized_name": "mace",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Oil",
+    "normalized_name": "coconut oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fennel Powder",
+    "normalized_name": "fennel powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli",
+    "normalized_name": "kashmiri chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Methi Leaves",
+    "normalized_name": "fresh methi leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Byadgi Chillies",
+    "normalized_name": "byadgi chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Gongura Leaves",
+    "normalized_name": "gongura leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Groundnut Oil",
+    "normalized_name": "groundnut oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Ginger Powder",
+    "normalized_name": "dry ginger powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Cardamom",
+    "normalized_name": "black cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mathania Red Chillies",
+    "normalized_name": "mathania red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kachri Powder",
+    "normalized_name": "kachri powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Clove Smoke",
+    "normalized_name": "clove smoke",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashews & Almonds",
+    "normalized_name": "cashews & almonds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mace & Nutmeg",
+    "normalized_name": "mace & nutmeg",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Poppy Seeds & Coconut",
+    "normalized_name": "poppy seeds & coconut",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin & Fennel",
+    "normalized_name": "cumin & fennel",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Garlic Pods",
+    "normalized_name": "whole garlic pods",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Red Chillies",
+    "normalized_name": "whole red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander & Cumin Seeds",
+    "normalized_name": "coriander & cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Black Peppercorns",
+    "normalized_name": "whole black peppercorns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander Powder",
+    "normalized_name": "coriander powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Peppercorns",
+    "normalized_name": "black peppercorns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chana Dal",
+    "normalized_name": "chana dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bottle Gourd",
+    "normalized_name": "bottle gourd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter & Ghee",
+    "normalized_name": "butter & ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tea Leaves",
+    "normalized_name": "tea leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Anardana",
+    "normalized_name": "anardana",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Amchur Powder",
+    "normalized_name": "amchur powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rajma",
+    "normalized_name": "rajma",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sabut Urad",
+    "normalized_name": "sabut urad",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Butter",
+    "normalized_name": "white butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Deggi Mirch",
+    "normalized_name": "deggi mirch",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Baby Potatoes",
+    "normalized_name": "baby potatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Saunf",
+    "normalized_name": "saunf",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sonth",
+    "normalized_name": "sonth",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cloves & Cardamoms",
+    "normalized_name": "cloves & cardamoms",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Large Bharta Baingan",
+    "normalized_name": "large bharta baingan",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Cloves",
+    "normalized_name": "garlic cloves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bhindi",
+    "normalized_name": "bhindi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric Powder",
+    "normalized_name": "turmeric powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Surti Papdi",
+    "normalized_name": "surti papdi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Baby Eggplants & Potatoes",
+    "normalized_name": "baby eggplants & potatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Methi Muthia",
+    "normalized_name": "methi muthia",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Garlic",
+    "normalized_name": "green garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sesame Seeds & Peanuts",
+    "normalized_name": "sesame seeds & peanuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard & Cumin Seeds",
+    "normalized_name": "mustard & cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Masoor Dal",
+    "normalized_name": "masoor dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Toor Dal or Moong Dal",
+    "normalized_name": "toor dal or moong dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Drumsticks",
+    "normalized_name": "drumsticks",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Groundnut Oil or Ghee",
+    "normalized_name": "groundnut oil or ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mixed Veggies",
+    "normalized_name": "mixed veggies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sour Curd",
+    "normalized_name": "sour curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sour Curd / Buttermilk",
+    "normalized_name": "sour curd / buttermilk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Toor Dal & Chana Dal",
+    "normalized_name": "toor dal & chana dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sundakkai Vathal",
+    "normalized_name": "sundakkai vathal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fenugreek Seeds",
+    "normalized_name": "fenugreek seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jaggery",
+    "normalized_name": "jaggery",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger-Chilli Paste",
+    "normalized_name": "ginger-chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cinnamon & Cloves",
+    "normalized_name": "cinnamon & cloves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Oil & Ghee",
+    "normalized_name": "mustard oil & ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger-Garlic",
+    "normalized_name": "ginger-garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bengali Garam Masala",
+    "normalized_name": "bengali garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fish",
+    "normalized_name": "fish",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Dry Red Chillies",
+    "normalized_name": "kashmiri dry red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kokum Petals",
+    "normalized_name": "kokum petals",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kudampuli",
+    "normalized_name": "kudampuli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kalonji",
+    "normalized_name": "kalonji",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chettinad Fish Masala",
+    "normalized_name": "chettinad fish masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crushed Black Pepper",
+    "normalized_name": "crushed black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Goan Toddy Vinegar",
+    "normalized_name": "goan toddy vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Dry Chillies",
+    "normalized_name": "kashmiri dry chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds & Cumin",
+    "normalized_name": "mustard seeds & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar",
+    "normalized_name": "sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Blue Crabs",
+    "normalized_name": "fresh blue crabs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Processed Cheese",
+    "normalized_name": "processed cheese",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Pepper Powder",
+    "normalized_name": "white pepper powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom Powder",
+    "normalized_name": "cardamom powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Cumin Powder",
+    "normalized_name": "roasted cumin powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger-Garlic Paste",
+    "normalized_name": "ginger-garlic paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mutton Keema",
+    "normalized_name": "mutton keema",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Mint & Coriander",
+    "normalized_name": "fresh mint & coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Cumin & Coriander Powder",
+    "normalized_name": "roasted cumin & coriander powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Chana Dal Powder",
+    "normalized_name": "roasted chana dal powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Browned Onion Paste",
+    "normalized_name": "browned onion paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Potli Masala / Shahi Garam Masala",
+    "normalized_name": "potli masala / shahi garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kewra & Rose Water",
+    "normalized_name": "kewra & rose water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boneless Mutton or Chicken",
+    "normalized_name": "boneless mutton or chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mint & Green Chillies",
+    "normalized_name": "mint & green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Gram Flour",
+    "normalized_name": "roasted gram flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chillies & Ginger",
+    "normalized_name": "green chillies & ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Besan",
+    "normalized_name": "roasted besan",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soya Chaap",
+    "normalized_name": "soya chaap",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Red Chilli",
+    "normalized_name": "kashmiri red chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boneless Mutton",
+    "normalized_name": "boneless mutton",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Black Pepper",
+    "normalized_name": "kashmiri chilli & black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric & Red Chilli",
+    "normalized_name": "turmeric & red chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Spinach Leaves",
+    "normalized_name": "fresh spinach leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coarse Besan",
+    "normalized_name": "coarse besan",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Semolina",
+    "normalized_name": "semolina",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger-Green Chilli Paste",
+    "normalized_name": "ginger-green chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sweet Corn Kernels",
+    "normalized_name": "sweet corn kernels",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bengali Bhaja Masala",
+    "normalized_name": "bengali bhaja masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch / Egg wash",
+    "normalized_name": "cornstarch / egg wash",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chaat Masala & Lemon",
+    "normalized_name": "chaat masala & lemon",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Paste",
+    "normalized_name": "garlic paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bajji Chillies",
+    "normalized_name": "bajji chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind Paste",
+    "normalized_name": "tamarind paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Green Banana",
+    "normalized_name": "raw green banana",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrot & Green Peas",
+    "normalized_name": "carrot & green peas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch Slurry",
+    "normalized_name": "cornstarch slurry",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Peanuts",
+    "normalized_name": "roasted peanuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger Paste",
+    "normalized_name": "ginger paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sabudana",
+    "normalized_name": "sabudana",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sendha Namak",
+    "normalized_name": "sendha namak",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Peanut Oil",
+    "normalized_name": "peanut oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hot Oil",
+    "normalized_name": "hot oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coconut Bits",
+    "normalized_name": "fresh coconut bits",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Processed Cheese & Mozzarella",
+    "normalized_name": "processed cheese & mozzarella",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Sweet Corn",
+    "normalized_name": "boiled sweet corn",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hing & Turmeric",
+    "normalized_name": "hing & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shredded Cabbage",
+    "normalized_name": "shredded cabbage",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Spring Onion Greens",
+    "normalized_name": "spring onion greens",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soy Sauce & Vinegar",
+    "normalized_name": "soy sauce & vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Pepper & Garlic",
+    "normalized_name": "white pepper & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Maida Paste",
+    "normalized_name": "maida paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rice Flour / Cornstarch",
+    "normalized_name": "rice flour / cornstarch",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Chaat Masala",
+    "normalized_name": "kashmiri chilli & chaat masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chillies & Garlic",
+    "normalized_name": "green chillies & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lemon Juice & Chaat Masala",
+    "normalized_name": "lemon juice & chaat masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil or Ghee",
+    "normalized_name": "oil or ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Chana Dal Flour",
+    "normalized_name": "roasted chana dal flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ajwain & Cumin Seeds",
+    "normalized_name": "ajwain & cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter or Hot Oil",
+    "normalized_name": "butter or hot oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Red Chilli Powder",
+    "normalized_name": "kashmiri red chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sesame Seeds",
+    "normalized_name": "sesame seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Gram",
+    "normalized_name": "roasted gram",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Byadgi Chilli Powder",
+    "normalized_name": "byadgi chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter / Ghee",
+    "normalized_name": "butter / ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli & Ginger Paste",
+    "normalized_name": "green chilli & ginger paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Urad Dal Flour",
+    "normalized_name": "urad dal flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Nendran Bananas",
+    "normalized_name": "raw nendran bananas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Coconut Oil",
+    "normalized_name": "pure coconut oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Salted Turmeric Water",
+    "normalized_name": "salted turmeric water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Cow Ghee / Butter",
+    "normalized_name": "pure cow ghee / butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Baking Powder & Soda",
+    "normalized_name": "baking powder & soda",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nigella Seeds",
+    "normalized_name": "nigella seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mozzarella & Processed Cheese",
+    "normalized_name": "mozzarella & processed cheese",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds, Cashews & Pistachios",
+    "normalized_name": "almonds, cashews & pistachios",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Desiccated Coconut",
+    "normalized_name": "desiccated coconut",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Golden Raisins & Glacé Cherries",
+    "normalized_name": "golden raisins & glacé cherries",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fennel Powder & Cardamom",
+    "normalized_name": "fennel powder & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter & Saffron Milk",
+    "normalized_name": "butter & saffron milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dried Mint Leaves",
+    "normalized_name": "dried mint leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Wheat Flour",
+    "normalized_name": "whole wheat flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil / Ghee",
+    "normalized_name": "oil / ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Warm Water & Salt",
+    "normalized_name": "warm water & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Maida & Atta",
+    "normalized_name": "maida & atta",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Milk & Water",
+    "normalized_name": "milk & water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Salt Water Spray",
+    "normalized_name": "salt water spray",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Makki ka Atta",
+    "normalized_name": "makki ka atta",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Warm Water",
+    "normalized_name": "warm water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ajwain & Salt",
+    "normalized_name": "ajwain & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Desi White Butter / Ghee",
+    "normalized_name": "desi white butter / ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jowar Flour",
+    "normalized_name": "jowar flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hot Boiling Water",
+    "normalized_name": "hot boiling water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bajra Flour",
+    "normalized_name": "bajra flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Desi Ghee / Butter",
+    "normalized_name": "desi ghee / butter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Dill Leaves & Coriander",
+    "normalized_name": "fresh dill leaves & coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds & Green Chillies",
+    "normalized_name": "cumin seeds & green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Cow Ghee / Oil",
+    "normalized_name": "pure cow ghee / oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Moringa / Drumstick Leaves",
+    "normalized_name": "fresh moringa / drumstick leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ajwain & Kasuri Methi",
+    "normalized_name": "ajwain & kasuri methi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garam Masala & Amchur",
+    "normalized_name": "garam masala & amchur",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Desi Ghee",
+    "normalized_name": "desi ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander Leaves",
+    "normalized_name": "fresh coriander leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jeera Powder & Chaat Masala",
+    "normalized_name": "jeera powder & chaat masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric & Red Chilli Powder",
+    "normalized_name": "turmeric & red chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Radish",
+    "normalized_name": "white radish",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander Leaves & Amchur",
+    "normalized_name": "coriander leaves & amchur",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Wheat Flour & Maida",
+    "normalized_name": "whole wheat flour & maida",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ajwain & Chaat Masala",
+    "normalized_name": "ajwain & chaat masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chaat Masala & Garam Masala",
+    "normalized_name": "chaat masala & garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sattu",
+    "normalized_name": "sattu",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kalonji & Ajwain",
+    "normalized_name": "kalonji & ajwain",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mango Pickle Masala",
+    "normalized_name": "mango pickle masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Green Chillies",
+    "normalized_name": "garlic & green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Egg / Milk",
+    "normalized_name": "egg / milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar & Salt",
+    "normalized_name": "sugar & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Pure Cow Ghee",
+    "normalized_name": "oil & pure cow ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Chilli Powder & Salt",
+    "normalized_name": "red chilli powder & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Amchur & Roasted Jeera Powder",
+    "normalized_name": "amchur & roasted jeera powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric & Chilli Powder",
+    "normalized_name": "turmeric & chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Nutmeg Powder",
+    "normalized_name": "cardamom & nutmeg powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Wheat Flour & Sooji",
+    "normalized_name": "whole wheat flour & sooji",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kasuri Methi & Hing",
+    "normalized_name": "kasuri methi & hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Curd & White Sesame Seeds",
+    "normalized_name": "curd & white sesame seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Carrots",
+    "normalized_name": "red carrots",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Full Cream Milk",
+    "normalized_name": "full cream milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Khoya / Mawa",
+    "normalized_name": "khoya / mawa",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Cardamom Powder",
+    "normalized_name": "green cardamom powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Water / Milk",
+    "normalized_name": "water / milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Saffron",
+    "normalized_name": "cardamom & saffron",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Besan & Sooji",
+    "normalized_name": "besan & sooji",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Saffron & Cardamom",
+    "normalized_name": "saffron & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashews & Cardamom",
+    "normalized_name": "cashews & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Khoya / Milk Powder",
+    "normalized_name": "khoya / milk powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashews & Pistachios",
+    "normalized_name": "cashews & pistachios",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Almonds",
+    "normalized_name": "cardamom & almonds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch / Cornflour",
+    "normalized_name": "cornstarch / cornflour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Melon Seeds & Cashews",
+    "normalized_name": "melon seeds & cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boora / Tagar",
+    "normalized_name": "boora / tagar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pistachios & Almonds",
+    "normalized_name": "pistachios & almonds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Saffron & Rose Water",
+    "normalized_name": "saffron & rose water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Melon Seeds",
+    "normalized_name": "melon seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Edible Camphor",
+    "normalized_name": "edible camphor",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cloves, Cashews & Raisins",
+    "normalized_name": "cloves, cashews & raisins",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fine Rava",
+    "normalized_name": "fine rava",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Powdered Sugar",
+    "normalized_name": "powdered sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Warm Milk",
+    "normalized_name": "warm milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Cashews",
+    "normalized_name": "cardamom & cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boora / Tagar Sugar",
+    "normalized_name": "boora / tagar sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds & Gond",
+    "normalized_name": "almonds & gond",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Condensed Milk",
+    "normalized_name": "condensed milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Nutmeg",
+    "normalized_name": "cardamom & nutmeg",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Paneer / Chhena",
+    "normalized_name": "fresh paneer / chhena",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Caster Sugar",
+    "normalized_name": "caster sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Gond",
+    "normalized_name": "gond",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Grated Coconut",
+    "normalized_name": "dry grated coconut",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds, Cashews & Walnuts",
+    "normalized_name": "almonds, cashews & walnuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nutmeg & Cardamom",
+    "normalized_name": "nutmeg & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Basmati Rice / Gobindobhog",
+    "normalized_name": "basmati rice / gobindobhog",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds, Pistachios & Cashews",
+    "normalized_name": "almonds, pistachios & cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Vermicelli",
+    "normalized_name": "roasted vermicelli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Milk",
+    "normalized_name": "whole milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Coconut Milk",
+    "normalized_name": "thick coconut milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thin Coconut Milk",
+    "normalized_name": "thin coconut milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Pieces & Cashews",
+    "normalized_name": "coconut pieces & cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rose Water & Cardamom",
+    "normalized_name": "rose water & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pistachios & Silver Vark",
+    "normalized_name": "pistachios & silver vark",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Fresh Curd / Yogurt Starter",
+    "normalized_name": "thick fresh curd / yogurt starter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Full Fat Milk",
+    "normalized_name": "full fat milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Saffron & Nutmeg",
+    "normalized_name": "saffron & nutmeg",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds, Cashews & Chironji",
+    "normalized_name": "almonds, cashews & chironji",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar / Condensed Milk",
+    "normalized_name": "sugar / condensed milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rose Water & Saffron",
+    "normalized_name": "rose water & saffron",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cow Milk",
+    "normalized_name": "cow milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lemon Juice / Vinegar",
+    "normalized_name": "lemon juice / vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Chhena Discs",
+    "normalized_name": "fresh chhena discs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cornstarch & Curd",
+    "normalized_name": "cornstarch & curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Maida & Sooji",
+    "normalized_name": "maida & sooji",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar Syrup",
+    "normalized_name": "sugar syrup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ice Cubes",
+    "normalized_name": "ice cubes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cold Milk & Water",
+    "normalized_name": "cold milk & water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rabri & Sugar Syrup",
+    "normalized_name": "rabri & sugar syrup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Chhena",
+    "normalized_name": "fresh chhena",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nolen Gur  / Sugar",
+    "normalized_name": "nolen gur  / sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pistachios",
+    "normalized_name": "pistachios",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar & Water",
+    "normalized_name": "sugar & water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom & Pistachios",
+    "normalized_name": "cardamom & pistachios",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Paneer & Maida",
+    "normalized_name": "paneer & maida",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chopped Nuts & Saffron",
+    "normalized_name": "chopped nuts & saffron",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Edible Silver Leaf",
+    "normalized_name": "edible silver leaf",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Chhena / Paneer",
+    "normalized_name": "fresh chhena / paneer",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chironji, Cashews & Cardamom",
+    "normalized_name": "chironji, cashews & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Citric Acid / Alum",
+    "normalized_name": "citric acid / alum",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Red Gongura Leaves",
+    "normalized_name": "fresh red gongura leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Guntur Dry Red Chillies",
+    "normalized_name": "guntur dry red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Methi Seeds",
+    "normalized_name": "methi seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cold-Pressed Sesame / Groundnut Oil",
+    "normalized_name": "cold-pressed sesame / groundnut oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds & Hing",
+    "normalized_name": "mustard seeds & hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Country  Tomatoes",
+    "normalized_name": "country  tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Ginger",
+    "normalized_name": "fresh ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Urad Dal & Chana Dal",
+    "normalized_name": "urad dal & chana dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Oil / Sesame Oil",
+    "normalized_name": "mustard oil / sesame oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ridge Gourd Peel",
+    "normalized_name": "ridge gourd peel",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Tamarind",
+    "normalized_name": "garlic & tamarind",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ivy Gourd",
+    "normalized_name": "ivy gourd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander Seeds & Jeera",
+    "normalized_name": "coriander seeds & jeera",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind & Garlic",
+    "normalized_name": "tamarind & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Large Bharta Brinjal",
+    "normalized_name": "large bharta brinjal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Cumin Seeds",
+    "normalized_name": "garlic & cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Yellow Cucumber",
+    "normalized_name": "yellow cucumber",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind & Turmeric",
+    "normalized_name": "tamarind & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds & Tamarind",
+    "normalized_name": "cumin seeds & tamarind",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind & Jaggery",
+    "normalized_name": "tamarind & jaggery",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander Leaves with Stems",
+    "normalized_name": "fresh coriander leaves with stems",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sour Raw Green Mango",
+    "normalized_name": "sour raw green mango",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri / Guntur Red Chilli Powder",
+    "normalized_name": "kashmiri / guntur red chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Powder",
+    "normalized_name": "mustard powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric & Salt",
+    "normalized_name": "turmeric & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cold-Pressed Sesame Oil",
+    "normalized_name": "cold-pressed sesame oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Amla",
+    "normalized_name": "fresh amla",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Cloves & Cumin",
+    "normalized_name": "garlic cloves & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Gram Dal",
+    "normalized_name": "roasted gram dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Oil / Pure Cow Ghee",
+    "normalized_name": "coconut oil / pure cow ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds, Urad Dal & Curry Leaves",
+    "normalized_name": "mustard seeds, urad dal & curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Byadagi Dry Red Chillies",
+    "normalized_name": "byadagi dry red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Peanuts",
+    "normalized_name": "raw peanuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Tadka Spices",
+    "normalized_name": "oil & tadka spices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Cumin Powder & Chaat Masala",
+    "normalized_name": "roasted cumin powder & chaat masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soft Seedless Dates",
+    "normalized_name": "soft seedless dates",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Cumin & Fennel Powder",
+    "normalized_name": "roasted cumin & fennel powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kala Namak",
+    "normalized_name": "kala namak",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lemon Juice & Salt",
+    "normalized_name": "lemon juice & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Small Shallots",
+    "normalized_name": "small shallots",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Country Tomatoes",
+    "normalized_name": "country tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sesame / Gingelly Oil",
+    "normalized_name": "sesame / gingelly oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind & Salt",
+    "normalized_name": "tamarind & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Cloves & Ginger",
+    "normalized_name": "garlic cloves & ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Mustard Popu",
+    "normalized_name": "oil & mustard popu",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Onions",
+    "normalized_name": "red onions",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander & Mint",
+    "normalized_name": "fresh coriander & mint",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Oil & Mustard Tadka",
+    "normalized_name": "coconut oil & mustard tadka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Green Mangoes",
+    "normalized_name": "raw green mangoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Guntur Red Chilli Powder",
+    "normalized_name": "guntur red chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crystal Salt",
+    "normalized_name": "crystal salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Cold-Pressed Sesame / Til Oil",
+    "normalized_name": "pure cold-pressed sesame / til oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sour Raw Mangoes",
+    "normalized_name": "sour raw mangoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ripe Country Tomatoes",
+    "normalized_name": "ripe country tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard & Methi Powder",
+    "normalized_name": "mustard & methi powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thin-Skinned Juicy Yellow Lemons",
+    "normalized_name": "thin-skinned juicy yellow lemons",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Fenugreek Powder",
+    "normalized_name": "roasted fenugreek powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Ripe Red Chillies",
+    "normalized_name": "fresh ripe red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rock Salt",
+    "normalized_name": "rock salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Whole Amla",
+    "normalized_name": "fresh whole amla",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Methi Seeds & Rai Kuria",
+    "normalized_name": "methi seeds & rai kuria",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Chilli & Turmeric",
+    "normalized_name": "red chilli & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Green Chillies",
+    "normalized_name": "fresh green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Yellow Mustard Seeds",
+    "normalized_name": "yellow mustard seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric, Hing & Salt",
+    "normalized_name": "turmeric, hing & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds & Methi Powder",
+    "normalized_name": "mustard seeds & methi powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Urad Dal",
+    "normalized_name": "white urad dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Asafoetida",
+    "normalized_name": "asafoetida",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Peppercorns & Cumin Seeds",
+    "normalized_name": "black peppercorns & cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Hing & Salt",
+    "normalized_name": "hing & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Curry Leaves",
+    "normalized_name": "fresh curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander Seeds & Cumin",
+    "normalized_name": "coriander seeds & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Red Chillies & Garlic",
+    "normalized_name": "dry red chillies & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Whole Coriander Seeds",
+    "normalized_name": "whole coriander seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Cloves with Skin",
+    "normalized_name": "garlic cloves with skin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Salt",
+    "normalized_name": "oil & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds & Salt",
+    "normalized_name": "cumin seeds & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds & Garlic",
+    "normalized_name": "cumin seeds & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bitter Gourd",
+    "normalized_name": "bitter gourd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Cloves & Dry Red Chillies",
+    "normalized_name": "garlic cloves & dry red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Salt & Cumin Seeds",
+    "normalized_name": "salt & cumin seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chana Dal & Urad Dal",
+    "normalized_name": "chana dal & urad dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds & Black Pepper",
+    "normalized_name": "cumin seeds & black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric Powder & Hing",
+    "normalized_name": "turmeric powder & hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Toor Dal Water",
+    "normalized_name": "toor dal water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic Cloves & Green Chilli",
+    "normalized_name": "garlic cloves & green chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Cow Ghee & Hing",
+    "normalized_name": "pure cow ghee & hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds & Curry Leaves",
+    "normalized_name": "mustard seeds & curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mutton Trotters",
+    "normalized_name": "mutton trotters",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Pepper & Turmeric",
+    "normalized_name": "black pepper & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bone-in Chicken",
+    "normalized_name": "bone-in chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander Roots & Stems",
+    "normalized_name": "fresh coriander roots & stems",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Peppercorns & Cloves",
+    "normalized_name": "black peppercorns & cloves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ripe Red Tomatoes",
+    "normalized_name": "ripe red tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander Stems & Leaves",
+    "normalized_name": "fresh coriander stems & leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bay Leaf & Cinnamon",
+    "normalized_name": "bay leaf & cinnamon",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coriander Seeds & Chana Dal",
+    "normalized_name": "coriander seeds & chana dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind & Country Tomato",
+    "normalized_name": "tamarind & country tomato",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cooked Toor Dal Broth",
+    "normalized_name": "cooked toor dal broth",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard & Curry Leaves",
+    "normalized_name": "mustard & curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Peppercorns & Cumin",
+    "normalized_name": "black peppercorns & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Country Tomato",
+    "normalized_name": "country tomato",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Horsegram",
+    "normalized_name": "horsegram",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind Juice",
+    "normalized_name": "tamarind juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Black Pepper",
+    "normalized_name": "garlic & black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomato & Cumin",
+    "normalized_name": "tomato & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cooked Toor Dal Water",
+    "normalized_name": "cooked toor dal water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rasam Powder & Hing",
+    "normalized_name": "rasam powder & hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Sweet Pineapple",
+    "normalized_name": "fresh sweet pineapple",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cooked Toor Dal",
+    "normalized_name": "cooked toor dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rasam Powder & Black Pepper",
+    "normalized_name": "rasam powder & black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fennel Seeds & Red Chilli",
+    "normalized_name": "fennel seeds & red chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind Extract",
+    "normalized_name": "tamarind extract",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomato & Rasam Powder",
+    "normalized_name": "tomato & rasam powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mutton on the Bone",
+    "normalized_name": "mutton on the bone",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dried Mint",
+    "normalized_name": "dried mint",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrot & Onion",
+    "normalized_name": "carrot & onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter & Fresh Cream",
+    "normalized_name": "butter & fresh cream",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Bay Leaf",
+    "normalized_name": "garlic & bay leaf",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bread Croutons",
+    "normalized_name": "bread croutons",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Pepper Powder & Salt",
+    "normalized_name": "white pepper powder & salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shredded Boiled Chicken",
+    "normalized_name": "shredded boiled chicken",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chicken Broth",
+    "normalized_name": "chicken broth",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mushrooms, Cabbage & Carrots",
+    "normalized_name": "mushrooms, cabbage & carrots",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soy Sauce, Vinegar & Chilli Paste",
+    "normalized_name": "soy sauce, vinegar & chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Coriander Stems",
+    "normalized_name": "fresh coriander stems",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Vegetables",
+    "normalized_name": "vegetables",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Vegetable Stock",
+    "normalized_name": "vegetable stock",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Finely Minced Cabbage, Carrots & Capsicum",
+    "normalized_name": "finely minced cabbage, carrots & capsicum",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chillies & Spring Onion",
+    "normalized_name": "green chillies & spring onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dark Soy Sauce & Vinegar",
+    "normalized_name": "dark soy sauce & vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crispy Fried Hakka Noodles",
+    "normalized_name": "crispy fried hakka noodles",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Drumstick / Moringa Leaves",
+    "normalized_name": "fresh drumstick / moringa leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Pure Cow Ghee",
+    "normalized_name": "garlic & pure cow ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Sea Crab / Mud Crab",
+    "normalized_name": "fresh sea crab / mud crab",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shallots & Country Tomatoes",
+    "normalized_name": "shallots & country tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mutton Shank with Bone Marrow",
+    "normalized_name": "mutton shank with bone marrow",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nihari Potli Masala",
+    "normalized_name": "nihari potli masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Atta Slurry",
+    "normalized_name": "roasted atta slurry",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Button Mushrooms",
+    "normalized_name": "fresh button mushrooms",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shallots & Garlic",
+    "normalized_name": "shallots & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Black Pepper & Cumin",
+    "normalized_name": "fresh black pepper & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Yellow Pumpkin",
+    "normalized_name": "yellow pumpkin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion & Garlic",
+    "normalized_name": "onion & garlic",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin & Coriander Powder",
+    "normalized_name": "cumin & coriander powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Assorted Vegetables",
+    "normalized_name": "assorted vegetables",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Ginger Juliennes",
+    "normalized_name": "fresh ginger juliennes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Green Onions",
+    "normalized_name": "garlic & green onions",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Toasted Sesame Oil",
+    "normalized_name": "toasted sesame oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soy Sauce & White Pepper",
+    "normalized_name": "soy sauce & white pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Strong Assam CTC Tea Dust",
+    "normalized_name": "strong assam ctc tea dust",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Cardamom Pods",
+    "normalized_name": "green cardamom pods",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cloves & Cinnamon",
+    "normalized_name": "cloves & cinnamon",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Cardamom",
+    "normalized_name": "green cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Filter Coffee Powder",
+    "normalized_name": "filter coffee powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiling Hot Water",
+    "normalized_name": "boiling hot water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Full Cream Buffalo / Cow Milk",
+    "normalized_name": "full cream buffalo / cow milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Assam Black Tea",
+    "normalized_name": "assam black tea",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Condensed Milk / Mawa",
+    "normalized_name": "condensed milk / mawa",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom Pods",
+    "normalized_name": "cardamom pods",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Green Tea Leaves",
+    "normalized_name": "kashmiri green tea leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Cardamom & Cinnamon",
+    "normalized_name": "green cardamom & cinnamon",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Honey / Sugar",
+    "normalized_name": "honey / sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Tea Leaves",
+    "normalized_name": "black tea leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jaggery / Sugar",
+    "normalized_name": "jaggery / sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Fresh Curd",
+    "normalized_name": "thick fresh curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cardamom Powder & Rose Water",
+    "normalized_name": "cardamom powder & rose water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilled Water / Ice",
+    "normalized_name": "chilled water / ice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Buffalo Milk Malai / Cream",
+    "normalized_name": "fresh buffalo milk malai / cream",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Alphonso Mango Pulp",
+    "normalized_name": "fresh alphonso mango pulp",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Fresh Yogurt",
+    "normalized_name": "thick fresh yogurt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar / Honey",
+    "normalized_name": "sugar / honey",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilled Water",
+    "normalized_name": "chilled water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli & Ginger",
+    "normalized_name": "green chilli & ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds & Cashews",
+    "normalized_name": "almonds & cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dried Rose Petals & Cardamom",
+    "normalized_name": "dried rose petals & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar & Saffron",
+    "normalized_name": "sugar & saffron",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Amchur & Black Salt",
+    "normalized_name": "amchur & black salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cold Water & Ice",
+    "normalized_name": "cold water & ice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crispy Salted Boondi",
+    "normalized_name": "crispy salted boondi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jaggery  / Sugar",
+    "normalized_name": "jaggery  / sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilled Water & Ice",
+    "normalized_name": "chilled water & ice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Semi-Dried Kokum Rinds",
+    "normalized_name": "semi-dried kokum rinds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugar / Jaggery",
+    "normalized_name": "sugar / jaggery",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Salt & Cardamom",
+    "normalized_name": "black salt & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kokum Rinds",
+    "normalized_name": "kokum rinds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Garlic & Green Chilli",
+    "normalized_name": "garlic & green chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shikanji Masala",
+    "normalized_name": "shikanji masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilled Club Soda / Water",
+    "normalized_name": "chilled club soda / water",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nannari Root Syrup",
+    "normalized_name": "nannari root syrup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soaked Sabja Seeds",
+    "normalized_name": "soaked sabja seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Badam Pisin",
+    "normalized_name": "badam pisin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Nannari Syrup",
+    "normalized_name": "nannari syrup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Reduced Basundi / Caramel Milk",
+    "normalized_name": "reduced basundi / caramel milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilled Milk",
+    "normalized_name": "chilled milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Palgova / Vanilla Ice Cream Scoop",
+    "normalized_name": "palgova / vanilla ice cream scoop",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pure Jaggery",
+    "normalized_name": "pure jaggery",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Edible Camphor & Tulsi Leaves",
+    "normalized_name": "edible camphor & tulsi leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chana Sattu",
+    "normalized_name": "chana sattu",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli",
+    "normalized_name": "green chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Cumin Powder & Black Salt",
+    "normalized_name": "roasted cumin powder & black salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sugarcane Jaggery / Fresh Cane Juice",
+    "normalized_name": "sugarcane jaggery / fresh cane juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Fruits",
+    "normalized_name": "dry fruits",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Instant Coffee Powder",
+    "normalized_name": "instant coffee powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chilled Full Cream Milk",
+    "normalized_name": "chilled full cream milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Vanilla Ice Cream",
+    "normalized_name": "vanilla ice cream",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chocolate Syrup & Ice",
+    "normalized_name": "chocolate syrup & ice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rooh Afza / Rose Syrup",
+    "normalized_name": "rooh afza / rose syrup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Sweet Watermelon",
+    "normalized_name": "fresh sweet watermelon",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crushed Ice",
+    "normalized_name": "crushed ice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rooh Afza Syrup",
+    "normalized_name": "rooh afza syrup",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Soaked Sabja  Seeds",
+    "normalized_name": "soaked sabja  seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cucumbers",
+    "normalized_name": "cucumbers",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Onion",
+    "normalized_name": "red onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ripe Firm Tomatoes",
+    "normalized_name": "ripe firm tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chaat Masala & Kala Namak",
+    "normalized_name": "chaat masala & kala namak",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Whisked Curd",
+    "normalized_name": "fresh whisked curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Salted Crisp Boondi",
+    "normalized_name": "salted crisp boondi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Cucumbers",
+    "normalized_name": "fresh cucumbers",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Salt & Sea Salt",
+    "normalized_name": "black salt & sea salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sprouted Green Moong",
+    "normalized_name": "sprouted green moong",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pomegranate Pearls",
+    "normalized_name": "pomegranate pearls",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Carrot & Cucumber",
+    "normalized_name": "carrot & cucumber",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Chickpeas",
+    "normalized_name": "white chickpeas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Seeds & Urad Dal",
+    "normalized_name": "mustard seeds & urad dal",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Red Chillies & Green Chilli",
+    "normalized_name": "dry red chillies & green chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Compounded Hing",
+    "normalized_name": "compounded hing",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chillies & Coriander",
+    "normalized_name": "green chillies & coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Lemon Juice & Sugar",
+    "normalized_name": "fresh lemon juice & sugar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Mustard Tadka",
+    "normalized_name": "oil & mustard tadka",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Lemon Juice & Coriander",
+    "normalized_name": "fresh lemon juice & coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Oil & Mustard Seeds",
+    "normalized_name": "coconut oil & mustard seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli & Coriander",
+    "normalized_name": "green chilli & coriander",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Cumin & Black Salt",
+    "normalized_name": "roasted cumin & black salt",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Groundnuts / Peanuts",
+    "normalized_name": "raw groundnuts / peanuts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dry Red Chillies & Curry Leaves",
+    "normalized_name": "dry red chillies & curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Pineapple",
+    "normalized_name": "fresh pineapple",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli & Mint",
+    "normalized_name": "green chilli & mint",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Green Papaya",
+    "normalized_name": "raw green papaya",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Lemon Juice",
+    "normalized_name": "oil & lemon juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Pomegranate Pearls",
+    "normalized_name": "fresh pomegranate pearls",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Black Salt & Mint",
+    "normalized_name": "black salt & mint",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mixed Sprouts",
+    "normalized_name": "mixed sprouts",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Potato & Onion",
+    "normalized_name": "boiled potato & onion",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chutney & Tamarind Chutney",
+    "normalized_name": "green chutney & tamarind chutney",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chaat Masala & Lemon Juice",
+    "normalized_name": "chaat masala & lemon juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Black Chickpeas",
+    "normalized_name": "boiled black chickpeas",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion, Tomato & Cucumber",
+    "normalized_name": "onion, tomato & cucumber",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chilli & Fresh Mint",
+    "normalized_name": "green chilli & fresh mint",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Green Chillies & Curry Leaves",
+    "normalized_name": "green chillies & curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pav Bhaji Masala & Turmeric",
+    "normalized_name": "pav bhaji masala & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Salted Butter & Oil",
+    "normalized_name": "salted butter & oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter / Oil",
+    "normalized_name": "butter / oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chettinad Pepper Masala",
+    "normalized_name": "chettinad pepper masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion Paste",
+    "normalized_name": "onion paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger & Garlic Paste",
+    "normalized_name": "ginger & garlic paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Shahi Garam Masala",
+    "normalized_name": "kashmiri chilli & shahi garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Meat Masala & Black Pepper",
+    "normalized_name": "meat masala & black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Oil & Curry Leaves",
+    "normalized_name": "coconut oil & curry leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Boiled Eggs",
+    "normalized_name": "boiled eggs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onions",
+    "normalized_name": "onions",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tomato Puree",
+    "normalized_name": "tomato puree",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kasuri Methi & Garam Masala",
+    "normalized_name": "kasuri methi & garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Raw Egg",
+    "normalized_name": "raw egg",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Pav Bhaji Masala & Garam Masala",
+    "normalized_name": "pav bhaji masala & garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Butter & Oil",
+    "normalized_name": "butter & oil",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Farm Eggs",
+    "normalized_name": "fresh farm eggs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Byadagi Red Chillies",
+    "normalized_name": "byadagi red chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Tamarind Pulp & Jaggery",
+    "normalized_name": "tamarind pulp & jaggery",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fermented Dosa Batter",
+    "normalized_name": "fermented dosa batter",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Egg",
+    "normalized_name": "fresh egg",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Idli Milagai Podi",
+    "normalized_name": "idli milagai podi",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onion & Green Chilli",
+    "normalized_name": "onion & green chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cumin Seeds & Fennel",
+    "normalized_name": "cumin seeds & fennel",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cashew Nut Paste",
+    "normalized_name": "cashew nut paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shahi Garam Masala & Cardamom",
+    "normalized_name": "shahi garam masala & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Chaat Masala & Red Chilli",
+    "normalized_name": "chaat masala & red chilli",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Red Chilli Powder & Turmeric",
+    "normalized_name": "red chilli powder & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Almonds & Magaz",
+    "normalized_name": "almonds & magaz",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger & Green Chilli Paste",
+    "normalized_name": "ginger & green chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "White Pepper Powder & Cardamom",
+    "normalized_name": "white pepper powder & cardamom",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onions & Tomatoes",
+    "normalized_name": "onions & tomatoes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Crushed Whole Coriander & Cumin",
+    "normalized_name": "crushed whole coriander & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kulambu Chilli Powder",
+    "normalized_name": "kulambu chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Peanuts, Sesame & Coconut",
+    "normalized_name": "roasted peanuts, sesame & coconut",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Large Bhavnagri Chillies",
+    "normalized_name": "large bhavnagri chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Mustard Oil / Ghee",
+    "normalized_name": "mustard oil / ghee",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Karimeen",
+    "normalized_name": "karimeen",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kudampuli  / Lime",
+    "normalized_name": "kudampuli  / lime",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Turmeric",
+    "normalized_name": "kashmiri chilli & turmeric",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Banana Leaves",
+    "normalized_name": "fresh banana leaves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Jumbo Tiger Prawns",
+    "normalized_name": "jumbo tiger prawns",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kingfish  Steaks",
+    "normalized_name": "kingfish  steaks",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Turmeric & Ginger Garlic Paste",
+    "normalized_name": "turmeric & ginger garlic paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kokum / Lemon Juice",
+    "normalized_name": "kokum / lemon juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fine Sooji / Rava & Rice Flour",
+    "normalized_name": "fine sooji / rava & rice flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Goan Toddy Vinegar / White Vinegar",
+    "normalized_name": "goan toddy vinegar / white vinegar",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cinnamon, Cloves & Cumin",
+    "normalized_name": "cinnamon, cloves & cumin",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Seer Fish / Pomfret",
+    "normalized_name": "fresh seer fish / pomfret",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Coriander Powder",
+    "normalized_name": "kashmiri chilli & coriander powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick & Thin Coconut Milk",
+    "normalized_name": "thick & thin coconut milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Coconut Oil & Fenugreek",
+    "normalized_name": "coconut oil & fenugreek",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Seer Fish",
+    "normalized_name": "fresh seer fish",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shallots & Garlic Cloves",
+    "normalized_name": "shallots & garlic cloves",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Dark Aged Tamarind",
+    "normalized_name": "dark aged tamarind",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Sesame Oil & Vadagam / Fenugreek",
+    "normalized_name": "sesame oil & vadagam / fenugreek",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Pomfret / Kingfish",
+    "normalized_name": "fresh pomfret / kingfish",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rohu / Katla Fish Steaks",
+    "normalized_name": "rohu / katla fish steaks",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Ginger Paste & Cumin Powder",
+    "normalized_name": "ginger paste & cumin powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Firm White Fish Fillets",
+    "normalized_name": "firm white fish fillets",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Mud Crabs",
+    "normalized_name": "fresh mud crabs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kundapur Sukka Masala",
+    "normalized_name": "kundapur sukka masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Seer Fish / Kingfish Steaks",
+    "normalized_name": "seer fish / kingfish steaks",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thin & Thick Coconut Milk",
+    "normalized_name": "thin & thick coconut milk",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Shallots & Ginger",
+    "normalized_name": "shallots & ginger",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Ajwain",
+    "normalized_name": "kashmiri chilli & ajwain",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Squid",
+    "normalized_name": "fresh squid",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thin Coconut Slices",
+    "normalized_name": "thin coconut slices",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cracked Black Pepper & Fennel",
+    "normalized_name": "cracked black pepper & fennel",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Malvani Masala",
+    "normalized_name": "malvani masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Roasted Onion-Coconut Paste",
+    "normalized_name": "roasted onion-coconut paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Oil & Mustard Seeds",
+    "normalized_name": "oil & mustard seeds",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Silver Pomfret",
+    "normalized_name": "fresh silver pomfret",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Red Chilli Paste",
+    "normalized_name": "kashmiri red chilli paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Lemon Juice & Garam Masala",
+    "normalized_name": "lemon juice & garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Crabs",
+    "normalized_name": "fresh crabs",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Malvani Dry Coconut Paste",
+    "normalized_name": "malvani dry coconut paste",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Malvani Masala & Kokum",
+    "normalized_name": "malvani masala & kokum",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Seer Fish",
+    "normalized_name": "seer fish",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Cracked Black Pepper",
+    "normalized_name": "cracked black pepper",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Fresh Bombay Duck",
+    "normalized_name": "fresh bombay duck",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Koli Masala / Red Chilli Powder",
+    "normalized_name": "koli masala / red chilli powder",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kokum Extract / Lemon Juice",
+    "normalized_name": "kokum extract / lemon juice",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Rava  & Rice Flour",
+    "normalized_name": "rava  & rice flour",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Firm Fish Cubes",
+    "normalized_name": "firm fish cubes",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Thick Hung Curd",
+    "normalized_name": "thick hung curd",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Kashmiri Chilli & Garam Masala",
+    "normalized_name": "kashmiri chilli & garam masala",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Poppy Seeds & Cashews",
+    "normalized_name": "poppy seeds & cashews",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Onions & Green Chillies",
+    "normalized_name": "onions & green chillies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Small Fish / Anchovies",
+    "normalized_name": "small fish / anchovies",
+    "category": "Pantry Staple"
+  },
+  {
+    "name": "Bird's Eye Chillies",
+    "normalized_name": "bird's eye chillies",
+    "category": "Pantry Staple"
+  }
+]

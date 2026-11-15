@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Breakfast & Tiffins",
+    "slug": "breakfast",
+    "description": "Traditional South and North Indian morning staples, dosas, idlis, and parathas"
+  },
+  {
+    "name": "Biryani & Rice Dishes",
+    "slug": "rice",
+    "description": "Royal dum biryanis, fragrant pulaos, khichdi, and regional rice varieties"
+  },
+  {
+    "name": "Street Food & Chaats",
+    "slug": "streetfood",
+    "description": "Iconic Mumbai, Delhi, and Kolkata street snacks, kathi rolls, and chaats"
+  },
+  {
+    "name": "Curries & Gravies",
+    "slug": "curries",
+    "description": "Rich homestyle curries, dal tadkas, sambars, and gravies"
+  },
+  {
+    "name": "Snacks, Starters & Tikkas",
+    "slug": "snacks",
+    "description": "Crispy fritters, tandoori tikkas, cutlets, and evening teatime snacks"
+  },
+  {
+    "name": "Breads, Rotis & Parathas",
+    "slug": "breads",
+    "description": "Tandoori naans, layered parathas, puris, and everyday rotis"
+  },
+  {
+    "name": "Mithai & Traditional Sweets",
+    "slug": "sweets",
+    "description": "Festive halwas, ladoos, payasams, and royal Indian sweets"
+  },
+  {
+    "name": "Pachallu, Chutneys & Pickles",
+    "slug": "chutneys",
+    "description": "Fresh stone-ground pachallu, coconut chutneys, podis, and heritage pickles"
+  },
+  {
+    "name": "Soups, Rasams & Coolers",
+    "slug": "soups_drinks",
+    "description": "Comforting rasams, spiced shorbas, masala chai, lassis, and coolers"
+  },
+  {
+    "name": "Salads, Eggs & Coastal Seafood",
+    "slug": "sides_eggs_seafood",
+    "description": "Fresh raitas, sundals, spicy egg curries, and coastal seafood specials"
+  }
+]
