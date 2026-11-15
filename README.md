@@ -1,6 +1,6 @@
-# AI Chef — Indian Homestyle Cooking & Recipe Platform
+# Desi Chef — Your Personal Chef
 
-An intelligent, full-stack Indian recipe discovery and home cooking platform. AI Chef helps households reduce domestic food waste and eliminate daily cooking indecision by suggesting authentic Indian recipes based directly on the ingredients currently available in their kitchen pantry.
+An intelligent, full-stack Indian recipe discovery and home cooking platform. **Desi Chef** acts as your personal kitchen assistant, helping households eliminate daily cooking indecision and reduce domestic food waste by suggesting authentic Indian recipes based directly on the ingredients currently available in your kitchen pantry.
 
 Built with **Python**, **Django 6.0+**, **Django REST Framework (DRF)**, **MySQL 8.0+** (with zero-config SQLite3 local fallback), and a responsive **HTML5/CSS3/ES6+ JavaScript** frontend.
 

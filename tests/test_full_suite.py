@@ -301,7 +301,8 @@ class HomepageAndSearchAPITests(TestCase):
     def test_homepage_view_renders(self):
         res = self.client.get('/')
         self.assertEqual(res.status_code, 200)
-        self.assertIn(b'AI CHEF', res.content)
+        self.assertIn(b'DESI CHEF', res.content)
+        self.assertIn(b'Your Personal Chef', res.content)
         self.assertIn(b'searchAutocompleteDropdown', res.content)
 
     def test_recipe_detail_view_renders(self):

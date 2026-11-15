@@ -1,5 +1,5 @@
 // ==========================================================================
-// AI CHEF — Production Django Full-Stack Application Controller
+// DESI CHEF — Your Personal Chef (Django Full-Stack Application Controller)
 // Powers All 10 Master Indian Culinary Domains (512 Authentic Recipes)
 // ==========================================================================
 
@@ -1724,13 +1724,13 @@ function switchAuthTab(tab) {
     if (tabRegister) { tabRegister.classList.remove("active"); tabRegister.style.color = "var(--text-muted)"; tabRegister.style.borderBottomColor = "transparent"; }
     if (formLogin) formLogin.style.display = "block";
     if (formRegister) formRegister.style.display = "none";
-    if (title) title.textContent = "Sign In to AI Chef";
+    if (title) title.textContent = "Sign In to Desi Chef";
   } else {
     if (tabRegister) { tabRegister.classList.add("active"); tabRegister.style.color = "var(--farm-green)"; tabRegister.style.borderBottomColor = "var(--farm-green)"; }
     if (tabLogin) { tabLogin.classList.remove("active"); tabLogin.style.color = "var(--text-muted)"; tabLogin.style.borderBottomColor = "transparent"; }
     if (formRegister) formRegister.style.display = "block";
     if (formLogin) formLogin.style.display = "none";
-    if (title) title.textContent = "Create AI Chef Account";
+    if (title) title.textContent = "Create Desi Chef Account";
   }
 }
 
@@ -1799,7 +1799,7 @@ function submitRegister(e) {
       closeAuthModal();
       updateAuthNavUI();
       syncLocalPantryToBackend();
-      alert("🎉 Account created successfully! Welcome to AI Chef.");
+      alert("🎉 Account created successfully! Welcome to Desi Chef.");
     } else {
       if (notice) {
         const errs = Object.entries(data).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(' ') : v}`).join(' | ');
