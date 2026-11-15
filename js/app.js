@@ -1,6 +1,6 @@
 // ==========================================================================
-// DESI CHEF — Your Personal Chef (Production Full-Stack Platform)
-// Powers All 10 Master Indian Culinary Domains (512 Authentic Recipes)
+// DESI CHEF — Your Personal Chef
+// Production Django Full-Stack Application Controller (512 Authentic Recipes)
 // ==========================================================================
 
 // Everyday Indian home pantry staples & leftovers (Immutable Default Set)
