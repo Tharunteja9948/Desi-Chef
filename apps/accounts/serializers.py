@@ -5,7 +5,9 @@ Serializers for User Authentication and Profile.
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from apps.accounts.models import UserProfile
+
 
 class UserSummarySerializer(serializers.ModelSerializer):
     dietary_preference = serializers.CharField(source='profile.dietary_preference', read_only=True)
@@ -14,6 +16,7 @@ class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'dietary_preference', 'favorite_cuisine']
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
@@ -24,17 +27,22 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'password', 'first_name', 'last_name', 'dietary_preference', 'favorite_cuisine']
 
+    def validate_password(self, value):
+        validate_password(value)
+        return value
+
     def create(self, validated_data):
         diet = validated_data.pop('dietary_preference', 'all')
         cuisine = validated_data.pop('favorite_cuisine', 'All Indian Cuisines')
         user = User.objects.create_user(**validated_data)
-        
+
         # Profile is created via signal, update preferences
         if hasattr(user, 'profile'):
             user.profile.dietary_preference = diet
             user.profile.favorite_cuisine = cuisine
             user.profile.save()
         return user
+
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -48,6 +56,7 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("User account is inactive.")
         data['user'] = user
         return data
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)

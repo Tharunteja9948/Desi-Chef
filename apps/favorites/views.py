@@ -1,5 +1,5 @@
 """
-Favorite Recipes ViewSet.
+Favorite Recipes ViewSet for DesiChef.
 Guarantees strict user isolation.
 """
 
@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from apps.favorites.models import FavoriteRecipe
 from apps.favorites.serializers import FavoriteRecipeSerializer
 from apps.recipes.models import Recipe
+
 
 class FavoriteRecipeViewSet(viewsets.ModelViewSet):
     serializer_class = FavoriteRecipeSerializer
@@ -25,7 +26,7 @@ class FavoriteRecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def toggle(self, request):
         """
-        Convenience endpoint to toggle favorite status by recipe_uid.
+        Convenience endpoint to toggle favorite status by recipe_uid, slug, or ID.
         Payload: {"recipe_uid": "classic-idli"}
         """
         uid = request.data.get('recipe_uid')
@@ -33,6 +34,11 @@ class FavoriteRecipeViewSet(viewsets.ModelViewSet):
             return Response({'error': 'recipe_uid is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         recipe = Recipe.objects.filter(recipe_uid=uid).first()
+        if not recipe:
+            recipe = Recipe.objects.filter(slug=uid).first()
+        if not recipe and str(uid).isdigit():
+            recipe = Recipe.objects.filter(id=int(uid)).first()
+
         if not recipe:
             return Response({'error': 'Recipe not found.'}, status=status.HTTP_404_NOT_FOUND)
 

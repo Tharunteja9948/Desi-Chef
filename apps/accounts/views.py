@@ -1,16 +1,18 @@
 """
-Authentication and Profile API views.
+Authentication and Profile API views for DesiChef.
 """
 
 from rest_framework import views, status, permissions
 from rest_framework.response import Response
 from django.contrib.auth import login, logout
+from apps.accounts.models import UserProfile
 from apps.accounts.serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
     UserSummarySerializer,
     UserProfileSerializer
 )
+
 
 class RegisterAPIView(views.APIView):
     permission_classes = [permissions.AllowAny]
@@ -26,6 +28,7 @@ class RegisterAPIView(views.APIView):
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LoginAPIView(views.APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -40,12 +43,14 @@ class LoginAPIView(views.APIView):
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LogoutAPIView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         logout(request)
         return Response({'message': 'Logged out successfully.'}, status=status.HTTP_200_OK)
+
 
 class CurrentUserAPIView(views.APIView):
     permission_classes = [permissions.AllowAny]
@@ -61,15 +66,18 @@ class CurrentUserAPIView(views.APIView):
             'user': None
         })
 
+
 class ProfileAPIView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        serializer = UserProfileSerializer(request.user.profile)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
 
     def put(self, request):
-        serializer = UserProfileSerializer(request.user.profile, data=request.data, partial=True)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        serializer = UserProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

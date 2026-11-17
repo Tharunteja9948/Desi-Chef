@@ -1,14 +1,16 @@
 """
-Views for Grocery Shopping Lists.
+Views for Grocery Shopping Lists in DesiChef.
+Supports generating shopping lists from recipe missing ingredients and custom items.
 """
 
-from rest_framework import viewsets, permissions, status, views
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.shopping.models import ShoppingList, ShoppingListItem
 from apps.shopping.serializers import ShoppingListSerializer, ShoppingListItemSerializer
 from apps.recipes.models import Recipe
 from apps.recommendations.services import ingredient_matches
+
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingListSerializer
@@ -34,7 +36,27 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
         item = ShoppingListItem.objects.create(
             shopping_list=shopping_list,
             ingredient_name=ing_name,
-            amount=amount
+            amount=amount or '1 unit'
+        )
+        return Response(ShoppingListItemSerializer(item).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def add_custom_item(self, request):
+        """Convenience endpoint to add an item to the user's active list (or create one)."""
+        ing_name = request.data.get('ingredient_name', '').strip()
+        amount = request.data.get('amount', '').strip()
+        if not ing_name:
+            return Response({'error': 'ingredient_name is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        shopping_list, _ = ShoppingList.objects.get_or_create(
+            user=request.user,
+            is_active=True,
+            defaults={'title': 'My Grocery List'}
+        )
+        item = ShoppingListItem.objects.create(
+            shopping_list=shopping_list,
+            ingredient_name=ing_name,
+            amount=amount or '1 unit'
         )
         return Response(ShoppingListItemSerializer(item).data, status=status.HTTP_201_CREATED)
 
@@ -73,7 +95,7 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
         pantry_items = []
         if exclude_pantry:
             user_pantry = request.user.pantry_items.all()
-            pantry_items = [p.display_name for p in user_pantry]
+            pantry_items = [p.display_name for p in user_pantry if p.display_name]
 
         # Get or create active shopping list
         shopping_list, _ = ShoppingList.objects.get_or_create(
@@ -87,8 +109,10 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
 
         for r in recipes:
             for ri in r.recipe_ingredients.all():
-                ing_name = ri.ingredient.name
-                
+                ing_name = ri.ingredient.name if ri.ingredient else ri.raw_name
+                if not ing_name:
+                    continue
+
                 # Check if user already has it
                 if exclude_pantry and any(ingredient_matches(ing_name, p) for p in pantry_items):
                     continue

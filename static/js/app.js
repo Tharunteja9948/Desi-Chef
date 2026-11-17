@@ -123,6 +123,7 @@ if (typeof window !== "undefined") {
   window.calculateMatch = calculateMatch;
   window.getAllRecipes = getAllRecipes;
   window.getPantryMatchedRecipes = getPantryMatchedRecipes;
+  window.addCustomShoppingItem = addCustomShoppingItem;
   window.getTimerState = () => ({
     timerSeconds,
     timerRemainingMs,
@@ -413,7 +414,8 @@ function viewPantryMatches() {
     },
     body: JSON.stringify({
       ingredients: Array.from(selectedPantry),
-      dietary: quickFilterVegOnly ? 'veg' : (quickFilterNonVegOnly ? 'nonveg' : 'all')
+      dietary: quickFilterVegOnly ? 'veg' : (quickFilterNonVegOnly ? 'nonveg' : 'all'),
+      veg: quickFilterVegOnly ? true : (quickFilterNonVegOnly ? false : null)
     })
   })
   .then(res => res.json())
@@ -426,10 +428,10 @@ function viewPantryMatches() {
       subCategory: r.subcategory,
       ingredients: r.ingredients || [],
       matchInfo: {
-        percent: r.match_percentage !== undefined ? r.match_percentage : (r.match_percent || 0),
-        userMatchedCount: r.matched_count || (r.matched_ingredients ? r.matched_ingredients.length : 0),
-        matchedItems: r.matched_ingredients || [],
-        missing: r.missing_ingredients || []
+        percent: r.match_percentage !== undefined ? r.match_percentage : (r.match_percent !== undefined ? r.match_percent : (r.match_info ? r.match_info.match_percent : 0)),
+        userMatchedCount: r.matched_count !== undefined ? r.matched_count : (r.match_info ? r.match_info.user_matched_count : (r.matched_ingredients ? r.matched_ingredients.length : 0)),
+        matchedItems: r.matched_ingredients || (r.match_info ? r.match_info.matched_ingredients : []),
+        missing: r.missing_ingredients || (r.match_info ? r.match_info.missing_ingredients : [])
       }
     }));
 
@@ -2070,6 +2072,41 @@ function toggleShoppingItem(listId, itemId) {
   })
   .then(() => loadShoppingListItems())
   .catch(() => {});
+}
+
+function addCustomShoppingItem() {
+  const input = document.getElementById("newShoppingItemInput");
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) return;
+
+  if (!currentUser) {
+    openAuthModal();
+    return;
+  }
+
+  fetch('/api/v1/shopping/add_custom_item/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCsrfToken()
+    },
+    body: JSON.stringify({
+      ingredient_name: name,
+      amount: '1 unit'
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Could not add item");
+    return res.json();
+  })
+  .then(() => {
+    input.value = '';
+    loadShoppingListItems();
+  })
+  .catch(() => {
+    alert("Could not add item to grocery list. Please try again.");
+  });
 }
 
 // Initial Page Bootstrap

@@ -1,6 +1,6 @@
 """
-User Pantry Views and API ViewSets.
-Guarantees strict user isolation and provides bulk toggle endpoints.
+User Pantry Views and API ViewSets for DesiChef.
+Guarantees strict user isolation and bidirectional sync with deselection reconciliation.
 """
 
 from rest_framework import viewsets, permissions, status
@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from apps.pantry.models import UserPantryItem
 from apps.pantry.serializers import UserPantryItemSerializer
 from apps.ingredients.models import Ingredient
+
 
 class UserPantryViewSet(viewsets.ModelViewSet):
     serializer_class = UserPantryItemSerializer
@@ -25,14 +26,17 @@ class UserPantryViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def sync_session_pantry(self, request):
         """
-        Syncs an array of ingredient names (e.g. from frontend local pantry) into the user's permanent pantry.
-        Payload: {"items": ["Rice", "Eggs", "Chicken"]}
+        Syncs an array of ingredient names from frontend pantry into user's permanent pantry.
+        Reconciles additions and removals so unselected items are cleanly removed from the database.
+        Payload: {"items": ["Rice", "Eggs", "Chicken"], "replace": true}
         """
         items = request.data.get('items', [])
         if not isinstance(items, list):
             return Response({'error': 'items must be an array of ingredient names.'}, status=status.HTTP_400_BAD_REQUEST)
 
         created_items = []
+        active_ids = set()
+
         for name in items:
             name_str = str(name).strip()
             if not name_str:
@@ -45,10 +49,16 @@ class UserPantryViewSet(viewsets.ModelViewSet):
 
             if ing:
                 obj, _ = UserPantryItem.objects.get_or_create(user=request.user, ingredient=ing)
-                created_items.append(obj)
             else:
                 obj, _ = UserPantryItem.objects.get_or_create(user=request.user, custom_name=name_str)
-                created_items.append(obj)
+
+            created_items.append(obj)
+            active_ids.add(obj.id)
+
+        # Reconcile deletions if replace flag is True (default True for live sync)
+        replace = request.data.get('replace', True)
+        if replace:
+            UserPantryItem.objects.filter(user=request.user).exclude(id__in=active_ids).delete()
 
         serializer = self.get_serializer(created_items, many=True)
         return Response({

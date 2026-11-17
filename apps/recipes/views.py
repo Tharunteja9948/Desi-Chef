@@ -1,5 +1,6 @@
 """
 Views and API ViewSets for Recipes and Categories.
+Supports search autocomplete, portion scaling, category/dietary filtering including vegan.
 """
 
 from django.shortcuts import render, get_object_or_404
@@ -26,7 +27,7 @@ class RecipePagination(PageNumberPagination):
 
 def home_view(request):
     """
-    Renders the AI Chef home page with preloaded categories and active recipe counts.
+    Renders the DesiChef home page with preloaded categories and active recipe counts.
     """
     categories = Category.objects.annotate(recipe_count=Count('recipes')).order_by('id')
     return render(request, 'index.html', {
@@ -77,13 +78,22 @@ class RecipeViewSet(viewsets.ReadOnlyModelViewSet):
         if subcat and subcat != 'all':
             qs = qs.filter(subcategory=subcat)
 
-        # Dietary Filter (veg / nonveg)
+        # Dietary Filter (veg / nonveg / vegan)
+        dietary = str(params.get('dietary', '')).lower()
         veg = params.get('veg')
-        if veg is not None:
-            if veg.lower() in ('true', '1'):
-                qs = qs.filter(veg=True)
-            elif veg.lower() in ('false', '0'):
-                qs = qs.filter(veg=False)
+        vegan = params.get('vegan')
+
+        if dietary == 'vegan' or (vegan is not None and str(vegan).lower() in ('true', '1')):
+            # Verified vegan: pure vegetarian with zero dairy/honey/meat ingredients
+            dairy_kw = ['ghee', 'butter', 'milk', 'paneer', 'curd', 'yogurt', 'cream', 'malai', 'cheese', 'honey', 'khoya', 'mawa']
+            q_dairy = Q()
+            for kw in dairy_kw:
+                q_dairy |= Q(recipe_ingredients__raw_name__icontains=kw) | Q(recipe_ingredients__ingredient__name__icontains=kw)
+            qs = qs.filter(veg=True).exclude(q_dairy).distinct()
+        elif dietary == 'veg' or (veg is not None and str(veg).lower() in ('true', '1')):
+            qs = qs.filter(veg=True)
+        elif dietary == 'nonveg' or (veg is not None and str(veg).lower() in ('false', '0')):
+            qs = qs.filter(veg=False)
 
         # Max Cooking Time Filter (e.g. max_time=20)
         max_time = params.get('max_time')
@@ -145,9 +155,10 @@ class RecipeViewSet(viewsets.ReadOnlyModelViewSet):
 
         suggestions = []
         for r in qs[:10]:
-            img = r.image
+            img = r.image or 'images/dishes/traditional-rice.jpg'
             if not img.startswith('/') and not img.startswith('http'):
                 img = f"/static/{img}"
+
             suggestions.append({
                 'recipe_uid': r.recipe_uid,
                 'name': r.name,
@@ -169,11 +180,12 @@ class RecipeViewSet(viewsets.ReadOnlyModelViewSet):
         Query param: ?servings=4
         """
         recipe = self.get_object()
-        target_servings = request.query_params.get('servings')
+        raw_servings = request.query_params.get('servings')
         try:
-            target_servings = int(target_servings)
+            target_servings = int(raw_servings)
             if target_servings <= 0:
                 target_servings = recipe.servings
+            target_servings = max(1, min(100, target_servings))
         except (TypeError, ValueError):
             target_servings = recipe.servings
 

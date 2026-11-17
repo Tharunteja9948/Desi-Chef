@@ -1,21 +1,24 @@
 """
 Django management command to seed all 512 validated Indian recipes into the database.
 Usage: python manage.py seed_recipes
+Idempotent and safe to run repeatedly across SQLite, MySQL, and PostgreSQL.
 """
 
 import json
 from pathlib import Path
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.conf import settings
 from apps.recipes.models import Category, Recipe, RecipeInstruction
 from apps.ingredients.models import Ingredient, RecipeIngredient, IngredientSynonym
 from apps.recommendations.services import SYNONYM_DICTIONARY
+
 
 class Command(BaseCommand):
     help = 'Seeds all 512 authentic Indian homestyle recipes, categories, ingredients and steps.'
 
     def handle(self, *args, **options):
-        base_dir = Path(__file__).resolve().parent.parent.parent.parent.parent
+        base_dir = settings.BASE_DIR
         data_dir = base_dir / 'data' / 'validated'
 
         recipes_file = data_dir / 'recipes_512.json'
@@ -37,7 +40,7 @@ class Command(BaseCommand):
             # 1. Seed Categories
             category_objs = {}
             for cat in categories_data:
-                obj, created = Category.objects.update_or_create(
+                obj, _ = Category.objects.update_or_create(
                     slug=cat['slug'],
                     defaults={
                         'name': cat['name'],
@@ -48,10 +51,9 @@ class Command(BaseCommand):
 
             self.stdout.write(self.style.SUCCESS(f"Seeded {len(category_objs)} categories."))
 
-            # 2. Seed Master Ingredients & Synonyms Cache
+            # 2. Cache existing ingredients
             ingredient_cache = {}
-            all_ingredients = Ingredient.objects.all()
-            for ing in all_ingredients:
+            for ing in Ingredient.objects.all():
                 ingredient_cache[ing.normalized_name] = ing
 
             # 3. Seed Recipes, RecipeIngredients, and RecipeInstructions
@@ -99,15 +101,18 @@ class Command(BaseCommand):
                     norm_name = ing_item['normalized_name']
                     ing_obj = ingredient_cache.get(norm_name)
                     if not ing_obj:
-                        ing_obj, _ = Ingredient.objects.get_or_create(
-                            normalized_name=norm_name,
-                            defaults={
-                                'name': ing_item['clean_name'],
-                                'category': 'Pantry Staple'
-                            }
-                        )
+                        ing_obj = Ingredient.objects.filter(normalized_name=norm_name).first()
+                        if not ing_obj:
+                            # Try finding by clean name to avoid duplicate name constraint
+                            ing_obj = Ingredient.objects.filter(name__iexact=ing_item['clean_name']).first()
+                        if not ing_obj:
+                            ing_obj = Ingredient.objects.create(
+                                normalized_name=norm_name,
+                                name=ing_item['clean_name'],
+                                category='Pantry Staple'
+                            )
+                            created_ingredients += 1
                         ingredient_cache[norm_name] = ing_obj
-                        created_ingredients += 1
 
                     RecipeIngredient.objects.create(
                         recipe=recipe_obj,
@@ -130,6 +135,15 @@ class Command(BaseCommand):
             created_synonyms = 0
             for staple_key, synonyms in SYNONYM_DICTIONARY.items():
                 target_ing = ingredient_cache.get(staple_key)
+                if not target_ing:
+                    target_ing = Ingredient.objects.filter(normalized_name__iexact=staple_key).first()
+                if not target_ing:
+                    target_ing = Ingredient.objects.filter(name__iexact=staple_key).first()
+                if not target_ing:
+                    target_ing = Ingredient.objects.filter(normalized_name__istartswith=staple_key).first()
+                if not target_ing:
+                    target_ing = Ingredient.objects.filter(name__icontains=staple_key).first()
+
                 if target_ing:
                     for syn in synonyms:
                         _, syn_created = IngredientSynonym.objects.get_or_create(
@@ -147,5 +161,6 @@ class Command(BaseCommand):
             f"  - Master Ingredients: {Ingredient.objects.count()}\n"
             f"  - Recipe-Ingredient Links: {created_recipe_ingredients}\n"
             f"  - Step Instructions: {created_instructions}\n"
-            f"  - Regional Synonyms: {created_synonyms}"
+            f"  - New Regional Synonyms: {created_synonyms}\n"
+            f"  - Total Database Synonyms: {IngredientSynonym.objects.count()}"
         ))
