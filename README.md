@@ -88,6 +88,7 @@ Desi-Chef/
 ├── Procfile              # Gunicorn process definition
 ├── render.yaml           # Infrastructure-as-Code for Render Web Service & Database
 ├── requirements.txt      # Production runtime dependencies
+├── runtime.txt           # Python runtime version declaration (3.14.6)
 └── manage.py             # Administrative CLI
 ```
 

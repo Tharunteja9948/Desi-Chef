@@ -41,6 +41,11 @@ htmlcov/
 Thumbs.db
 desktop.ini
 
+# Archives & Backups
+*.zip
+*.tar.gz
+*.bak
+
 # Logs
 *.log
 npm-debug.log*

@@ -1,7 +1,13 @@
+# ==============================================================================
+# DesiChef - Python Application Dependencies
+# Production & Local Development Requirements
+# ==============================================================================
+
 # Core Web Framework
 Django>=5.1.0,<6.2.0
 asgiref>=3.8.0
 sqlparse>=0.5.0
+tzdata>=2024.1
 
 # REST API & CORS
 djangorestframework>=3.15.0
@@ -15,6 +21,9 @@ whitenoise>=6.7.0
 dj-database-url>=2.2.0
 psycopg2-binary>=2.9.9
 PyMySQL>=1.1.0
+
+# Image Processing & Assets
+Pillow>=10.4.0
 
 # Environment Configuration
 python-dotenv>=1.0.0
